@@ -1,0 +1,1286 @@
+[
+  {
+    "input": "a, b, c = 0, 0, 0",
+    "output": "a = b = c = 0",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a, b, c = '1', '2', '3'",
+    "output": "a, b, c = '123'",
+    "byte_saving": 2,
+    "python_versions": "3"
+  },
+  {
+    "input": "if a < b:\n    return a\nelse:\n    return b",
+    "output": "return (b, a)[a < b]",
+    "byte_saving": 9,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if a > 1 and b > 1 and 3 > a and 5 > b:\n    foo()",
+    "output": "if 3 > a > 1 < b < 5: foo()",
+    "byte_saving": 16,
+    "python_versions": "2"
+  },
+  {
+    "input": "if a < b and c > d:\n    foo()",
+    "output": "if a < b <[]> c > d: foo()",
+    "byte_saving": 2,
+    "python_versions": "2"
+  },
+  {
+    "input": "if a < b and c > d:\n    foo()",
+    "output": "if a < b < c > d: foo()",
+    "byte_saving": 4,
+    "python_versions": "2"
+  },
+  {
+    "input": "r = range\nfor x in range(10):\n    for y in range(100): print x, y",
+    "output": "r = range\nfor x in r(10):\n for y in r(100): print x, y",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a = lambda b: lambda c: lambda d: lambda e: lambda f: 0",
+    "output": "exec\"a=`b:`c:`d:`e:`f:0\".replace('`','lambda ')",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if 1:\n    if 1:\n        pass",
+    "output": "if 1:\n if 1:\n\tpass",
+    "byte_saving": 1,
+    "python_versions": "2"
+  },
+  {
+    "input": "def has_n(n):\n    return n in [1,7,9,10,11]",
+    "output": "def has_n(n):\n    return 3714 >> n & 1",
+    "byte_saving": 12,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for x in [\"foo\",\"bar\",\"baz\"]:\n    print(x)",
+    "output": "for i in 0,1,2: print\"fbboaaorz\"[i::3]",
+    "byte_saving": 15,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in range(m):\n    for j in range(n): do_stuff(i,j)",
+    "output": "for k in range(m*n): do_stuff(k//n, k%n)",
+    "byte_saving": 10,
+    "python_versions": "3"
+  },
+  {
+    "input": "n = 123\ns = str(n)",
+    "output": "n = 123\ns = `n`",
+    "byte_saving": 4,
+    "python_versions": "2"
+  },
+  {
+    "input": "n = n + 1",
+    "output": "n = -~n",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if i == 4 and j == 4:\n    pass",
+    "output": "if i == 4and j == 4:\n    pass",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "x = list(i)",
+    "output": "*x, = i",
+    "byte_saving": 4,
+    "python_versions": "3"
+  },
+  {
+    "input": "a, b, c = 1, 2, 3",
+    "output": "a, *b, c = [1,2,3]",
+    "byte_saving": 2,
+    "python_versions": "3"
+  },
+  {
+    "input": "for i in range(8): pass",
+    "output": "for i in [1]*8: pass",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "rev = [1,2,3,4][::-1]",
+    "output": "rev = [1,2,3,4][::-1]",
+    "byte_saving": 0,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "elem = L[-i]",
+    "output": "elem = L[~i]",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "alpha = 'abcdefghijklmnopqrstuvwxyz'",
+    "output": "alpha = map(chr, range(97,123))",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "[0,y][b]",
+    "output": "y*b",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "S = {1,2,3}\nif e in S: ...",
+    "output": "if {e}&S: ...",
+    "byte_saving": 2,
+    "python_versions": "2.7"
+  },
+  {
+    "input": "if a and b: do_something()",
+    "output": "if a*b: do_something()",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def getValue(k):\n    if k=='blah': return 1\n    if k=='foo': return 2\n    return 4",
+    "output": "getValue = lambda k: {'blah':1,'foo':2}.get(k,4)",
+    "byte_saving": 20,
+    "python_versions": "2.7+, 3"
+  },
+  {
+    "input": "L = set(T)",
+    "output": "L = {*T}",
+    "byte_saving": 3,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "import math\nx = math.ceil(3/2)",
+    "output": "x = -(-3//2)",
+    "byte_saving": 13,
+    "python_versions": "3"
+  },
+  {
+    "input": "for x in range(3): pass",
+    "output": "for x in 0,1,2: pass",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "A.append(B)",
+    "output": "A += B,",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "import * from math",
+    "output": "import*math",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "x = expensive_expr\ny = expensive_expr",
+    "output": "x = _ = expensive_expr; y = _",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def c(a):\n    if a < 3: return a+10\n    else: return a-5",
+    "output": "c = lambda a: a<3 and a+10 or a-5",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "''.join(l)",
+    "output": "`l`[2::5]",
+    "byte_saving": 7,
+    "python_versions": "2"
+  },
+  {
+    "input": "def f(s): t = s.strip(); return t + t[::-1]",
+    "output": "f = lambda s: (t:=s.strip()) + t[::-1]",
+    "byte_saving": 5,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "f = lambda n: n * f(n-1)",
+    "output": "f = lambda n: 1>>n or n*f(n-1)",
+    "byte_saving": 2,
+    "python_versions": "2"
+  },
+  {
+    "input": "n == 0",
+    "output": "0**n",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "print(s, end='')",
+    "output": "print(end=s)",
+    "byte_saving": 3,
+    "python_versions": "3"
+  },
+  {
+    "input": "(x for _ in iter(lambda:0,1))",
+    "output": "(x for() in iter(set,1))",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "while foo(a):\n    print(a)\n    a *= 2",
+    "output": "while foo(a): print a; a*=2",
+    "byte_saving": 6,
+    "python_versions": "2"
+  },
+  {
+    "input": "for i in range(x): s += input()",
+    "output": "exec 's+=input();' * x",
+    "byte_saving": 4,
+    "python_versions": "2"
+  },
+  {
+    "input": "binom = nCr(n, k)",
+    "output": "binom = ((2**n+1)**n >> n*k) % 2**n",
+    "byte_saving": 0,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "lambda s: s.replace('a','T').replace('b','a').replace('T','b')",
+    "output": "lambda s: s.translate({97:98,98:97})",
+    "byte_saving": 13,
+    "python_versions": "3"
+  },
+  {
+    "input": "l[0] == x",
+    "output": "l[:1] == [x]",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "data = open('file.txt').read()",
+    "output": "data = open(0).read()",
+    "byte_saving": 9,
+    "python_versions": "3"
+  },
+  {
+    "input": "import itertools\nfor g in itertools.groupby(data): ...",
+    "output": "import itertools as i\nfor g in i.groupby(data): ...",
+    "byte_saving": 11,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "map(lambda x,y: x+y, a, b)",
+    "output": "map(lambda x,y: x+y, a, b)",
+    "byte_saving": 0,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "[({a:b}.get(x, x) for x in L)]",
+    "output": "map({a:b}.get, L, L)",
+    "byte_saving": 6,
+    "python_versions": "2"
+  },
+  {
+    "input": "if not C:\n    ...",
+    "output": "if C < 1:\n    ...",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "chunks = []\nfor i in range(0, len(l), 4):\n    chunks.append(tuple(l[i:i+4]))",
+    "output": "chunks = zip(*[iter(l)]*4)",
+    "byte_saving": 18,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def baz(i):\n    if i == 0:\n        i = 1\n        print(i)\n        bar()",
+    "output": "def baz(i):\n if i==0: i=1;print i;bar()",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def f(a):\n    l = [1,2,3]\n    return sum(a==i for i in l)",
+    "output": "def f(a, l=[1,2,3]): return sum(a==i for i in l)",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "map(None, *L)",
+    "output": "map(None, *L)",
+    "byte_saving": 0,
+    "python_versions": "2"
+  },
+  {
+    "input": "def classify_data(data):\n    result = {'int': 0, 'float': 0, 'str': 0, 'list': 0}\n    for item in data:\n        if isinstance(item, int):\n            result['int'] += 1\n        elif isinstance(item, float):\n            result['float'] += 1\n        elif isinstance(item, str):\n            result['str'] += 1\n        elif isinstance(item, list):\n            result['list'] += 1\n    return result",
+    "output": "lambda d:[sum(x*0is 0for x in d),sum(x*0==0and x*0is not 0for x in d),sum(x*0==\"\"for x in d),sum(x*0==[]for x in d)]",
+    "byte_saving": 181,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "import sys\ns = sys.stdin.read()",
+    "output": "import os\ns = os.read(0,10**9)",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "while not a:\n    pass",
+    "output": "while ~a:\n    pass",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "c = [a[i] + b[i] for i in range(len(a))]",
+    "output": "c = list(map(sum, zip(a, b)))",
+    "byte_saving": 13,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "f = lambda n: n in range(123,790,111)",
+    "output": "f = range(123,790,111).count",
+    "byte_saving": 12,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "s = ' ' * 2 + '<|>' + ' ' * 2",
+    "output": "p = '<|>'.center(7)",
+    "byte_saving": 15,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for x in (0,1): print(['Hello','World'][x])",
+    "output": "for x in (-2,2): print('WoolrlledH'[::x])",
+    "byte_saving": 5,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "t = tuple(map(int, input().split(',')))",
+    "output": "t = input()",
+    "byte_saving": 30,
+    "python_versions": "3"
+  },
+  {
+    "input": "x = float(x)",
+    "output": "x = x*1.",
+    "byte_saving": 4,
+    "python_versions": "2.6+"
+  },
+  {
+    "input": "M = [[0]*4]*3",
+    "output": "M = eval('[0]*4,'*3)",
+    "byte_saving": -4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if s.startswith(t):\n    do_something()",
+    "output": "if s[:len(t)]==t:\n    do_something()",
+    "byte_saving": 4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "n % 2 == 0",
+    "output": "n % 2 < 1",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "n % 2 == 0",
+    "output": "~n & 1",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "r = reused\nfor _ in '_'*n:\n    stuff()",
+    "output": "for r in [reused]*n:\n    stuff()",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in range(len(l)):\n    DoStuff(i, l[i])",
+    "output": "i=0\nfor x in l: DoStuff(i,x);i+=1",
+    "byte_saving": 4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "d = ((x[0]-y[0])**2 + (x[1]-y[1])**2)**.5",
+    "output": "d = abs(complex(*x)-complex(*y))",
+    "byte_saving": 13,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for _ in [0]*x: doSomething()\na = 'blah'",
+    "output": "for a in ['blah']*x: doSomething()",
+    "byte_saving": 14,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "print('%s, %d bytes'%(l,b))",
+    "output": "print(f'{l}, {b} bytes')",
+    "byte_saving": 6,
+    "python_versions": "3.6+"
+  },
+  {
+    "input": "for n in range(100):\n    if f(n)<2: print(n)",
+    "output": "for n in range(100): f(n)<2==print(n)",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "import random\nx = random.randint(0,255)",
+    "output": "import os\nx = os.urandom(1)[0]",
+    "byte_saving": 11,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "[2,3,5,7,11,13,17,19,23]",
+    "output": "b'\\x02\\x03\\x05\\x07\\x0b\\r\\x11\\x13\\x17'",
+    "byte_saving": 6,
+    "python_versions": "3"
+  },
+  {
+    "input": "L.insert(i, x)",
+    "output": "L[:i] += x,",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "s = math.sin(r)",
+    "output": "s = (1j**(r/90.)).imag",
+    "byte_saving": 4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "n & (n-1) == 0",
+    "output": "n & -n == n",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if not all(f(x) for x in a): do()",
+    "output": "if 0 in map(f,a): do()",
+    "byte_saving": 9,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if any(f(x) for x in a): do()",
+    "output": "if 1 in map(f,a): do()",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "i = i or j and 'a' or ''",
+    "output": "i = j and 'a' or ''",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for z in D:\n    d.pop()",
+    "output": "[d.pop() for z in D]",
+    "byte_saving": 5,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "L=[1,2,3,1]\nfor x in [1,2]: L.remove(x)",
+    "output": "list(map(L.remove,[1,2]))",
+    "byte_saving": 10,
+    "python_versions": "3"
+  },
+  {
+    "input": "f = lambda s: '' if not s else s[0]*2 + f(s[1:])",
+    "output": "f = lambda s: s and s[0]*2 + f(s[1:])",
+    "byte_saving": 9,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a.replace('a','b')",
+    "output": "a.replace(*'ab')",
+    "byte_saving": 5,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "[a for a in 'abc' if cond1() and cond2() or cond3() and cond4() and cond5()]",
+    "output": "[a for a in 'abc' if cond1() if cond2() or cond3() if cond4() if cond5()]",
+    "byte_saving": 9,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a = [5,5,5,5,5,5,5]",
+    "output": "a = [5]*7",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def f():\n    a=1\n    b=9",
+    "output": "def f():a=1;b=9",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "n = 1\nexec('n=f(n);'*k)\nprint(n)",
+    "output": "print(eval('f('*k+'1'+')'*k))",
+    "byte_saving": 6,
+    "python_versions": "3"
+  },
+  {
+    "input": "{'a':1,'e':4,'i':9}",
+    "output": "dict(a=1,e=4,i=9)",
+    "byte_saving": 3,
+    "python_versions": "2.7+, 3"
+  },
+  {
+    "input": "x**2",
+    "output": "x*x",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "print('Yes' if x else 'No')",
+    "output": "print('YNeos'[x::2])",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "s = ''\nif c:\n    s = 'a'",
+    "output": "s = c*'a'",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if n != 69:\n    print('ok')",
+    "output": "if n-69:\n    print('ok')",
+    "byte_saving": 4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "s = ''.join(f(x) for x in l)",
+    "output": "s = ''\nfor x in l: s+=f(x)",
+    "byte_saving": 7,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for x,y in zip(l,l[1:]): do(x,y)",
+    "output": "x=l[0]\nfor y in l[1:]: do(x,y);x=y",
+    "byte_saving": 7,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "lst = list(map(f,l))",
+    "output": "lst = [*map(f,l)]",
+    "byte_saving": 2,
+    "python_versions": "3"
+  },
+  {
+    "input": "from itertools import *\nz = combinations_with_replacement('ABC',2)",
+    "output": "from itertools import *\nz = eval(dir()[0])('ABC',2)",
+    "byte_saving": 7,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "filt = [s[i] for i in range(len(s)) if i==0 or s[i]!=s[i-1]]",
+    "output": "e=''\nfilt=[c for c in s if e!=(e:=c)]",
+    "byte_saving": 20,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "shortList = []\nfor x in range(10): shortList += [x*2]",
+    "output": "shortList = [x*2 for x in range(10)]",
+    "byte_saving": 15,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a = 1 if c>0 else 0",
+    "output": "a = +(c>0)",
+    "byte_saving": 9,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for c in s:\n    for i in l:\n        if ord(c)==i:\n            print(i,c)\n            break",
+    "output": "try:\n    for c in s:\n        for i in l:\n            if ord(c)==i: print(i,c);1/0\nexcept:0",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "print('x')\nprint('x')",
+    "output": "print('x')\nexit('x')",
+    "byte_saving": 4,
+    "python_versions": "3"
+  },
+  {
+    "input": "product(x, repeat=2)",
+    "output": "product(*tee(x,2))",
+    "byte_saving": 7,
+    "python_versions": "3"
+  },
+  {
+    "input": "lines = []\nwhile True:\n    try:\n        lines.append(input())\n    except EOFError:\n        break",
+    "output": "lines = list(iter(input,''))",
+    "byte_saving": 60,
+    "python_versions": "3"
+  },
+  {
+    "input": "def f(n):\n    return [i for i in range(n*n) if p(i)][n]",
+    "output": "f=lambda n,i=1:n and-~f(n-p(i),i+1)",
+    "byte_saving": 25,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "\"We are in year: %s\" % (date.strftime('%y'))",
+    "output": "\"We are in year: {:%y}\".format(date)",
+    "byte_saving": 11,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "\"We are in year: %s\" % (date.strftime('%y'))",
+    "output": "f\"We are in year: {date:%y}\"",
+    "byte_saving": 17,
+    "python_versions": "3.6+"
+  },
+  {
+    "input": "lambda a,b: e(b) - e(a)",
+    "output": "lambda*l: eval('e(%s)-'*2%l+'0')",
+    "byte_saving": 0,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "lambda a,b: e(b) - e(a)",
+    "output": "f=lambda a,*b:e(a)-(b and f(*b))",
+    "byte_saving": -2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "lambda a,b: d(b) - d(a)\nd=lambda x:e(x)",
+    "output": "lambda a,b:d(b)-d(a)\nd=lambda x:e(x)",
+    "byte_saving": 0,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a,b=[e(x) for x in input()]\nprint(b-a)",
+    "output": "a,b=map(e,input());print(b-a)",
+    "byte_saving": 4,
+    "python_versions": "3"
+  },
+  {
+    "input": "r=0\nfor x in input():\n    r=e(x)-r\nprint(r)",
+    "output": "r=0\nfor x in input():r=e(x)-r\nprint(r)",
+    "byte_saving": 2,
+    "python_versions": "3"
+  },
+  {
+    "input": "lambda *l: int.__sub__(*[e(x) for x in l])",
+    "output": "lambda*l:int.__sub__(*[e(x)for x in l])",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "'\n'.join(''.join(i) for i in M)",
+    "output": "'\n'.join(map(''.join,M))",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in M: print(''.join(i))",
+    "output": "for i in M: print(*i,sep='')",
+    "byte_saving": 5,
+    "python_versions": "3"
+  },
+  {
+    "input": "(a<b)*2-1",
+    "output": "-(a>b)|1",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "pow(base, exp, mod)  # to compute inverse",
+    "output": "pow(base, -1, mod)",
+    "byte_saving": 0,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "import math\nmath.comb(n,k)",
+    "output": "from math import comb\ncomb(n,k)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "import math\nmath.perm(n,k)",
+    "output": "from math import perm\nperm(n,k)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "import math\nmath.prod(l)",
+    "output": "from math import prod\nprod(l)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "import math\nmath.dist(p,q)",
+    "output": "from math import dist\ndist(p,q)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "import math\nmath.hypot(*p)",
+    "output": "from math import hypot\nhypot(*p)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "import math\nmath.isqrt(n)",
+    "output": "from math import isqrt\nisqrt(n)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "n=input()\nwhile~-n:\n    n-=1;print('*'*n)\nprint('|')",
+    "output": "n=input()\nexec\"'*'*n;n-=1;print\"*n+\"'|'\"",
+    "byte_saving": 3,
+    "python_versions": "2"
+  },
+  {
+    "input": "print(' '.join(str(i**2) for i in range(11)))",
+    "output": "print(*(i**2 for i in range(11)))",
+    "byte_saving": 12,
+    "python_versions": "3"
+  },
+  {
+    "input": "s='...'\n# literal with newlines",
+    "output": "'''...\n...'''",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "while 1:\n    print(x)\n    x+=1",
+    "output": "while [print(x)]: x+=1",
+    "byte_saving": 1,
+    "python_versions": "3"
+  },
+  {
+    "input": "if isdigit(a) and isdigit(b) and isdigit(c): pass",
+    "output": "if all(map(isdigit,[a,b,c])): pass",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "i=__import__('itertools');g=i.product",
+    "output": "i=__import__;g=i('itertools').product",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "s.index(x)",
+    "output": "s.find(x)",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "{...}.get(k,d)",
+    "output": "{k:d,...}[k]",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "[x for x in locals()['_[1]'] if x not in L]",
+    "output": "[x for x in L if x not in locals()['_[1]']]",
+    "byte_saving": 0,
+    "python_versions": "2.4-2.7"
+  },
+  {
+    "input": "tuple(T)",
+    "output": "(*T,)",
+    "byte_saving": 3,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "set(T)",
+    "output": "{*T}",
+    "byte_saving": 2,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "list(T)",
+    "output": "[*T]",
+    "byte_saving": 3,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "a=x[:]\nb=x*1",
+    "output": "a=x[:]\nb=[*x]",
+    "byte_saving": 0,
+    "python_versions": "3"
+  },
+  {
+    "input": "not C",
+    "output": "1-C",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "[k for k in G if not G[k]]",
+    "output": "G.keys()-filter(G.get,G)",
+    "byte_saving": 4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "L.insert(i,x)",
+    "output": "L[:i]+=x,",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "f(x for x in range(4))",
+    "output": "f(*range(4))",
+    "byte_saving": 2,
+    "python_versions": "3"
+  },
+  {
+    "input": "x.from_bytes(...)",
+    "output": "0.from_bytes(...)",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if i%3==0 or i%5==0 or i%7==0: pass",
+    "output": "if 0in[i%3,i%5,i%7]: pass",
+    "byte_saving": 5,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if a not in b: pass",
+    "output": "if(a in b)^1: pass",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "10000",
+    "output": "1e4",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if a%b==a: pass",
+    "output": "if 0<=a<b: pass",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def g(n):\n    if n: print(n);g(n//2)",
+    "output": "def g(n):1/n;print(n);g(n//2)",
+    "byte_saving": 2,
+    "python_versions": "2"
+  },
+  {
+    "input": "print(s+s[::-1])",
+    "output": "lambda s:s+s[::-1]",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "cmp(x,0)",
+    "output": "cmp(x,0)",
+    "byte_saving": 0,
+    "python_versions": "2"
+  },
+  {
+    "input": "or_expr or f()",
+    "output": "or_expr==f()",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a and b: return x",
+    "output": "a*b and x",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "x y",
+    "output": "xy",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "'#000'",
+    "output": "0",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "True + True",
+    "output": "2*True",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "len(a)>i",
+    "output": "a>a[:i]",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "1000000000000",
+    "output": "0xe8d4a51000",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a,b=[i for i in range(n*n) if p(i)][n]",
+    "output": "f=lambda n,i=1:n and-~f(n-p(i),i+1)",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a,b=[e(x) for x in input()]\nprint(b-a)",
+    "output": "lambda*l:eval('e(%s)-'*2%l+'0')",
+    "byte_saving": 0,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def s(x):\n    return (x>0)-(x<0)",
+    "output": "s=lambda x:(x>0)-(x<0)",
+    "byte_saving": 19,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "import numpy as np\nflat=list(np.array(matrix).flatten())",
+    "output": "flat=sum(matrix,[])",
+    "byte_saving": 35,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if abcd:\n    for defg in hijk:\n        k=eval(input())\n        print(k(k))",
+    "output": "if abcd:\n    for defg in hijk: k:print(k(k))=eval(input())",
+    "byte_saving": 5,
+    "python_versions": "3.6+"
+  },
+  {
+    "input": "[v] if p>0 else f(x)",
+    "output": "[v][:p] or f(x)",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "import math\nfact=math.factorial(n)",
+    "output": "from math import perm\nfact=perm(n)",
+    "byte_saving": 7,
+    "python_versions": "3.8+"
+  },
+  {
+    "input": "indexes=[i for i in range(len(l)) if l[i]==element]",
+    "output": "indexes=list(filter(lambda i:l[i]==element,range(len(l))))",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "import string\nfor q in dir(__builtins__):\n    if len(q)>2: globals()[q[0]]=__builtins__[q]",
+    "output": "import string;[globals().__setitem__(q[0],__builtins__[q]) for q in dir(__builtins__) if len(q)>2]",
+    "byte_saving": 12,
+    "python_versions": "2"
+  },
+  {
+    "input": "print('0' if x==0 else '1' if x>0 else '-1')",
+    "output": "print(['0','1','-1'][x])",
+    "byte_saving": 16,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for e in range(len(L)):\n    queue[e]=L[e]\n    print(queue[e])",
+    "output": "for e,queue[e] in enumerate(L): print(queue[e])",
+    "byte_saving": 8,
+    "python_versions": "3"
+  },
+  {
+    "input": "import os.path as p\nimport glob\nd=p.join(p.dirname(p.abspath(__file__)),'foo','*.py')\nfor x in glob.glob(d):\n    with open(x,'rb') as f: data=f.read()",
+    "output": "import pathlib as p\nd=p.Path(__file__).absolute().parent/'foo'\nfor f in d.glob('*.py'): data=f.read_bytes()",
+    "byte_saving": 32,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "[f(x) for x in l] + [g(x) for x in l]",
+    "output": "sum([[f(x),g(x)] for x in l],[])",
+    "byte_saving": 4,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "from lib import func as F",
+    "output": "import lib;F=lib.func",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "p='+'\ni=1\nfor _ in range(255):\n    print(p*i)\n    i+=1",
+    "output": "p='+'\ni=1\nexec\"print(p*i);i+=1;\"*255",
+    "byte_saving": 10,
+    "python_versions": "2"
+  },
+  {
+    "input": "if not flag and n==odd:\n    do()",
+    "output": "if ~flag&n==odd:\n    do()",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def f(x):\n    return 1 if x<2 else x*f(x-1)",
+    "output": "f=lambda x:x<2or x*f(x-1)",
+    "byte_saving": 3,
+    "python_versions": "3"
+  },
+  {
+    "input": "for x in s[::-1]:\n    f(x)",
+    "output": "while s: f(s.pop())",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "res=(n+d-1)//d",
+    "output": "0--n//d",
+    "byte_saving": 1,
+    "python_versions": "3"
+  },
+  {
+    "input": "repr(a)",
+    "output": "\"%r\"%a",
+    "byte_saving": 2,
+    "python_versions": "3"
+  },
+  {
+    "input": "def flatten(l):\n    if isinstance(l,list): return sum(map(flatten,l),[])\n    else: return [l]",
+    "output": "flatten=lambda l:sum(map(flatten,l),[])if isinstance(l,list)else[l]",
+    "byte_saving": 14,
+    "python_versions": "3"
+  },
+  {
+    "input": "while True:\n    if cond: print('Hello')\n    else: exit()",
+    "output": "while 1:\n    func=print if cond else exit\n    func('Hello')",
+    "byte_saving": 4,
+    "python_versions": "3"
+  },
+  {
+    "input": "print('yes' if x==3 else 'no')",
+    "output": "print('yes'if x==3 else'no')",
+    "byte_saving": 2,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "eval(base64decode(s))",
+    "output": "exec(ENCODEFUNC(CODE))",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for b in range(0,len(pixels),3):\n    pixels[b],pixels[b+2]=pixels[b+2],pixels[b]",
+    "output": "pixels[2::3],pixels[0::3]=pixels[0::3],pixels[2::3]",
+    "byte_saving": 12,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "d={k:None for k in iterable}\nd.update(d1)\nd.update(d2)",
+    "output": "d={**dict.fromkeys(iterable),**d1,**d2}",
+    "byte_saving": 6,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "if a!=b:\n    do()",
+    "output": "if a^b:\n    do()",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "s=[x.strip() for x in lines]",
+    "output": "s=list(map(str.strip,lines))",
+    "byte_saving": 6,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a,b=map(int,sys.stdin.readline().split())",
+    "output": "a,b=map(int,open(0))",
+    "byte_saving": 14,
+    "python_versions": "3"
+  },
+  {
+    "input": "if a==123 or b==123:\n    pass",
+    "output": "if 123 in[a,b]:\n    pass",
+    "byte_saving": 5,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "list(map(lambda c:c.func(),iterable))",
+    "output": "list(map(type(c).func,iterable))",
+    "byte_saving": 8,
+    "python_versions": "3"
+  },
+  {
+    "input": "x=4\nres=math.sqrt(x)",
+    "output": "res=4**.5",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in range(1,101):\n    print(str(i)*(i%3and i%5)+'Fizz'*(i%3==0)+'Buzz'*(i%5==0))",
+    "output": "for i in range(1,101):print(f'{i}'*bool(i%3and i%5)+'Fizz'*(i%3==0)+'Buzz'*(i%5==0))",
+    "byte_saving": 5,
+    "python_versions": "3.6+"
+  },
+  {
+    "input": "def f(x): return 1 if x//2==x/2 else 0",
+    "output": "f=lambda x:1 if x%2<1 else 0",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in range(m):\n    for j in range(n):\n        print(i, j)",
+    "output": "for i in range(m*n):\n    print(i//n, i%n)",
+    "byte_saving": 15,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in range(m):\n    for j in range(n):\n        for k in range(o):\n            print(i, j, k)",
+    "output": "for idx in range(m*n*o):\n    print(idx//n//o, idx%(n*o), idx%o)",
+    "byte_saving": 18,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if 5 in S:\n    print(\"Present\")\nelse:\n    print(\"Absent\")",
+    "output": "if {5}&S:\n    print(\"Present\")\nelse:\n    print(\"Absent\")",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if a or b:\n    print(\"geeks\")\nelse:\n    print(\"geeksforgeeks\")",
+    "output": "if a|b:\n    print(\"geeks\")\nelse:\n    print(\"geeksforgeeks\")",
+    "byte_saving": 1,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "from math import floor\nn = 3/2\nprint(floor(n))",
+    "output": "n = 3/2\nprint(n//1)",
+    "byte_saving": 17,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "from math import ceil\nn = 3/2\nprint(ceil(n))",
+    "output": "n = 3/2\nprint(-(-n//1))",
+    "byte_saving": 16,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "def c(a):\n    if a < 3: return a-5\n    else: return a+5",
+    "output": "c=lambda a:a<3and a-5or a+5",
+    "byte_saving": 19,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "string = 'abcdefghijklmnopqrstuvwxyz'",
+    "output": "string = map(chr,range(97,123))",
+    "byte_saving": 3,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "string = [chr(i+97)for i in range(26)]",
+    "output": "string = map(chr,range(97,123))",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if a<b:return a\nelse:return b",
+    "output": "return (b, a)[a<b]",
+    "byte_saving": 9,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "string = 'geeksforgeeks'\nfor i in range(len(string)-1,-1,-1):\n    print(string[i])",
+    "output": "string = 'geeksforgeeks'\nfor i in string[::-1]:\n    print(i)",
+    "byte_saving": 20,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "for i in range(len(string)):\n    print(string[len(string)-1-i])",
+    "output": "for i in range(len(string)):\n    print(string[~i])",
+    "byte_saving": 10,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "A = [1,2,3,4,5,6,7]\nfor i in A:\n    print(i,end = ' ')",
+    "output": "A = [1,2,3,4,5,6,7]\nprint(*A)",
+    "byte_saving": 14,
+    "python_versions": "3"
+  },
+  {
+    "input": "a = 0\nb = 0\nc = 0",
+    "output": "a = b = c = 0",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a = 'p'\nb = 'q'\nc = 'r'",
+    "output": "a,b,c = 'pqr'",
+    "byte_saving": 8,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "a = (2,3,5,7,11)\nx = list(a)",
+    "output": "a = (2,3,5,7,11)\n*x, = a",
+    "byte_saving": 4,
+    "python_versions": "3"
+  },
+  {
+    "input": "a = 'geeksforgeeks'\nx = list(a)",
+    "output": "a = 'geeksforgeeks'\n*x, = a",
+    "byte_saving": 4,
+    "python_versions": "3"
+  },
+  {
+    "input": "a = (2,3,5,7,11)\nx = set(a)",
+    "output": "a = (2,3,5,7,11)\nx = {*a}",
+    "byte_saving": 3,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "a = [2,3,5,7,11]\nx = set(a)",
+    "output": "a = [2,3,5,7,11]\nx = {*a}",
+    "byte_saving": 3,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "a = 'geeksforgeeks'\nx = set(a)",
+    "output": "a = 'geeksforgeeks'\nx = {*a}",
+    "byte_saving": 3,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "a = [2,3,5,7,11]\nx = tuple(a)",
+    "output": "a = [2,3,5,7,11]\nx = (*a,)",
+    "byte_saving": 4,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "a = 'geeksforgeeks'\nx = tuple(a)",
+    "output": "a = 'geeksforgeeks'\nx = (*a,)",
+    "byte_saving": 4,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "T = [2,3,4,5,6,7,8,9]\nnew_T = [1]+T+[10]",
+    "output": "T = [2,3,4,5,6,7,8,9]\nnew_T = [1,*T,10]",
+    "byte_saving": 2,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "T = (2,3,4,5,6,7,8,9)\nnew_T = (1,)+T+(10,)",
+    "output": "T = (2,3,4,5,6,7,8,9)\nnew_T = (1,*T,10)",
+    "byte_saving": 2,
+    "python_versions": "3.5+"
+  },
+  {
+    "input": "if 1<a and a<10:\n    print(a)",
+    "output": "if 1<a<10:\n    print(a)",
+    "byte_saving": 5,
+    "python_versions": "2, 3"
+  },
+  {
+    "input": "if a > 10 and b > 10 and 30 > a and 50 > b:\n    print(a)",
+    "output": "if 30 > a > 10 < b < 50:\n    print(a)",
+    "byte_saving": 16,
+    "python_versions": "2, 3"
+  }
+]

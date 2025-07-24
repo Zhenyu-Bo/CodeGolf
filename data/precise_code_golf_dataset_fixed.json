@@ -1,0 +1,1099 @@
+{
+  "code_golf_dataset": [
+    {
+      "input": "a,b,c=0,0,0",
+      "output": "a=b=c=0",
+      "description": "Multiple variable assignment with same value"
+    },
+    {
+      "input": "a,b,c='1','2','3'",
+      "output": "a,b,c='123'",
+      "description": "String unpacking assignment"
+    },
+    {
+      "input": "if a<b:return a\nelse:return b",
+      "output": "return(b,a)[a<b]",
+      "description": "Replace conditional with tuple indexing"
+    },
+    {
+      "input": "if a > 1 and b > 1 and 3 > a and 5 > b: foo()",
+      "output": "if 3 > a > 1 < b < 5: foo()",
+      "description": "Chain comparison operators"
+    },
+    {
+      "input": "if a<b and c>d:foo()",
+      "output": "if a<b<[]>c>d:foo()",
+      "description": "Use list comparison to avoid and operator"
+    },
+    {
+      "input": "for x in range(10):\n for y in range(100):print x,y",
+      "output": "r=range\nfor x in r(10):\n for y in r(100):print x,y",
+      "description": "Assign built-in functions to shorter names"
+    },
+    {
+      "input": "a=lambda b:lambda c:lambda d:lambda e:lambda f:0",
+      "output": "exec\"a=`b:`c:`d:`e:`f:0\".replace('`','lambda ')",
+      "description": "Use exec with replace for repeated lambda"
+    },
+    {
+      "input": "for i in range(m):\n for j in range(n):\n  do_stuff(i,j)",
+      "output": "for k in range(m*n):\n do_stuff(k/n,k%n)",
+      "description": "Collapse nested loops into single loop"
+    },
+    {
+      "input": "str(n)",
+      "output": "`n`",
+      "description": "Convert integer to string using backticks (Python 2)"
+    },
+    {
+      "input": "n+1",
+      "output": "-~n",
+      "description": "Increment using bitwise operations"
+    },
+    {
+      "input": "n-1",
+      "output": "~-n",
+      "description": "Decrement using bitwise operations"
+    },
+    {
+      "input": "if i==4 and j==4:",
+      "output": "if i==4and j==4:",
+      "description": "Remove space after number"
+    },
+    {
+      "input": "x=list(i)",
+      "output": "*x,=i",
+      "description": "Convert iterable to list using starred assignment"
+    },
+    {
+      "input": "s=list('abcde')",
+      "output": "*s,='abcde'",
+      "description": "Convert string to list of chars"
+    },
+    {
+      "input": "a=L[-1]",
+      "output": "*_,a=L",
+      "description": "Get last element using starred assignment"
+    },
+    {
+      "input": "a=(L+[1])[0]",
+      "output": "a,*_=L+[1]",
+      "description": "Get first element safely"
+    },
+    {
+      "input": "a=1;b=2;c=[]",
+      "output": "a,b,*c=1,2",
+      "description": "Assign multiple variables including empty list"
+    },
+    {
+      "input": "_,*L=L",
+      "output": "L=L[1:]",
+      "description": "Remove first element (starred assignment shorter)"
+    },
+    {
+      "input": "*L,_=L",
+      "output": "L.pop()",
+      "description": "Remove last element (starred assignment shorter)"
+    },
+    {
+      "input": "for i in range(8):pass",
+      "output": "for i in[1]*8:pass",
+      "description": "Use list multiplication instead of range"
+    },
+    {
+      "input": "L[-i-1]",
+      "output": "L[~i]",
+      "description": "Index from back using bitwise complement"
+    },
+    {
+      "input": "'abcdefghijklmnopqrstuvwxyz'",
+      "output": "map(chr,range(97,123))",
+      "description": "Generate alphabet using ASCII values"
+    },
+    {
+      "input": "map(chr,range(97,123))",
+      "output": "map(chr,range(65,91))",
+      "description": "Use uppercase for shorter alphabet"
+    },
+    {
+      "input": "[0,y][b]",
+      "output": "y*b",
+      "description": "Optimize conditional selection for 0 case"
+    },
+    {
+      "input": "[1,y][b]",
+      "output": "y**b",
+      "description": "Optimize conditional selection for 1 case"
+    },
+    {
+      "input": "[x,1][b]",
+      "output": "b or x",
+      "description": "Optimize conditional selection when second value is 1"
+    },
+    {
+      "input": "[x,x+1][b]",
+      "output": "x+b",
+      "description": "Optimize conditional selection for increment"
+    },
+    {
+      "input": "[x,x-1][b]",
+      "output": "x-b",
+      "description": "Optimize conditional selection for decrement"
+    },
+    {
+      "input": "e in S",
+      "output": "{e}&S",
+      "description": "Set membership using intersection"
+    },
+    {
+      "input": "if a and b:",
+      "output": "if a*b:",
+      "description": "Use multiplication instead of and for booleans"
+    },
+    {
+      "input": "set(T)",
+      "output": "{*T}",
+      "description": "Create set using unpacking"
+    },
+    {
+      "input": "list(T)",
+      "output": "[*T]",
+      "description": "Create list using unpacking"
+    },
+    {
+      "input": "tuple(T)",
+      "output": "(*T,)",
+      "description": "Create tuple using unpacking"
+    },
+    {
+      "input": "[1]+T+[2]",
+      "output": "[1,*T,2]",
+      "description": "Join lists using unpacking"
+    },
+    {
+      "input": "(1,)+T+(2,)",
+      "output": "(1,*T,2)",
+      "description": "Join tuples using unpacking"
+    },
+    {
+      "input": "d[0]=1;d[1]=3;d[2]=5",
+      "output": "d={**d,0:1,1:3,2:5}",
+      "description": "Update dictionary using unpacking"
+    },
+    {
+      "input": "math.ceil(3/2)",
+      "output": "-(-3//2)",
+      "description": "Ceiling division using negation"
+    },
+    {
+      "input": "math.floor(n)",
+      "output": "n//1",
+      "description": "Floor division shortcut"
+    },
+    {
+      "input": "for x in range(3):",
+      "output": "for x in 0,1,2:",
+      "description": "Use tuple instead of range for small iterations"
+    },
+    {
+      "input": "A.append(B)",
+      "output": "A+=B,",
+      "description": "Append using += with tuple"
+    },
+    {
+      "input": "A.extend(B)",
+      "output": "A+=B",
+      "description": "Extend using += operator"
+    },
+    {
+      "input": "from math import *",
+      "output": "from math import*",
+      "description": "Remove space in import statement"
+    },
+    {
+      "input": "while foo(a):\n print a;a*=2",
+      "output": "while foo(a):print a;a*=2",
+      "description": "Put statements on one line"
+    },
+    {
+      "input": "for i in range(x):s+=input()",
+      "output": "for i in[0]*x:s+=input()",
+      "description": "Use list multiplication for unused iteration variable"
+    },
+    {
+      "input": "for i in range(x):s+=input()",
+      "output": "exec's+=input();'*x",
+      "description": "Use exec with string multiplication"
+    },
+    {
+      "input": "l[:1]==[x]",
+      "output": "l[0]==x",
+      "description": "Safely check first element (left is safer)"
+    },
+    {
+      "input": "import sys\ns=sys.stdin.read()",
+      "output": "import os\ns=os.read(0,1e9)",
+      "description": "Read all input using os.read"
+    },
+    {
+      "input": "c=[a[i]+b[i]for i in range(len(a))]",
+      "output": "c=map(sum,zip(a,b))",
+      "description": "Vector addition using map and zip"
+    },
+    {
+      "input": "lambda n:range(123,790,111).count(n)",
+      "output": "range(123,790,111).count",
+      "description": "Use object method as function"
+    },
+    {
+      "input": "lambda s:\"prefix\"+s+\"suffix\"",
+      "output": "\"prefix{}suffix\".format",
+      "description": "Use format method as function"
+    },
+    {
+      "input": "lambda n:n*n",
+      "output": "2 .__rpow__",
+      "description": "Use rpow method for squaring"
+    },
+    {
+      "input": "lambda l:[0,0]<=l",
+      "output": "[0,0].__le__",
+      "description": "Use comparison method as function"
+    },
+    {
+      "input": "print(s,end='')",
+      "output": "print(end=s)",
+      "description": "Print without newline using end parameter"
+    },
+    {
+      "input": "(... for _ in iter(lambda:0,1))",
+      "output": "(... for _ in iter(int,1))",
+      "description": "Shorter infinite generator"
+    },
+    {
+      "input": "(... for _ in iter(int,1))",
+      "output": "(... for()in iter(set,1))",
+      "description": "Even shorter infinite generator"
+    },
+    {
+      "input": "def f(s):t=s.strip();return t+t[::-1]",
+      "output": "lambda s:(t:=s.strip())+t[::-1]",
+      "description": "Use walrus operator in lambda"
+    },
+    {
+      "input": "math.ceil(n)",
+      "output": "-(-n//1)",
+      "description": "Ceiling using double negation"
+    },
+    {
+      "input": "n%2==0",
+      "output": "n%2<1",
+      "description": "Check even number"
+    },
+    {
+      "input": "n%2<1",
+      "output": "~n&1",
+      "description": "Check even number with bitwise"
+    },
+    {
+      "input": "for i in range(len(l)):DoStuff(i,l[i])",
+      "output": "i=0\nfor x in l:DoStuff(i,x);i+=1",
+      "description": "Manual index tracking instead of enumerate"
+    },
+    {
+      "input": "d=((x[0]-y[0])**2+(x[1]-y[1])**2)**.5",
+      "output": "c=complex;d=abs(c(*x)-c(*y))",
+      "description": "Distance using complex numbers"
+    },
+    {
+      "input": "abs(a-c+(b-d)*1j)",
+      "output": "abs(a-c+(b-d)*1j)",
+      "description": "Distance with complex number literal"
+    },
+    {
+      "input": "while not a:",
+      "output": "while~a:",
+      "description": "Use bitwise complement for negation"
+    },
+    {
+      "input": "L.insert(i,x)",
+      "output": "L[:i]+=x,",
+      "description": "Insert using slice assignment"
+    },
+    {
+      "input": "s.startswith(t)",
+      "output": "s[:len(t)]==t",
+      "description": "Check string prefix"
+    },
+    {
+      "input": "s.startswith(t)",
+      "output": "s.find(t)==0",
+      "description": "Check string prefix with find"
+    },
+    {
+      "input": "s.startswith(t)",
+      "output": "t<=s<t+'~'",
+      "description": "Check string prefix with comparison"
+    },
+    {
+      "input": "isinstance(x,C)",
+      "output": "type(x)==C",
+      "description": "Type checking shortcut"
+    },
+    {
+      "input": "not all(...)",
+      "output": "0in(...)",
+      "description": "Replace not all with membership test"
+    },
+    {
+      "input": "any(map(f,a))",
+      "output": "1in map(f,a)",
+      "description": "Replace any with membership test"
+    },
+    {
+      "input": "a not in b",
+      "output": "(a in b)^1",
+      "description": "Replace not in with XOR"
+    },
+    {
+      "input": "10000",
+      "output": "1e4",
+      "description": "Use scientific notation for large numbers"
+    },
+    {
+      "input": "print('string')",
+      "output": "print 'string'",
+      "description": "Remove parentheses in print (Python 2)"
+    },
+    {
+      "input": "if a!=b:",
+      "output": "if a^b:",
+      "description": "Compare booleans using XOR"
+    },
+    {
+      "input": "x**2",
+      "output": "x*x",
+      "description": "Square by multiplication (single letter variables)"
+    },
+    {
+      "input": "s = ''\nif c:\n s = 'a'",
+      "output": "s = c*'a'",
+      "description": "Conditional string assignment"
+    },
+    {
+      "input": "n!=69",
+      "output": "n-69",
+      "description": "Replace != with subtraction"
+    },
+    {
+      "input": "s=\"\"\nfor x in l:s+=f(x)",
+      "output": "s=\"\".join(f(x)for x in l)",
+      "description": "Build string vs join (build is shorter)"
+    },
+    {
+      "input": "[f(x)for x in l]",
+      "output": "[*map(f,l)]",
+      "description": "Map to list using unpacking (Python 3)"
+    },
+    {
+      "input": "1 if c>0 else 0",
+      "output": "+(c>0)",
+      "description": "Convert boolean to int using unary plus"
+    },
+    {
+      "input": "int(c>0)",
+      "output": "+(c>0)",
+      "description": "Convert boolean to int using unary plus"
+    },
+    {
+      "input": "(0,1)[c>0]",
+      "output": "+(c>0)",
+      "description": "Convert boolean to int using unary plus"
+    },
+    {
+      "input": "print('x')",
+      "output": "exit('x')",
+      "description": "Use exit for final print (Python 3)"
+    },
+    {
+      "input": "l.reverse()",
+      "output": "l[::-1]=l",
+      "description": "Reverse list using slice assignment"
+    },
+    {
+      "input": "l.append(x)",
+      "output": "l[len(l):]=x,",
+      "description": "Append using slice assignment"
+    },
+    {
+      "input": "x=input();print x",
+      "output": "print input()",
+      "description": "Inline input when used once"
+    },
+    {
+      "input": "import math\nmath.sqrt(x)",
+      "output": "x**.5",
+      "description": "Square root using power operator"
+    },
+    {
+      "input": "not bool",
+      "output": "1-bool",
+      "description": "Negate boolean using subtraction"
+    },
+    {
+      "input": "and",
+      "output": "*",
+      "description": "Replace and with multiplication for booleans"
+    },
+    {
+      "input": "or",
+      "output": "+",
+      "description": "Replace or with addition for booleans"
+    },
+    {
+      "input": "repr(a)",
+      "output": "'%r'%a",
+      "description": "Use format for repr (Python 3)"
+    },
+    {
+      "input": "repr(a)",
+      "output": "`a`",
+      "description": "Use backticks for repr (Python 2)"
+    },
+    {
+      "input": "a=x[:]",
+      "output": "a=[*x]",
+      "description": "Copy list using unpacking"
+    },
+    {
+      "input": "a=[*x]",
+      "output": "a=x*1",
+      "description": "Copy list using multiplication"
+    },
+    {
+      "input": "while True:",
+      "output": "while 1:",
+      "description": "Use 1 instead of True"
+    },
+    {
+      "input": "if x==3:\n print \"yes\"\nelse:\n print \"no\"",
+      "output": "print \"yes\" if x==3 else \"no\"",
+      "description": "Use ternary operator"
+    },
+    {
+      "input": "math.factorial(n)",
+      "output": "math.perm(n)",
+      "description": "Use perm for factorial (Python 3.8+)"
+    },
+    {
+      "input": "[f(x)for x in l]+[g(x)for x in l]",
+      "output": "sum([[f(x),g(x)]for x in l],[])",
+      "description": "Fuse list comprehensions"
+    },
+    {
+      "input": "l+[f(x)for x in l]+[g(x)for x in l]",
+      "output": "sum([[f(x),g(x)]for x in l],l)",
+      "description": "Fuse list comprehensions with base list"
+    },
+    {
+      "input": "if not C:",
+      "output": "if C<1:",
+      "description": "Negate boolean comparison"
+    },
+    {
+      "input": "if C<1:",
+      "output": "if~-C:",
+      "description": "Even shorter boolean negation"
+    },
+    {
+      "input": "def f(a,l=[1,2,3]):\n return sum(a==i for i in l)",
+      "output": "def f(a):\n l=[1,2,3]\n return sum(a==i for i in l)",
+      "description": "Use default arguments to save indentation (shorter version first)"
+    },
+    {
+      "input": "filter(None,L)",
+      "output": "[x for x in L if x]",
+      "description": "Filter truthy values"
+    },
+    {
+      "input": "while 1:print(x);...",
+      "output": "while[print(x)]:...",
+      "description": "Shorten while 1 using expression"
+    },
+    {
+      "input": "if isdigit(a) and isdigit(b) and isdigit(c)",
+      "output": "if all(map(isdigit,[a,b,c]))",
+      "description": "Use all and map for multiple conditions"
+    },
+    {
+      "input": ">>> \"the quick brown fox\".capitalize()",
+      "output": ">>> \"the quick brown fox\".title()",
+      "description": "Use title instead of capitalize for single words"
+    },
+    {
+      "input": "s.splitlines()",
+      "output": "s.split('\\n')",
+      "description": "Use split instead of splitlines"
+    },
+    {
+      "input": "{...}.get(k,d)",
+      "output": "{k:d,...}[k]",
+      "description": "Dictionary default using entry"
+    },
+    {
+      "input": "tuple(iterable)",
+      "output": "(*iterable,)",
+      "description": "Create tuple using unpacking (Python 3.5+)"
+    },
+    {
+      "input": "iterable+[1]",
+      "output": "*iterable,1",
+      "description": "Append using unpacking (tuples)"
+    },
+    {
+      "input": "[1]+iterable+[1]",
+      "output": "1,*iterable,1",
+      "description": "Prepend and append using unpacking"
+    },
+    {
+      "input": "a=x[:]\nb=[*x]\nc=x*1",
+      "output": "# All equivalent ways to copy list",
+      "description": "Different ways to copy a list"
+    },
+    {
+      "input": "not",
+      "output": "1-",
+      "description": "Replace not with 1-"
+    },
+    {
+      "input": "int.from_bytes(...",
+      "output": "0 .from_bytes(...",
+      "description": "Access static method on instance"
+    },
+    {
+      "input": "dict.fromkeys(...",
+      "output": "{}.fromkeys(...",
+      "description": "Access static method on instance"
+    },
+    {
+      "input": "if i % 3 == 0 or i % 5 == 0 or i % 7 == 0:",
+      "output": "if 0in[i%3,i%5,i%7]:",
+      "description": "Use list membership instead of multiple or"
+    },
+    {
+      "input": "a not in b",
+      "output": "(a in b)^1",
+      "description": "Replace not in with XOR"
+    },
+    {
+      "input": "from math import*\nx=sqrt(4)",
+      "output": "x=4**.5",
+      "description": "Use ** instead of sqrt"
+    },
+    {
+      "input": "for x in s[::-1]:f(x)",
+      "output": "while s:f(s.pop())",
+      "description": "Destructive reverse iteration"
+    },
+    {
+      "input": "while s:f(s.pop())",
+      "output": "while s:*s,x=s;f(x)",
+      "description": "Destructive reverse iteration with unpacking"
+    },
+    {
+      "input": "math.ceil(n/d)",
+      "output": "-(-n//d)",
+      "description": "Ceiling division"
+    },
+    {
+      "input": "-(-n//d)",
+      "output": "0--n//d",
+      "description": "Ceiling division without parentheses"
+    },
+    {
+      "input": "if a!=b: # 8 bytes",
+      "output": "if a^b: # 7 bytes",
+      "description": "Compare booleans with XOR"
+    },
+    {
+      "input": "a==123or b==123",
+      "output": "123in[a,b]",
+      "description": "Multiple equality checks"
+    },
+    {
+      "input": "123in[a,b]",
+      "output": "a!=123!=b",
+      "description": "Even shorter multiple equality check (inverted)"
+    },
+    {
+      "input": "list(map(lambda c:c.strip(), lines))",
+      "output": "list(map(str.strip, lines))",
+      "description": "Use method reference instead of lambda"
+    },
+    {
+      "input": "a,b,c=map(int,input().split())",
+      "output": "a,b,c=map(int,open(0))",
+      "description": "Multi-line integer input"
+    },
+    {
+      "input": ">>> a=5\n>>> b=4\n>>> a,b=b,a",
+      "output": "# Swap values using tuple assignment",
+      "description": "Easiest way to swap values"
+    },
+    {
+      "input": "isinstance(x,C)",
+      "output": "x.__class__==C",
+      "description": "Alternative to isinstance"
+    },
+    {
+      "input": "x.__class__==C",
+      "output": "'a'in dir(x)",
+      "description": "Check type by attribute (if distinguishing)"
+    },
+    {
+      "input": "'a'in dir(x)",
+      "output": "type(x)==C",
+      "description": "Type checking"
+    },
+    {
+      "input": "type(x)==C",
+      "output": "'K'in`x`",
+      "description": "Type checking with string representation (Python 2)"
+    },
+    {
+      "input": "def f(n,k,L=[]):n and[f(n-1,k,[b]+L)for b in range(k)]or print(L)",
+      "output": "def f(n,k,*T):n and[f(n-1,k,b,*T)for b in range(k)]or print(T)",
+      "description": "Optional sequence argument using unpacking"
+    },
+    {
+      "input": "a=1,2,3",
+      "output": "# assigns (1, 2, 3) to a",
+      "description": "Tuple assignment without parentheses"
+    },
+    {
+      "input": "'' == b''",
+      "output": "# True in Python 2, False in Python 3",
+      "description": "Python 2/3 string/bytes difference"
+    },
+    {
+      "input": "round(1*0.5)",
+      "output": "# 1.0 in Python 2, 0 in Python 3",
+      "description": "Python 2/3 rounding difference"
+    },
+    {
+      "input": "10/11",
+      "output": "# 0 in Python 2, 0.909... in Python 3",
+      "description": "Python 2/3 division difference"
+    },
+    {
+      "input": "new_a=list(map(f,a))",
+      "output": "new_a=[*map(f,a)]",
+      "description": "Convert map to list using unpacking"
+    },
+    {
+      "input": "[a,b],[c,d]=[[1,2],[3,4]]",
+      "output": "# Nested unpacking",
+      "description": "Complex unpacking assignment"
+    },
+    {
+      "input": "def a(b):yield b",
+      "output": "def a(b):return b",
+      "description": "Use yield instead of return"
+    },
+    {
+      "input": "hash('V~')%10000",
+      "output": "# Pseudo-random number generation",
+      "description": "Generate pseudo-random using hash"
+    },
+    {
+      "input": "def f(s):return s+s[::-1]",
+      "output": "lambda s:s+s[::-1]",
+      "description": "Use lambda when possible"
+    },
+    {
+      "input": "lambda s:s+s[::-1]",
+      "output": "s=input();print s+s[::-1]",
+      "description": "Compare function vs program"
+    },
+    {
+      "input": "\"ZPN\"[cmp(x,0)]",
+      "output": "# P if x>0, N if x<0, Z if x==0 (Python 2)",
+      "description": "Use cmp function (Python 2 only)"
+    },
+    {
+      "input": "  L D S\n+-----\nL|s s n\nD|n - n\nS|n n n",
+      "output": "# Space omission rules",
+      "description": "When spaces can be omitted"
+    },
+    {
+      "input": "'#000'",
+      "output": "0",
+      "description": "Use 0 for black color"
+    },
+    {
+      "input": "'#fff'",
+      "output": "~0",
+      "description": "Use ~0 for white color"
+    },
+    {
+      "input": "assert True == 1\nassert False == 0",
+      "output": "# Booleans are integers",
+      "description": "Booleans can be used as integers"
+    },
+    {
+      "input": "[a,a+x][c]",
+      "output": "a+x*c",
+      "description": "Arithmetic with boolean conditions"
+    },
+    {
+      "input": "len(a)>i",
+      "output": "a>a[:i]",
+      "description": "Check list length (if non-empty)"
+    },
+    {
+      "input": "1000000000000",
+      "output": "0xe8d4a51000",
+      "description": "Use hexadecimal for large numbers"
+    },
+    {
+      "input": "n=input()\nwhile n:print n;n/=2",
+      "output": "def g(n):1/n;print n;g(n/2)",
+      "description": "Recursive function that prints"
+    },
+    {
+      "input": "'We are in year: %s' % (date.strftime('%y'))",
+      "output": "'We are in year: {:%y}'.format(date)",
+      "description": "Format works on dates"
+    },
+    {
+      "input": "'We are in year: {:%y}'.format(date)",
+      "output": "f'We are in year: {date:%y}'",
+      "description": "Use f-strings"
+    },
+    {
+      "input": "for n in range(100):f(n)<2and print(n)",
+      "output": "for n in range(100):f(n)<2==print(n)",
+      "description": "Abuse == short circuiting"
+    },
+    {
+      "input": "l=b\"golf\"\nlist(l)",
+      "output": "[103, 111, 108, 102]",
+      "description": "Bytes object acts like tuple of ord values"
+    },
+    {
+      "input": "p=1j**(d/90.)\ns=p.real\nc=p.imag",
+      "output": "# Calculate sine and cosine",
+      "description": "Use imaginary unit for trig"
+    },
+    {
+      "input": "n&~-n<1",
+      "output": "# Check if n is power of 2",
+      "description": "Power of 2 check"
+    },
+    {
+      "input": "n&-n==n",
+      "output": "# Another power of 2 check",
+      "description": "Alternative power of 2 check"
+    },
+    {
+      "input": "a.replace(\"a\",\"b\")",
+      "output": "a.replace(*\"ab\")",
+      "description": "Use splat for single character strings"
+    },
+    {
+      "input": "some_function(\"a\",\"b\",\"c\")",
+      "output": "some_function(*\"abc\")",
+      "description": "Pass multiple single chars with splat"
+    },
+    {
+      "input": "[a for a in 'abc'if cond1()and cond2()or cond3()and cond4()and cond5()]",
+      "output": "[a for a in 'abc'if cond1()if cond2()or cond3()if cond4()if cond5()]",
+      "description": "Multiple if in comprehensions"
+    },
+    {
+      "input": "a=[5,5,5,5,5,5,5]",
+      "output": "a=[5]*7",
+      "description": "List multiplication"
+    },
+    {
+      "input": "a=1\nb=9",
+      "output": "a=1;b=9",
+      "description": "Semicolon vs newline (same length at top level)"
+    },
+    {
+      "input": "print(eval(\"f(\"*k+'1'+\")\"*k))",
+      "output": "# Apply function k times",
+      "description": "Use eval to iterate"
+    },
+    {
+      "input": "{'a':1,'e':4,'i':9}",
+      "output": "dict(a=1,e=4,i=9)",
+      "description": "Use dict() for string keys"
+    },
+    {
+      "input": ">>> x=30\n>>> x**2",
+      "output": ">>> x*x",
+      "description": "Multiply by self for squaring"
+    },
+    {
+      "input": "print 'YNeos'[x::2]",
+      "output": "# x is 0 or 1 for No/Yes",
+      "description": "Yes/No using slicing"
+    },
+    {
+      "input": "for i in range(n):\n print((i%3<1)*\"Fizz\"+(i%5<1)*\"Buzz\" or i)",
+      "output": "# FizzBuzz using boolean multiplication",
+      "description": "FizzBuzz with conditional strings"
+    },
+    {
+      "input": "(1j**(d/90)).real",
+      "output": "# cosine of d degrees",
+      "description": "Trig without imports"
+    },
+    {
+      "input": "(1j**(d/90)).imag",
+      "output": "# sine of d degrees",
+      "description": "Trig without imports"
+    },
+    {
+      "input": "n=int(input())\nif n!=69:\n print(\"thanks for being mature\")",
+      "output": "n=int(input())\nif n-69:\n print(\"thanks for being mature\")",
+      "description": "Replace != with subtraction"
+    },
+    {
+      "input": "for x,y in zip(l,l[1:]):do_stuff(x,y)",
+      "output": "x,*l=input()\nfor y in l:do_stuff(x,y);x=y",
+      "description": "Iterate adjacent pairs"
+    },
+    {
+      "input": "[f(x)for x in l]",
+      "output": "list(map(f,l))",
+      "description": "Map vs list comprehension"
+    },
+    {
+      "input": "list(map(f,l))",
+      "output": "[*map(f,l)]",
+      "description": "Map to list with unpacking"
+    },
+    {
+      "input": "from itertools import*\ncombinations_with_replacement('ABC',2)",
+      "output": "eval(dir()[7])('ABC',2)",
+      "description": "Access long function names via dir"
+    },
+    {
+      "input": "f=[s[i]for i in range(len(s))if s[i-1]!=s[i]]",
+      "output": "e=\"\"\nf=[c for c in s if e!=(e:=c)]",
+      "description": "Use walrus operator to store previous value"
+    },
+    {
+      "input": "shortList = []\nfor x in range(10):\n shortList += [x * 2]",
+      "output": "shortList = [x*2 for x in range(10)]",
+      "description": "Use list comprehension"
+    },
+    {
+      "input": "shortList = [x*2 for x in range(10)]",
+      "output": "shortList = range(0,20,2)",
+      "description": "Use range when pattern matches"
+    },
+    {
+      "input": "try:\n for c in s:\n  for i in l:\n   if ord(c)==i:print i,c;1/0\nexcept:0",
+      "output": "# Use try/except to exit nested loops",
+      "description": "Abuse try/except for control flow"
+    },
+    {
+      "input": "print('x')",
+      "output": "exit('x')",
+      "description": "Use exit for final print (exits to STDERR)"
+    },
+    {
+      "input": "l.insert(x,y)",
+      "output": "l[x:x]=y,",
+      "description": "Insert using slice assignment"
+    },
+    {
+      "input": "l.reverse()",
+      "output": "l[::-1]=l",
+      "description": "Reverse using slice assignment"
+    },
+    {
+      "input": "l.append(x)",
+      "output": "l[L:]=x,",
+      "description": "Append using slice assignment"
+    },
+    {
+      "input": "f=lambda n,i=1:n and-~f(n-p(i),i+1)",
+      "output": "# Find nth number meeting condition p(i)",
+      "description": "Recursive function for sequence generation"
+    },
+    {
+      "input": "lambda a,b:e(b)-e(a)",
+      "output": "lambda*l:eval('e(%s)-'*2%l+'0')",
+      "description": "Difference of parallel expressions"
+    },
+    {
+      "input": "'\\n'.join(''.join(i)for i in M)",
+      "output": "'\\n'.join(map(''.join,M))",
+      "description": "Format matrix using map"
+    },
+    {
+      "input": "(a<b)*2-1",
+      "output": "-(a>b)|1",
+      "description": "Return 1 if b>a, else -1"
+    },
+    {
+      "input": "pow(38, -1, 97)",
+      "output": "# Modular inverse (Python 3.8+)",
+      "description": "Math built-ins in 3.8"
+    },
+    {
+      "input": "print(' '.join(str(i**2)for i in range(11)))",
+      "output": "print(*(i**2for i in range(11)))",
+      "description": "Print list elements with spaces"
+    },
+    {
+      "input": "while 1:print(x);...",
+      "output": "while[print(x)]:...",
+      "description": "Shorten while 1"
+    },
+    {
+      "input": "while 1:x=1;...",
+      "output": "while x:=1:...",
+      "description": "Walrus operator in while"
+    },
+    {
+      "input": "i=__import__;s=i('string');x=i('itertools');",
+      "output": "# Reassign __import__ for shorter module imports",
+      "description": "Shorter module imports"
+    },
+    {
+      "input": "s.capitalize()",
+      "output": "s.title()",
+      "description": "Use title for single words"
+    },
+    {
+      "input": "tuple(iterable)",
+      "output": "(*iterable,)",
+      "description": "Splat operator for tuple creation"
+    },
+    {
+      "input": "set(iterable)",
+      "output": "{*iterable}",
+      "description": "Splat operator for set creation"
+    },
+    {
+      "input": "not",
+      "output": "1-",
+      "description": "Replace not with 1-"
+    },
+    {
+      "input": "and",
+      "output": "*",
+      "description": "Replace and with * for booleans"
+    },
+    {
+      "input": "or",
+      "output": "+",
+      "description": "Replace or with + for booleans"
+    },
+    {
+      "input": "if 0 in [i % 3, i % 5, i % 7, ...]:",
+      "output": "if i%3==0or i%5==0or i%7==0 ...:",
+      "description": "Multiple conditions vs membership"
+    },
+    {
+      "input": "func = lambda x:True if x//2==x/2 else False",
+      "output": "func = lambda x:1 if x//2==x/2 else 0",
+      "description": "Use 1/0 instead of True/False"
+    },
+    {
+      "input": "if x==3:\n print \"yes\"\nelse:\n print \"no\"",
+      "output": "print \"yes\" if x==3 else \"no\"",
+      "description": "Use ternary operator for print"
+    },
+    {
+      "input": "sum(2d_list,[])",
+      "output": "# Flatten 2D list",
+      "description": "Flatten 2D list with sum"
+    },
+    {
+      "input": "a:b = c",
+      "output": "a = c\n__annotations[\"a\"] = b",
+      "description": "Annotations for side effects"
+    },
+    {
+      "input": "[v]if p>0else f(x)",
+      "output": "[v][:p]or f(x)",
+      "description": "Slicing for conditional single element"
+    },
+    {
+      "input": "math.perm(n)",
+      "output": "math.factorial(n)",
+      "description": "Use perm instead of factorial"
+    },
+    {
+      "input": "filter(lambda x:l[x]==element,range(len(l)))",
+      "output": "# Find all indexes of element",
+      "description": "Find all indexes of element"
+    },
+    {
+      "input": "print('0'if x==0else('1'if x>0else'-1'))",
+      "output": "print(['0','1','-1'][x])",
+      "description": "Use list for multiple choices"
+    },
+    {
+      "input": "for e, queue[e] in enumerate(L):",
+      "output": "# Assign to list inside for loop",
+      "description": "Assign to list in for loop"
+    },
+    {
+      "input": "import pathlib as p\nd = p.Path(__file__).absolute().parent / 'foo'\nfor f in d.glob('*.py'):\n do_stuff(f.read_bytes())",
+      "output": "# Pathlib for file operations",
+      "description": "Use pathlib for file operations"
+    },
+    {
+      "input": "[f(x)for x in l]+[g(x)for x in l]",
+      "output": "sum([[f(x),g(x)]for x in l],[])",
+      "description": "Fuse list comprehensions"
+    },
+    {
+      "input": "from lib import func as F",
+      "output": "from lib import*;F=func",
+      "description": "Import alternatives"
+    },
+    {
+      "input": "exec\"print[p*i,i/9*p+'[>'+p*9+'<-]>'+i%9*p][i>20];i+=1;\"*255",
+      "output": "# Repeat exec instead of for loop",
+      "description": "Use exec repetition instead of loop"
+    },
+    {
+      "input": "~True",
+      "output": "-2",
+      "description": "Bitwise complement of True"
+    },
+    {
+      "input": "~False",
+      "output": "-1",
+      "description": "Bitwise complement of False"
+    },
+    {
+      "input": "def f(x):return 1 if x==1 else x*f(x-1)",
+      "output": "# Factorial with ternary",
+      "description": "Ternary in recursion"
+    },
+    {
+      "input": "lambda x,y:x**(1/y)",
+      "output": "# Nth root function",
+      "description": "Nth root using power"
+    },
+    {
+      "input": "lambda x:1 if x//2==x/2 else 0",
+      "output": "# Use 1/0 instead of True/False",
+      "description": "Boolean as integer"
+    },
+    {
+      "input": "if x==3:\n print \"yes\"\nelse:\n print \"no\"",
+      "output": "print \"yes\" if x==3 else \"no\"",
+      "description": "Ternary print statement"
+    }
+  ]
+}
