@@ -1,24 +1,4 @@
-## 12-days-of-christmas
-Print the lyrics to the song The 12 Days of Christmas:
-On the First day of Christmas
-My true love sent to me
-A Partridge in a Pear Tree.
-…
-On the Twelfth day of Christmas
-My true love sent to me
-Twelve Drummers Drumming,
-Eleven Pipers Piping,
-Ten Lords-a-Leaping,
-Nine Ladies Dancing,
-Eight Maids-a-Milking,
-Seven Swans-a-Swimming,
-Six Geese-a-Laying,
-Five Gold Rings,
-Four Calling Birds,
-Three French Hens,
-Two Turtle Doves, and
-A Partridge in a Pear Tree.
-
+## 1. 12-days-of-christmas
 ```python
 def sing_12_days_of_christmas():
     """Prints the lyrics to the song The 12 Days of Christmas."""
@@ -56,20 +36,7 @@ if __name__ == "__main__":
 
 ---
 
-## 24-game
-The 24 game is an arithmetical puzzle in which the objective is to find a
-way to combine four integers using only basic arithmetic operations
-(+, -, ×, ÷) to get a result of 24. Each integer must be used exactly once.
-The variation we use is played with a standard 52-card deck, with integers
-ranging from 1 to 13. Print all solvable quadruples of integers. The
-integers of each quadruple should be printed in non-decreasing order.
-Keep in mind that some solutions involve fractions. For example, the only
-solution to 1 3 4 6 is 6/(1-3/4).
-Rosetta Code,
-Rosetta Code (2),
-Wikipedia
-Copy Answer
-Copied
+## 2. 24-game
 ```python
 from itertools import combinations_with_replacement, combinations
 from fractions import Fraction
@@ -120,21 +87,7 @@ if __name__ == "__main__":
 
 ---
 
-## 99-bottles-of-beer
-Print the lyrics to the song 99 Bottles of Beer:
-99 bottles of beer on the wall, 99 bottles of beer.
-Take one down and pass it around, 98 bottles of beer on the wall.
-98 bottles of beer on the wall, 98 bottles of beer.
-Take one down and pass it around, 97 bottles of beer on the wall.
-…
-1 bottle of beer on the wall, 1 bottle of beer.
-Take one down and pass it around, no more bottles of beer on the wall.
-No more bottles of beer on the wall, no more bottles of beer.
-Go to the store and buy some more, 99 bottles of beer on the wall.
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 3. 99-bottles-of-beer
 ```python
 def ninety_nine_bottles():
     for i in range(99, 0, -1):
@@ -149,23 +102,7 @@ ninety_nine_bottles()
 
 ---
 
-## abundant-numbers
-An abundant number is a number for which the sum of its proper divisors
-(divisors not including the number itself) is greater than the number
-itself. For example 12 is abundant because its proper divisors are
-1, 2, 3, 4, and 6 which add up to
-16.
-Print all the abundant numbers from 1 to
-200
-inclusive, each on their own line.
-Variants:
-Abundant Numbers (Long)
-OEIS A005101,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
-
+## 4. abundant-numbers
 ```python
 def is_abundant(n):
     """
@@ -215,22 +152,7 @@ if __name__ == "__main__":
 
 ---
 
-## abundant-numbers-long
-An abundant number is a number for which the sum of its proper divisors
-(divisors not including the number itself) is greater than the number
-itself. For example 12 is abundant because its proper divisors are
-1, 2, 3, 4, and 6 which add up to
-16.
-Print all the abundant numbers from 1 to
-1,000
-inclusive, each on their own line.
-Variants:
-Abundant Numbers
-OEIS A005101,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 5. abundant-numbers-long
 ```python
 def is_abundant(n):
     """
@@ -280,30 +202,7 @@ if __name__ == "__main__":
 
 ---
 
-## arabic-to-roman
-For each numeric argument in Arabic numerals, print the same number in
-Roman numerals.
-The numbers range from 1 to 3999 inclusive.
-Arabic
-1
-5
-10
-50
-100
-500
-1000
-Roman
-I
-V
-X
-L
-C
-D
-M
-Variants:
-Roman to Arabic
-Rosetta Code,
-Wikipedia
+## 6. arabic-to-roman
 ```python
 def to_roman(num):
     roman_map = [
@@ -346,17 +245,7 @@ if __name__ == "__main__":
 
 ---
 
-## arithmetic-numbers
-An arithmetic number is a number for which the average of its divisors is
-an integer. For example, number 6 is arithmetic because its divisors
-(1, 2, 3, and 6) average 3.
-Print all the arithmetic numbers from 1 to 10,000 inclusive,
-each on their own line.
-OEIS A003601,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 7. arithmetic-numbers
 ```python
 def is_arithmetic_number(n):
   """
@@ -405,52 +294,7 @@ if __name__ == "__main__":
 
 ---
 
-## arrows
-Starting at [0, 0] print the cumulative result of applying each of
-the given Unicode arrow arguments. The arrows will be a random combination
-of these:
-CoordArrows
-[-1, -1]
-↙ U+2199,
-↲ U+21B2,
-⇙ U+21D9
-[-1,  0]
-← U+2190,
-⇐ U+21D0,
-⇦ U+21E6
-[-1,  1]
-↖ U+2196,
-↰ U+21B0,
-⇖ U+21D6
-[ 0, -1]
-↓ U+2193,
-⇓ U+21D3,
-⇩ U+21E9
-[ 0,  0]
-↔ U+2194,
-↕ U+2195,
-⇔ U+21D4,
-⇕ U+21D5,
-⥀ U+2940,
-⥁ U+2941
-[ 0,  1]
-↑ U+2191,
-⇑ U+21D1,
-⇧ U+21E7
-[ 1, -1]
-↘ U+2198,
-↳ U+21B3,
-⇘ U+21D8
-[ 1,  0]
-→ U+2192,
-⇒ U+21D2,
-⇨ U+21E8
-[ 1,  1]
-↗ U+2197,
-↱ U+21B1,
-⇗ U+21D7
-Copy as JSON
-Copied
+## 8. arrows
 ```python
 def main():
     import sys
@@ -473,12 +317,7 @@ if __name__ == "__main__":
 
 ---
 
-## ascending-primes
-Print all primes whose decimal digits are distinct and appear in ascending
-order. There are 100 such primes, the largest being 23456789.
-OEIS A052015
-Copy Answer
-Copied
+## 9. ascending-primes
 ```python
 def is_prime(n):
     if n < 2: return False
@@ -501,29 +340,7 @@ for prime in ascending_primes: print(prime)
 
 ---
 
-## ascii-table
-Print the following hex ASCII table, taken from man 7 ascii.
-2 3 4 5 6 7
--------------
-0:   0 @ P ` p
-1: ! 1 A Q a q
-2: " 2 B R b r
-3: # 3 C S c s
-4: $ 4 D T d t
-5: % 5 E U e u
-6: & 6 F V f v
-7: ' 7 G W g w
-8: ( 8 H X h x
-9: ) 9 I Y i y
-A: * : J Z j z
-B: + ; K [ k {
-C: , < L \ l |
-D: - = M ] m }
-E: . > N ^ n ~
-F: / ? O _ o DEL
-Rosetta Code
-Copy Answer
-Copied
+## 10. ascii-table
 ```python
 def print_ascii_table():
     """Prints a hex ASCII table as described in the prompt."""
@@ -550,15 +367,7 @@ if __name__ == "__main__":
 
 ---
 
-## billiards
-Given the size of a billiard table, draw the path of a ball shot from the
-top left corner of the table at 45 degree angles to the sides.
-For example, given 4 14, output
-\  /\  /\  /\
-\/  \/  \/  \
-/\  /\  /\  /
-/  \/  \/  \/
-Separate each size with empty lines.
+## 11. billiards
 ```python
 import sys
 def draw_billiard_path(h,w):
@@ -585,33 +394,7 @@ for i in range(0,len(flattened),2):
 
 ---
 
-## brainfuck
-Brainfuck is a minimalistic esoteric programming language created by
-Urban Müller in 1993.
-Assuming an infinitely large array, the entire brainfuck alphabet matches
-the following pseudocode:
-Cmd
-Pseudocode
->
-ptr++
-<
-ptr--
-+
-array[ptr]++
--
-array[ptr]--
-.
-print(chr(array[ptr]))
-[
-while(array[ptr]){
-]
-}
-Write a program that will receive various brainfuck programs as arguments
-and execute each program in turn.
-Arguments will not contain any character not listed in the table above.
-In particular, the input command "," is not tested.
-Rosetta Code,
-Wikipedia
+## 12. brainfuck
 ```python
 def brainfuck_interpreter(program):
     """
@@ -689,19 +472,7 @@ if __name__ == '__main__':
 
 ---
 
-## card-number-validation
-The Luhn algorithm is a simple check digit formula used to validate a
-variety of identification numbers.
-Given a list of 16-digit payment card numbers
-(like 3566 0020 2036 0505), output the ones that are valid
-according to the Luhn algorithm. The digits of each input are separated
-into groups of four by spaces.
-To verify a 16-digit card number like XyXy XyXy XyXy XyXy,
-add up all the "y" digits and the digit sums of the
-doubles of the "X" digits. The card number is valid if
-this sum is divisible by 10.
-Rosetta Code,
-Wikipedia
+## 13. card-number-validation
 ```python
 import sys
 for card in sys.argv[1:]:
@@ -719,18 +490,7 @@ for card in sys.argv[1:]:
 
 ---
 
-## catalan-numbers
-The nth Catalan number can be expressed as C(n) = binomial(2n,n)/(n+1).
-They are unrelated to Catalan’s Constant
-except by name.
-Print the first 100 Catalan numbers, from C(0) to
-C(99) inclusive, each on their own line.
-Note: C(99) is 57 digits long, and is greater than 2187.
-OEIS A000108,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 14. catalan-numbers
 ```python
 import math
 
@@ -757,16 +517,7 @@ if __name__ == "__main__":
 
 ---
 
-## catalans-constant
-Catalan’s constant is a mathematical constant equal to
-1/1 − 1/3² + 1/5² − 1/7² + 1/9² − …
-It is unrelated to the Catalan Numbers except
-by name.
-Print the first 1,000 decimal digits of Catalan’s constant.
-OEIS A006752,
-Wikipedia
-Copy Answer
-Copied
+## 15. catalans-constant
 ```python
 import decimal
 from decimal import Decimal,getcontext
@@ -805,27 +556,7 @@ print(s)
 
 ---
 
-## christmas-trees
-Draw a size ascending range of Christmas trees using asterisks, ranging from size 3 to size 9, each tree separated by a blank line.
-
-A size 3 tree should look like this, with a single centered asterisk for the trunk:
-
-   *
-***
-*****
-   *
-With the largest size 9 tree looking like this:
-
-         *
-        ***
-       *****
-      *******
-     *********
-    ***********
-*************
-***************
-*****************
-         *
+## 16. christmas-trees
 ```python
 def print_tree(size):
  width=2*size-1
@@ -840,21 +571,7 @@ for s in range(3,10):
 
 ---
 
-## collatz
-The Collatz conjecture states that, for any positive integer n, it
-will eventually reach 1 by repeatedly applying the following procedure:
-If n is even, divide it by 2.
-If n is odd, multiply by 3 and then add 1.
-The number of steps needed for n to reach 1 is called its stopping
-time. For example, the stopping time of 10 is six:
-10 → 5 → 16 → 8 → 4 → 2 → 1
-Print the stopping times of all the numbers from 1 to 1,000
-inclusive, each on their own line.
-OEIS A006577,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 17. collatz
 ```python
 def collatz_stopping_time(n):
   """
@@ -887,314 +604,7 @@ if __name__ == "__main__":
 
 ---
 
-## css-colors
-Given a list of all the CSS color keywords print the hex values in the
-corresponding order. The full mapping is as follows:
-KeywordHex
-IndianRed
-#cd5c5c
-LightCoral
-#f08080
-Salmon
-#fa8072
-DarkSalmon
-#e9967a
-LightSalmon
-#ffa07a
-Red
-#ff0000
-Crimson
-#dc143c
-FireBrick
-#b22222
-DarkRed
-#8b0000
-Pink
-#ffc0cb
-LightPink
-#ffb6c1
-HotPink
-#ff69b4
-DeepPink
-#ff1493
-MediumVioletRed
-#c71585
-PaleVioletRed
-#db7093
-Coral
-#ff7f50
-Tomato
-#ff6347
-OrangeRed
-#ff4500
-DarkOrange
-#ff8c00
-Orange
-#ffa500
-Gold
-#ffd700
-Yellow
-#ffff00
-LightYellow
-#ffffe0
-LemonChiffon
-#fffacd
-LightGoldenRodYellow
-#fafad2
-PapayaWhip
-#ffefd5
-Moccasin
-#ffe4b5
-PeachPuff
-#ffdab9
-PaleGoldenRod
-#eee8aa
-Khaki
-#f0e68c
-DarkKhaki
-#bdb76b
-Lavender
-#e6e6fa
-Thistle
-#d8bfd8
-Plum
-#dda0dd
-Violet
-#ee82ee
-Orchid
-#da70d6
-Fuchsia
-#ff00ff
-KeywordHex
-Magenta
-#ff00ff
-MediumOrchid
-#ba55d3
-MediumPurple
-#9370db
-BlueViolet
-#8a2be2
-DarkViolet
-#9400d3
-DarkOrchid
-#9932cc
-DarkMagenta
-#8b008b
-Purple
-#800080
-Indigo
-#4b0082
-DarkSlateBlue
-#483d8b
-SlateBlue
-#6a5acd
-MediumSlateBlue
-#7b68ee
-RebeccaPurple
-#663399
-GreenYellow
-#adff2f
-Chartreuse
-#7fff00
-LawnGreen
-#7cfc00
-Lime
-#00ff00
-LimeGreen
-#32cd32
-PaleGreen
-#98fb98
-LightGreen
-#90ee90
-SpringGreen
-#00ff7f
-MediumSpringGreen
-#00fa9a
-MediumSeaGreen
-#3cb371
-SeaGreen
-#2e8b57
-ForestGreen
-#228b22
-Green
-#008000
-DarkGreen
-#006400
-YellowGreen
-#9acd32
-OliveDrab
-#6b8e23
-Olive
-#808000
-DarkOliveGreen
-#556b2f
-MediumAquamarine
-#66cdaa
-DarkSeaGreen
-#8fbc8f
-LightSeaGreen
-#20b2aa
-DarkCyan
-#008b8b
-Teal
-#008080
-Aqua
-#00ffff
-KeywordHex
-Cyan
-#00ffff
-LightCyan
-#e0ffff
-PaleTurquoise
-#afeeee
-Aquamarine
-#7fffd4
-Turquoise
-#40e0d0
-MediumTurquoise
-#48d1cc
-DarkTurquoise
-#00ced1
-CadetBlue
-#5f9ea0
-SteelBlue
-#4682b4
-LightSteelBlue
-#b0c4de
-PowderBlue
-#b0e0e6
-LightBlue
-#add8e6
-SkyBlue
-#87ceeb
-LightSkyBlue
-#87cefa
-DeepSkyBlue
-#00bfff
-DodgerBlue
-#1e90ff
-CornflowerBlue
-#6495ed
-RoyalBlue
-#4169e1
-Blue
-#0000ff
-MediumBlue
-#0000cd
-DarkBlue
-#00008b
-Navy
-#000080
-MidnightBlue
-#191970
-Cornsilk
-#fff8dc
-BlanchedAlmond
-#ffebcd
-Bisque
-#ffe4c4
-NavajoWhite
-#ffdead
-Wheat
-#f5deb3
-Burlywood
-#deb887
-Tan
-#d2b48c
-RosyBrown
-#bc8f8f
-SandyBrown
-#f4a460
-GoldenRod
-#daa520
-DarkGoldenRod
-#b8860b
-Peru
-#cd853f
-Chocolate
-#d2691e
-SaddleBrown
-#8b4513
-KeywordHex
-Sienna
-#a0522d
-Brown
-#a52a2a
-Maroon
-#800000
-White
-#ffffff
-Snow
-#fffafa
-Honeydew
-#f0fff0
-MintCream
-#f5fffa
-Azure
-#f0ffff
-AliceBlue
-#f0f8ff
-GhostWhite
-#f8f8ff
-WhiteSmoke
-#f5f5f5
-SeaShell
-#fff5ee
-Beige
-#f5f5dc
-OldLace
-#fdf5e6
-FloralWhite
-#fffaf0
-Ivory
-#fffff0
-AntiqueWhite
-#faebd7
-Linen
-#faf0e6
-LavenderBlush
-#fff0f5
-MistyRose
-#ffe4e1
-Gainsboro
-#dcdcdc
-LightGray
-#d3d3d3
-LightGrey
-#d3d3d3
-Silver
-#c0c0c0
-DarkGray
-#a9a9a9
-DarkGrey
-#a9a9a9
-Gray
-#808080
-Grey
-#808080
-DimGray
-#696969
-DimGrey
-#696969
-LightSlateGray
-#778899
-LightSlateGrey
-#778899
-SlateGray
-#708090
-SlateGrey
-#708090
-DarkSlateGray
-#2f4f4f
-DarkSlateGrey
-#2f4f4f
-Black
-#000000
-Variants:
-CSS Colors (Inverse)
-The output will be checked case-insensitively.
-Copy as JSON
-Copied
+## 18. css-colors
 ```python
 import sys
 color_map={"indianred":"#cd5c5c","lightcoral":"#f08080","salmon":"#fa8072","darksalmon":"#e9967a","lightsalmon":"#ffa07a","red":"#ff0000","crimson":"#dc143c","firebrick":"#b22222","darkred":"#8b0000","pink":"#ffc0cb","lightpink":"#ffb6c1","hotpink":"#ff69b4","deeppink":"#ff1493","mediumvioletred":"#c71585","palevioletred":"#db7093","coral":"#ff7f50","tomato":"#ff6347","orangered":"#ff4500","darkorange":"#ff8c00","orange":"#ffa500","gold":"#ffd700","yellow":"#ffff00","lightyellow":"#ffffe0","lemonchiffon":"#fffacd","lightgoldenrodyellow":"#fafad2","papayawhip":"#ffefd5","moccasin":"#ffe4b5","peachpuff":"#ffdab9","palegoldenrod":"#eee8aa","khaki":"#f0e68c","darkkhaki":"#bdb76b","lavender":"#e6e6fa","thistle":"#d8bfd8","plum":"#dda0dd","violet":"#ee82ee","orchid":"#da70d6","fuchsia":"#ff00ff","magenta":"#ff00ff","mediumorchid":"#ba55d3","mediumpurple":"#9370db","blueviolet":"#8a2be2","darkviolet":"#9400d3","darkorchid":"#9932cc","darkmagenta":"#8b008b","purple":"#800080","indigo":"#4b0082","darkslateblue":"#483d8b","slateblue":"#6a5acd","mediumslateblue":"#7b68ee","rebeccapurple":"#663399","greenyellow":"#adff2f","chartreuse":"#7fff00","lawngreen":"#7cfc00","lime":"#00ff00","limegreen":"#32cd32","palegreen":"#98fb98","lightgreen":"#90ee90","springgreen":"#00ff7f","mediumspringgreen":"#00fa9a","mediumseagreen":"#3cb371","seagreen":"#2e8b57","forestgreen":"#228b22","green":"#008000","darkgreen":"#006400","yellowgreen":"#9acd32","olivedrab":"#6b8e23","olive":"#808000","darkolivegreen":"#556b2f","mediumaquamarine":"#66cdaa","darkseagreen":"#8fbc8f","lightseagreen":"#20b2aa","darkcyan":"#008b8b","teal":"#008080","aqua":"#00ffff","cyan":"#00ffff","lightcyan":"#e0ffff","paleturquoise":"#afeeee","aquamarine":"#7fffd4","turquoise":"#40e0d0","mediumturquoise":"#48d1cc","darkturquoise":"#00ced1","cadetblue":"#5f9ea0","steelblue":"#4682b4","lightsteelblue":"#b0c4de","powderblue":"#b0e0e6","lightblue":"#add8e6","skyblue":"#87ceeb","lightskyblue":"#87cefa","deepskyblue":"#00bfff","dodgerblue":"#1e90ff","cornflowerblue":"#6495ed","royalblue":"#4169e1","blue":"#0000ff","mediumblue":"#0000cd","darkblue":"#00008b","navy":"#000080","midnightblue":"#191970","cornsilk":"#fff8dc","blanchedalmond":"#ffebcd","bisque":"#ffe4c4","navajowhite":"#ffdead","wheat":"#f5deb3","burlywood":"#deb887","tan":"#d2b48c","rosybrown":"#bc8f8f","sandybrown":"#f4a460","goldenrod":"#daa520","darkgoldenrod":"#b8860b","peru":"#cd853f","chocolate":"#d2691e","saddlebrown":"#8b4513","sienna":"#a0522d","brown":"#a52a2a","maroon":"#800000","white":"#ffffff","snow":"#fffafa","honeydew":"#f0fff0","mintcream":"#f5fffa","azure":"#f0ffff","aliceblue":"#f0f8ff","ghostwhite":"#f8f8ff","whitesmoke":"#f5f5f5","seashell":"#fff5ee","beige":"#f5f5dc","oldlace":"#fdf5e6","floralwhite":"#fffaf0","ivory":"#fffff0","antiquewhite":"#faebd7","linen":"#faf0e6","lavenderblush":"#fff0f5","mistyrose":"#ffe4e1","gainsboro":"#dcdcdc","lightgray":"#d3d3d3","lightgrey":"#d3d3d3","silver":"#c0c0c0","darkgray":"#a9a9a9","darkgrey":"#a9a9a9","gray":"#808080","grey":"#808080","dimgray":"#696969","dimgrey":"#696969","lightslategray":"#778899","lightslategrey":"#778899","slategray":"#708090","slategrey":"#708090","darkslategray":"#2f4f4f","darkslategrey":"#2f4f4f","black":"#000000"}
@@ -1206,45 +616,7 @@ for name in args:
 
 ---
 
-## cubes
-Draw 7 cubes in increasing size using "╱" (U+2571) for the diagonal
-edges, "│" (U+2502) for the vertical edges, "─" (U+2500) for the
-horizontal edges, and "█" (U+2588) for the vertices. The cubes should
-range from size 1 to size 7 with a blank line between each
-cube. A size 1 cube should look like:
-█────█
-╱    ╱│
-█────█ │
-│    │ █
-│    │╱
-█────█
-And a size 7 cube should look like:
-█────────────────────────────█
-╱                            ╱│
-╱                            ╱ │
-╱                            ╱  │
-╱                            ╱   │
-╱                            ╱    │
-╱                            ╱     │
-╱                            ╱      │
-█────────────────────────────█       │
-│                            │       │
-│                            │       │
-│                            │       │
-│                            │       │
-│                            │       │
-│                            │       │
-│                            │       █
-│                            │      ╱
-│                            │     ╱
-│                            │    ╱
-│                            │   ╱
-│                            │  ╱
-│                            │ ╱
-│                            │╱
-█────────────────────────────█
-Copy Answer
-Copied
+## 19. cubes
 ```python
 def draw_cube(n):
  V='█';D='╱';H='─';W='│'
@@ -1270,11 +642,7 @@ for size in range(1,8):
 
 ---
 
-## day-of-week
-Given a date in the YYYY-MM-DD format between 1583-01-01 and
-9999-12-31 inclusive, output the English name of the corresponding day
-of the week.
-Wikipedia
+## 20. day-of-week
 ```python
 import sys;import datetime
 def parse_and_print(date_str):
@@ -1289,56 +657,7 @@ for date_input in sys.argv[1:]:
 
 ---
 
-## dfa-simulator
-A deterministic finite automaton or DFA is a
-finite-state machine that moves between states as it reads characters
-from a string.
-Each input consists of a table describing the DFA, and a quoted input
-string, like so:
-a b c d e f
-> 0 0 0 0 1 0 0
-1 0 0 0 1 0 2
-2 3 0 0 1 0 0
-F3 3 3 3 3 3 3
-"adbacadafad"
-In this table, we can find the following information:
-There are four states, called 0, 1,
-2, and 3.
-States are always digits 0-9.
-There may be up to 10 states.
-There are six characters in the input alphabet: a,
-b, c, d, e, and
-f.
-Input characters may be lowercase letters a-z or
-digits 0-9.
-The table entries describe the new state for each (current state,
-character) pair.
-For example, if the current state is 0, and a
-d is read, the next state is 1.
-The row describing state 0 is marked with
-> so it is the initial state.
-There is exactly one initial state.
-The row describing state 3 is marked with
-F so it is an accept state.
-There may be multiple accept states, or none at all.
-Use the table to move the DFA between its states by feeding it
-characters from the input string.
-In our example:
-The initial state is 0. The first character is
-a. Looking at the table, we see the new state is
-0.
-The current state is 0. The next character is
-d. Looking at the table, we see the new state is
-1.
-The current state is 1. The next character is
-b. Looking at the table, we see the new state is
-0.
-…
-Finally, print the name of the state, followed by a space, followed
-by either Accept (if it is an accept state) or
-Reject (otherwise). In this case, we end in state
-1 so we print 1 Reject.
-Wikipedia
+## 21. dfa-simulator
 ```python
 import sys
 def main():
@@ -1394,32 +713,7 @@ if __name__=='__main__':main()
 
 ---
 
-## diamonds
-Draw a size ascending range of diamonds using the numbers 1 to
-9, ranging from size 1 to size 9, each diamond
-separated by a blank line.A size 1 diamond should look like
-this, a single centered 1:
-1
-With the largest size 9 diamond looking like this:
-1
-121
-12321
-1234321
-123454321
-12345654321
-1234567654321
-123456787654321
-12345678987654321
-123456787654321
-1234567654321
-12345654321
-123454321
-1234321
-12321
-121
-1
-Copy Answer
-Copied
+## 22. diamonds
 ```python
 MAX=9
 for n in range(1,MAX+1):
@@ -1438,14 +732,7 @@ for n in range(1,MAX+1):
 
 ---
 
-## divisors
-A number is a divisor of another number if it can divide into it with no
-remainder.
-Print the positive divisors of each number from 1 to 100
-inclusive, on their own line, with each divisor separated by a space.
-Rosetta Code
-Copy Answer
-Copied
+## 23. divisors
 ```python
 def find_divisors_and_print(n):
   """
@@ -1469,20 +756,7 @@ for num in range(1, 101):
 
 ---
 
-## emirp-numbers
-An emirp (prime spelled backwards) is a prime number that results in a
-different prime when its decimal digits are reversed. For example
-both 13 and 31 are emirps, but 131 is not.
-Print all the emirp numbers from 1 to
-1,000
-inclusive, each on their own line.
-Variants:
-Emirp Numbers (Long)
-OEIS A006567,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 24. emirp-numbers
 ```python
 def sieve(n):
  is_prime=[False,False]+[True]*(n-1)
@@ -1504,20 +778,7 @@ if __name__=='__main__':main()
 
 ---
 
-## emirp-numbers-long
-An emirp (prime spelled backwards) is a prime number that results in a
-different prime when its decimal digits are reversed. For example
-both 13 and 31 are emirps, but 131 is not.
-Print all the emirp numbers from 1 to
-10,000
-inclusive, each on their own line.
-Variants:
-Emirp Numbers
-OEIS A006567,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 25. emirp-numbers-long
 ```python
 def is_evil(n):
  return bin(n).count('1')%2==0
@@ -1529,37 +790,7 @@ if __name__=='__main__':main()
 
 ---
 
-## emojify
-Given each of the following ASCII emoticons print the corresponding
-Unicode emoji.
-:-D😀
-:-)🙂
-:-|😐
-:-(🙁
-:-\😕
-:-*😗
-:-O😮
-:-#🤐
-':-D😅
-':-(😓
-:'-)😂
-:'-(😢
-:-P😛
-;-P😜
-X-P😝
-X-)😆
-O:-)😇
-;-)😉
-:-$😳
-:-😶
-B-)😎
-:-J😏
-}:-)😈
-}:-(👿
-:-@😡
-Wikipedia
-Copy as JSON
-Copied
+## 26. emojify
 ```python
 import sys
 m={":-D":"😀",":-)":"🙂",":-|":"😐",":-(":"🙁",":-\\":"😕",":-*":"😗",":-O":"😮",":-#":"🤐","':-D":"😅","':-(":"😓",":'-)":"😂",":'-(":"😢",":-P":"😛",";-P":"😜","X-P":"😝","X-)":"😆","O:-)":"😇",";-)":"😉",":-$":"😳",":-":"😶","B-)":"😎",":-J":"😏","}:-)":"😈","}:-(":"👿",":-@":"😡"}
@@ -1569,21 +800,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## evil-numbers
-An evil number is a non-negative number that has an even number of 1s in
-its binary expansion.
-Print all the evil numbers from 0 to
-50
-inclusive, each on their own line.
-Variants:
-Evil Numbers (Long),
-Odious Numbers,
-Odious Numbers (Long)
-OEIS A001969,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 27. evil-numbers
 ```python
 def is_evil(n):
     """
@@ -1610,21 +827,7 @@ if __name__ == "__main__":
 
 ---
 
-## evil-numbers-long
-An evil number is a non-negative number that has an even number of 1s in
-its binary expansion.
-Print all the evil numbers from 0 to
-1,000
-inclusive, each on their own line.
-Variants:
-Evil Numbers,
-Odious Numbers,
-Odious Numbers (Long)
-OEIS A001969,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 28. evil-numbers-long
 ```python
 def is_evil(n):
  return bin(n).count('1')%2==0
@@ -1636,13 +839,7 @@ if __name__=='__main__':main()
 
 ---
 
-## factorial-factorisation
-Print the factorisation of 1000!,
-2^994*3^498*5^249*7^164*11^98*13^81*17^61*19^54*23^44*...*983*991*997
-.
-Wikipedia
-Copy Answer
-Copied
+## 29. factorial-factorisation
 ```python
 import math
 def get_primes(n):
@@ -1675,16 +872,7 @@ print_factorization(factors)
 
 ---
 
-## farey-sequence
-The Farey sequence of order n is the sequence of all reduced
-fractions within the range [0, 1], where each denominator is at most
-n.
-Print the Farey sequence of order 50 in ascending order. The sequence
-begins 0/1, 1/50, 1/49, ...
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 30. farey-sequence
 ```python
 def farey(n):
     """
@@ -1712,16 +900,7 @@ if __name__ == '__main__':
 
 ---
 
-## fibonacci
-The Fibonacci numbers are a numerical sequence in which each number is the
-sum of the two preceding numbers: 0, 1, 1, 2, 3, 5, 8, 13…
-Print the first 31 Fibonacci numbers from F0 = 0
-to F30 = 832040 (inclusive), each on a separate line.
-OEIS A000045,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 31. fibonacci
 ```python
 def fibonacci(n):
   """
@@ -1749,21 +928,7 @@ if __name__ == "__main__":
 
 ---
 
-## fizz-buzz
-Print the numbers from 1 to
-100
-inclusive, each on their own line.
-If, however, the number is a multiple of three then print
-Fizz instead, and if the number is a multiple of five then
-print Buzz.
-If multiple conditions hold true then all replacements should be printed,
-for example 15 should print FizzBuzz.
-Variants:
-Foo Fizz Buzz Bar
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 32. fizz-buzz
 ```python
 def fizzbuzz():
   """Prints numbers from 1 to 100, replacing multiples of 3 with "Fizz",
@@ -1787,23 +952,7 @@ if __name__ == "__main__":
 
 ---
 
-## foo-fizz-buzz-bar
-Print the numbers from 1 to
-1,000
-inclusive, each on their own line.
-If, however, the number is a multiple of two then print Foo
-instead, if the number is a multiple of three then print
-Fizz, if the number is a multiple of five then print
-Buzz, and if the number is a multiple of seven then print
-Bar.
-If multiple conditions hold true then all replacements should be printed,
-for example 15 should print FizzBuzz.
-Variants:
-Fizz Buzz
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 33. foo-fizz-buzz-bar
 ```python
 def fizzbuzz():
   """
@@ -1833,29 +982,7 @@ if __name__ == "__main__":
 
 ---
 
-## forsyth-edwards-notation
-Forsyth–Edwards Notation (FEN) is a standard notation for describing a
-particular board position of a chess game.
-The standard starting chess position is encoded as
-rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-The first of the space separated groups is the main part which encodes the
-physical positions of the pieces on the board.
-Each rank (row) is described, starting with rank 8 and ending with rank 1;
-within each rank, the contents of each square are described from file
-(column) "a" through file "h". Each piece is identified by a single letter
-taken from the standard English names (Pawn, kNight,
-Bishop, Rook, Queen, King). White pieces are
-designated using upper-case letters ("PNBRQK") while black pieces use
-lowercase ("pnbrqk"). Empty squares are noted using digits 1 through 8
-(the number of empty squares), and "/" separates ranks.
-Given a FEN, output the board using the chess unicode characters and a
-space for empty squares. The output corresponding to the FEN of the
-starting position given above should be
-♜♞♝♛♚♝♞♜
-♟♟♟♟♟♟♟♟
-♙♙♙♙♙♙♙♙
-♖♘♗♕♔♗♘♖
-Wikipedia
+## 34. forsyth-edwards-notation
 ```python
 import sys
 pieces={'K':'♔','Q':'♕','R':'♖','B':'♗','N':'♘','P':'♙','k':'♚','q':'♛','r':'♜','b':'♝','n':'♞','p':'♟'}
@@ -1872,9 +999,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## fractions
-For each fraction argument a/b, reduce it to its simplest form.
-Wikipedia
+## 35. fractions
 ```python
 import sys,math
 for arg in sys.argv[1:]:
@@ -1885,19 +1010,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## game-of-life
-The universe of the Game of Life is a grid of square cells, each of which
-is either alive ("#") or dead ("."). Every cell interacts with its eight
-neighbours, which are the cells that are horizontally, vertically, or
-diagonally adjacent. At each step in time, the following transitions occur:
-Any dead cell with exactly three live neighbours becomes a live cell.
-All other dead cells stay dead.
-Any live cell with two or three live neighbours survives.
-All other live cells die.
-Given a 32×32 grid, output the state in the next step. Assume that every
-cell outside the grid is dead.
-Rosetta Code,
-Wikipedia
+## 36. game-of-life
 ```python
 import sys
 def next_gen(grid):
@@ -1923,29 +1036,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## gijswijts-sequence
-Gijswijt’s sequence is a slow-growing sequence where each term counts the
-maximum number of repeated blocks of numbers in the sequence immediately
-preceding that term.
-The sequence begins 1, 1, 2, 1, 1, 2, 2, 2, 3, 1 ... and its construction
-can be seen in the following figure.
-[1]
-[1],[1]
-1 , 1 ,[2]
-1 , 1 , 2 ,[1]
-1 , 1 , 2 ,[1],[1]
-[1 , 1 , 2],[1 , 1 , 2]
-1 , 1 , 2 , 1 , 1 ,[2],[2]
-1 , 1 , 2 , 1 , 1 ,[2],[2],[2]
-1 , 1 , 2 , 1 , 1 , 2 , 2 , 2 ,[3]
-1 , 1 , 2 , 1 , 1 , 2 , 2 , 2 , 3 , 1
-On each line, the blocks that are used to get the next number in the
-sequence are marked in []. Print the first 1,000 terms of
-Gijswijt’s sequence, each on a separate line.
-OEIS A090822,
-Wikipedia
-Copy Answer
-Copied
+## 37. gijswijts-sequence
 ```python
 def gijswijt(n_terms):
  seq=[1]
@@ -1964,28 +1055,7 @@ if __name__=='__main__':
 
 ---
 
-## happy-numbers
-A happy number is defined by the following Sequence: Starting with any
-positive integer, replace the number by the sum of the squares of its
-digits in base-ten, and repeat the process until the number either equals
-1 (where it will stay), or it loops endlessly in a cycle that does not
-include 1. Those numbers for which this process ends in 1 are happy
-numbers, while those that do not end in 1 are sad numbers.
-For example, 19 is happy, as the associated Sequence is:
-12 + 92 = 82
-82 + 22 = 68
-62 + 82 = 100
-12 + 02 + 02 = 1.
-Print all the happy numbers from 1 to
-200
-inclusive, each on their own line.
-Variants:
-Happy Numbers (Long)
-OEIS A007770,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 38. happy-numbers
 ```python
 def is_happy(n):
     """
@@ -2027,28 +1097,7 @@ if __name__ == "__main__":
 
 ---
 
-## happy-numbers-long
-A happy number is defined by the following Sequence: Starting with any
-positive integer, replace the number by the sum of the squares of its
-digits in base-ten, and repeat the process until the number either equals
-1 (where it will stay), or it loops endlessly in a cycle that does not
-include 1. Those numbers for which this process ends in 1 are happy
-numbers, while those that do not end in 1 are sad numbers.
-For example, 19 is happy, as the associated Sequence is:
-12 + 92 = 82
-82 + 22 = 68
-62 + 82 = 100
-12 + 02 + 02 = 1.
-Print all the happy numbers from 1 to
-1,000
-inclusive, each on their own line.
-Variants:
-Happy Numbers
-OEIS A007770,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 39. happy-numbers-long
 ```python
 def sum_of_squares(n):
   """计算一个数的各位数字的平方和。"""
@@ -2075,19 +1124,7 @@ for i in range(1, 1001):
 
 ---
 
-## hexdump
-Given a string, output the hexdump of the string as given by the xxd
-utility using the default settings, as described below.
-Divide up the input string into groups of 16 bytes (16 octets). For each
-group, print in order:
-The (hexadecimal, lowercase) index of the starting octet, padded with
-zeros to eight hexadecimal digits
-A single colon (:), followed by a single space.
-8 space-separated pairs of octets, with each pair printed as 4
-hexadecimal digits
-Spaces to pad to 51 bytes
-The original 16 bytes, except with newline replaced with full stop
-(.)
+## 40. hexdump
 ```python
 import sys
 def hexdump(data):
@@ -2113,20 +1150,7 @@ if __name__=='__main__':
 
 ---
 
-## intersection
-A box is defined via x, y, w and h as
-y
-│ ┌───w───┐
-│ │   ┌───┼──┐
-│ h   │▓▓▓│  │
-│ │   │▓▓▓│  │
-│ o───┼───┘  │
-│     o──────┘
-└───────────────x
-(0,0)
-Compute the intersection area between two boxes given as
-x1 y1 w1 h1 x2 y2 w2 h2
-Wikipedia
+## 41. intersection
 ```python
 import sys
 tokens=[]
@@ -2141,29 +1165,7 @@ for i in range(0,len(nums),8):
 
 ---
 
-## inventory-sequence
-We will build a sequence by repeatedly taking inventory.
-We take inventory each time we add 0 to the sequence.
-To take inventory we start by counting the number of zeros in the sequence
-and add the number to the end of the sequence, then we continue by
-counting the number of ones and add that to the sequence and so on.
-We stop when we reach a number that is not in the sequence and we add 0 to
-the sequence then start over.
-The first few terms are as follows:
-0 1 2 3 4 5
------------
-0
-1 1 0
-2 2 2 0
-3 2 4 1 1 0
-4 4 4 1 4 0
-Print the first 1,000 terms of the inventory sequence,
-each on their own line.
-Numberphile,
-OEIS A342585,
-Rosetta Code
-Copy Answer
-Copied
+## 42. inventory-sequence
 ```python
 def inventory_sequence(n):
  seq=[0]
@@ -2181,13 +1183,7 @@ if __name__=='__main__':
 
 ---
 
-## isbn
-Calculate the check digit for these incomplete ISBNs.
-If the check digit would be 10, write "X" instead.
-The check digit of a-bcdef-ghi-? is computed as
-− 10a − 9b − 8c − … − 2i, modulo 11.
-Dashes may occur in varying positions and are ignored.
-Wikipedia
+## 43. isbn
 ```python
 import sys
 def calc_check(s):
@@ -2202,20 +1198,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## jacobi-symbol
-For each argument a n, print the value of the Jacobi symbol
-J(a, n).
-Both inputs are non-negative integers, and n is odd.
-J(a, 1) is defined as 1.
-If n is prime, then J(a, n) is defined as 0 if
-a=0 (mod n), as 1 if a is a square modulo n,
-and −1 otherwise.
-If n = x*y, x,y>1, then J(a, n) is defined as
-J(a, x)*J(a, y).
-Note that calculating the symbol from the definition is not very efficient
-as it requires factorisation of n.
-Rosetta Code,
-Wikipedia
+## 44. jacobi-symbol
 ```python
 import sys
 def jacobi(a,n):
@@ -2237,21 +1220,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## kaprekar-numbers(Time limit exceeded)
-Any positive integer is a Kaprekar number on the following conditions:
-the integer is 1 or when splitting the integer's square in two
-makes their sum equal the original integer.
-For example, the square of 55 equals 3,025. Splitting the
-square in 30 and 25 makes their sum equal 55. Both
-operands must not equal zero, and must retain their digit order,
-but they may differ in length.
-Print all the Kaprekar numbers from 1 to 25,000,000
-inclusive, each on their own line.
-OEIS A006886,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 45. kaprekar-numbers(Time limit exceeded)
 ```python
 def kaprekar_numbers(limit):
     """
@@ -2287,20 +1256,7 @@ if __name__ == "__main__":
 
 ---
 
-## kolakoski-constant
-The Kolakoski constant is created by taking the
-Kolakoski sequence, subtracting one from
-each element, and then interpreting it as a binary fraction.
-1 221121221221121122121121…
-0.110010110110010011010010…
-0.7945071927…
-Print the first 1,000 decimal digits of the Kolakoski constant.
-Variants:
-Kolakoski Sequence
-OEIS A118270,
-Wikipedia
-Copy Answer
-Copied
+## 46. kolakoski-constant
 ```python
 from decimal import Decimal,getcontext
 getcontext().prec=1005
@@ -2319,23 +1275,7 @@ print(str(d)[:1002])
 
 ---
 
-## kolakoski-sequence
-The Kolakoski sequence is a self referential sequence where the nth
-element is the length of the nth run of same numbers in the sequence.
-This has the interesting property where if you take the run lengths of
-this sequence, then you will get the same sequence back again. For
-example, the sequence starting with (1, 2) looks like:
-1 2 2 1 1 2 1 2 2 1 2 2 1 1 2 1 1 2 2 1 2 1 1 2 1…
-1  2   2  1 1  2  1  2   2  1  2   2  1 1  2  1 1…
-Beginning with (1, 2) print the first 1,000 elements in the
-Kolakoski sequence, separated by spaces.
-Variants:
-Kolakoski Constant
-OEIS A000002,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 47. kolakoski-sequence
 ```python
 def generate_kolakoski_sequence(length):
  sequence=[1,2,2]
@@ -2355,17 +1295,7 @@ if __name__=='__main__':main()
 
 ---
 
-## leap-years
-In the Gregorian calendar, a leap year is created by extending February
-to 29 days in order to keep the calendar year synchronized with the
-astronomical year. These longer years occur in years which are multiples
-of 4, with the exception of centennial years that aren’t multiples
-of 400.
-Write a program to print all the leap years from the year 1800 up
-to and including 2400.
-Rosetta Code
-Copy Answer
-Copied
+## 48. leap-years
 ```python
 def is_leap_year(year):
     """
@@ -2396,20 +1326,7 @@ if __name__ == "__main__":
 
 ---
 
-## levenshtein-distance
-The Levenshtein distance is the minimum number of single character edits
-that are needed to transform one word into another. The available edits
-are deletion, insertion, or substitution of a single character.
-For example the Levenshtein distance between “shine” and
-“train” is 4:
-shine → shin (deletion of 'e')
-shin → tshin (insertion of 't')
-tshin → trhin (substitution of 's' for 'r')
-trhin → train (substitution of 'h' for 'a')
-For each pair of words per argument, print the Levenshtein distance on its
-own line.
-Rosetta Code,
-Wikipedia
+## 49. levenshtein-distance
 ```python
 import sys
 def levenshtein_distance(s1,s2):
@@ -2435,17 +1352,7 @@ if __name__=='__main__':main()
 
 ---
 
-## leyland-numbers
-A Leyland number is of the form xy + yx where
-1 < y ≤ x.
-For example, 8 is a Leyland number because
-22 + 22 = 8.
-Print all the Leyland numbers from 1 to 100,000,000,000
-inclusive, each on their own line.
-OEIS A076980,
-Wikipedia
-Copy Answer
-Copied
+## 50. leyland-numbers
 ```python
 def solve_leyland_numbers():
  leyland_numbers=set()
@@ -2462,12 +1369,7 @@ if __name__=='__main__':solve_leyland_numbers()
 
 ---
 
-## ln-2
-Print the first 1,000 decimal digits of ln 2 (the natural logarithm of 2).
-OEIS A002162,
-Wikipedia
-Copy Answer
-Copied
+## 51. ln-2
 ```python
 import decimal
 from decimal import Decimal,getcontext
@@ -2479,17 +1381,7 @@ print(ln2_str[0:1002])
 
 ---
 
-## look-and-say
-The Look and Say sequence starts with 1 and is continued by looking at
-each of the runs of the same number in the previous term and combining the
-length with the original number. For example the next term after 111221
-would be 312211 (three ones, two twos and one one).
-Print the first 20 terms of the Look and Say sequence.
-OEIS A005150,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 52. look-and-say
 ```python
 def look_and_say(s):
     """
@@ -2520,28 +1412,7 @@ for i in range(20):
 
 ---
 
-## lucky-numbers
-The lucky numbers are an integer sequence that results from a
-certain "sieve" process:
-Start from the odd natural numbers a = 1 3 5 7 … viewed as a
-1-indexed infinite sequence.
-For each k = 2…∞, replace a with the result of deleting
-every a[k]-th term from a.
-Print the first 1,000 terms of the resulting sequence.
-Start:
-1 3 5 7 9 11 13 15 …
-^
-Delete every 3rd term and advance:
-1 3 7 9 13 15 19 21 …
-^
-Delete every 7th term and advance:
-1 3 7 9 13 15 21 25 …
-^
-OEIS A000959,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 53. lucky-numbers
 ```python
 def find_lucky_numbers(n):
  lucky_numbers_sequence=list(range(1,40000,2))
@@ -2557,17 +1428,7 @@ for number in first_1000_lucky_numbers:print(number)
 
 ---
 
-## lucky-tickets
-In Russia, bus ticket numbers consist of 6 decimal digits. It is
-considered lucky when the sum of the first three digits equals the sum of
-the last three digits. The concept of lucky tickets can be extended to
-ticket numbering systems with even numbers of digits and arbitrary bases.
-Each argument describes a ticket numbering system and consists of two
-numbers separated by a space. The first is the even number of digits
-2 ≤ d ≤ 14. The second is the base of the numbering system
-2 ≤ b ≤ 16. For each argument, output the total number of lucky
-tickets for the numbering system on a separate line.
-OEIS A174061
+## 54. lucky-tickets
 ```python
 import sys
 def count_lucky_tickets(d,b):
@@ -2599,36 +1460,7 @@ if __name__=='__main__':main()
 
 ---
 
-## mahjong
-Given a list of mahjong hands, print out all of the hands which are
-complete under the rules of Riichi Mahjong.
-Mahjong tiles are divided into three suits of number tiles
-from 1 to 9, and seven honor tiles, which are not numbered.
-These are the Unicode characters representing the tiles in each suit,
-from 1 to 9:
-Characters 🀇🀈🀉🀊🀋🀌🀍🀎🀏
-Bamboo 🀐🀑🀒🀓🀔🀕🀖🀗🀘
-Circles 🀙🀚🀛🀜🀝🀞🀟🀠🀡
-These are the Unicode characters representing honor tiles: 🀀🀁🀂🀃🀄🀅🀆
-A triplet is a group of three identical tiles, e.g. 🀓🀓🀓 or 🀅🀅🀅.
-A sequence is a group of three number tiles of the same suit and
-with consecutive numbers, e.g. 🀇🀈🀉 or 🀜🀝🀞.
-A meld is either a triplet or a sequence.
-A pair is a group of two identical tiles.
-A mahjong hand is complete if it consists of one of the following:
-Four melds and a pair.
-Seven distinct pairs. Four of the same tile do not count as two pairs.
-All seven honor tiles and the 1 and 9 of each suit,
-plus one duplicate tile that forms a pair.
-The tiles in a mahjong hand are not ordered. For example,
-the hand 🀇🀈🀈🀈🀉🀓🀔🀕🀚🀛🀜🀀🀀🀀 is complete,
-as it can be split into the groups 🀇🀈🀉 🀓🀔🀕 🀚🀛🀜 🀀🀀🀀 🀈🀈.
-You may assume that no hand contains more than 4 of a single tile.
-The input consists of a sequence of arguments, each containing a string of
-14 Unicode characters which represent the tiles in the hand. Output the
-arguments that represent complete mahjong hands, in the same order as they
-appear in the argument list.
-Wikipedia
+## 55. mahjong
 ```python
 import sys
 from collections import Counter
@@ -2706,20 +1538,7 @@ if __name__=='__main__':main()
 
 ---
 
-## mandelbrot
-The Mandelbrot set is the set of complex numbers c for which the
-sequence a(1) = 0, a(n+1) = a(n)² + c does not diverge to infinity.
-Consider the section of the complex plane where
--2 ≤ Re c ≤ 0.5, -1 ≤ Im c ≤ 1 divided into a 41×81 lattice.
-Draw the Mandelbrot set using this grid. That is, for each such lattice
-point, print █ (U+2588) if it belongs to the set and ▒ (U+2592) if it
-doesn't. Note that for each of the lattice points, 1063 iterations are
-enough to determine whether the sequence corresponding to the point is
-unbounded or not.
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 56. mandelbrot
 ```python
 def draw_mandelbrot_set():
  width=81
@@ -2746,18 +1565,7 @@ if __name__=='__main__':draw_mandelbrot_set()
 
 ---
 
-## maze
-For a given maze, find the shortest path from Start to End
-points. Output the path in the maze with dots. For example:
-###########       ###########
-#S#      E#       #S#  ....E#
-# ### #####       #.###.#####
-#   #     #   →   #...#.....#
-### ##### #       ###.#####.#
-#         #       #  .......#
-###########       ###########
-Rosetta Code,
-Wikipedia
+## 57. maze
 ```python
 import sys
 from collections import deque
@@ -2805,13 +1613,7 @@ if __name__=='__main__':main()
 
 ---
 
-## medal-tally
-Solutions on code.golf can be awarded one of three medals: bronze (🥉) for
-3rd place, silver (🥈) for 2nd place, or gold (🥇) for 1st place. In
-addition, an uncontested 1st place solution is awarded a diamond (💎).
-Tied solutions are all awarded the same medal.
-Given a list of space-separated solution scores in ascending order,
-print the corresponding diamonds and medals.
+## 58. medal-tally
 ```python
 import sys
 from collections import Counter
@@ -2850,64 +1652,7 @@ if __name__=='__main__':main()
 
 ---
 
-## morse-decoder
-Using ▄ (U+2584 Lower Half Block) to represent a dot,
-decode the argument from International Morse Code to alphanumeric.
-The length of a dot is one unit.
-A dash is three units.
-The space between parts of the same letter is one unit.
-The space between letters is three units.
-The space between words is ten units.
-Chr.
-Code
-A▄ ▄▄▄
-B▄▄▄ ▄ ▄ ▄
-C▄▄▄ ▄ ▄▄▄ ▄
-D▄▄▄ ▄ ▄
-E▄
-F▄ ▄ ▄▄▄ ▄
-G▄▄▄ ▄▄▄ ▄
-H▄ ▄ ▄ ▄
-I▄ ▄
-Chr.
-Code
-J▄ ▄▄▄ ▄▄▄ ▄▄▄
-K▄▄▄ ▄ ▄▄▄
-L▄ ▄▄▄ ▄ ▄
-M▄▄▄ ▄▄▄
-N▄▄▄ ▄
-O▄▄▄ ▄▄▄ ▄▄▄
-P▄ ▄▄▄ ▄▄▄ ▄
-Q▄▄▄ ▄▄▄ ▄ ▄▄▄
-R▄ ▄▄▄ ▄
-Chr.
-Code
-S▄ ▄ ▄
-T▄▄▄
-U▄ ▄ ▄▄▄
-V▄ ▄ ▄ ▄▄▄
-W▄ ▄▄▄ ▄▄▄
-X▄▄▄ ▄ ▄ ▄▄▄
-Y▄▄▄ ▄ ▄▄▄ ▄▄▄
-Z▄▄▄ ▄▄▄ ▄ ▄
-0▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄
-Chr.
-Code
-1▄ ▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄
-2▄ ▄ ▄▄▄ ▄▄▄ ▄▄▄
-3▄ ▄ ▄ ▄▄▄ ▄▄▄
-4▄ ▄ ▄ ▄ ▄▄▄
-5▄ ▄ ▄ ▄ ▄
-6▄▄▄ ▄ ▄ ▄ ▄
-7▄▄▄ ▄▄▄ ▄ ▄ ▄
-8▄▄▄ ▄▄▄ ▄▄▄ ▄ ▄
-9▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄ ▄
-Variants:
-Morse Encoder
-Rosetta Code,
-Wikipedia
-Copy as JSON
-Copied
+## 59. morse-decoder
 ```python
 import sys
 def morse_decode(morse_code_str):
@@ -2929,64 +1674,7 @@ if __name__=='__main__':
 
 ---
 
-## morse-encoder
-Using ▄ (U+2584 Lower Half Block) to represent a dot,
-encode the argument from alphanumeric into International Morse Code.
-The length of a dot is one unit.
-A dash is three units.
-The space between parts of the same letter is one unit.
-The space between letters is three units.
-The space between words is ten units.
-Chr.
-Code
-A▄ ▄▄▄
-B▄▄▄ ▄ ▄ ▄
-C▄▄▄ ▄ ▄▄▄ ▄
-D▄▄▄ ▄ ▄
-E▄
-F▄ ▄ ▄▄▄ ▄
-G▄▄▄ ▄▄▄ ▄
-H▄ ▄ ▄ ▄
-I▄ ▄
-Chr.
-Code
-J▄ ▄▄▄ ▄▄▄ ▄▄▄
-K▄▄▄ ▄ ▄▄▄
-L▄ ▄▄▄ ▄ ▄
-M▄▄▄ ▄▄▄
-N▄▄▄ ▄
-O▄▄▄ ▄▄▄ ▄▄▄
-P▄ ▄▄▄ ▄▄▄ ▄
-Q▄▄▄ ▄▄▄ ▄ ▄▄▄
-R▄ ▄▄▄ ▄
-Chr.
-Code
-S▄ ▄ ▄
-T▄▄▄
-U▄ ▄ ▄▄▄
-V▄ ▄ ▄ ▄▄▄
-W▄ ▄▄▄ ▄▄▄
-X▄▄▄ ▄ ▄ ▄▄▄
-Y▄▄▄ ▄ ▄▄▄ ▄▄▄
-Z▄▄▄ ▄▄▄ ▄ ▄
-0▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄
-Chr.
-Code
-1▄ ▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄
-2▄ ▄ ▄▄▄ ▄▄▄ ▄▄▄
-3▄ ▄ ▄ ▄▄▄ ▄▄▄
-4▄ ▄ ▄ ▄ ▄▄▄
-5▄ ▄ ▄ ▄ ▄
-6▄▄▄ ▄ ▄ ▄ ▄
-7▄▄▄ ▄▄▄ ▄ ▄ ▄
-8▄▄▄ ▄▄▄ ▄▄▄ ▄ ▄
-9▄▄▄ ▄▄▄ ▄▄▄ ▄▄▄ ▄
-Variants:
-Morse Decoder
-Rosetta Code,
-Wikipedia
-Copy as JSON
-Copied
+## 60. morse-encoder
 ```python
 import sys
 def morse_encode(text):
@@ -3005,100 +1693,7 @@ if __name__=='__main__':
 
 ---
 
-## musical-chords
-For each set of three musical notes forming a triad, print the name of the
-chord they form, consisting of the root note and the type of triad.
-Each note is represented as an uppercase letter, optionally followed by a
-single accidental, either sharp (♯ U+266F) or flat (♭ U+266D).
-Background:
-There are twelve pitch classes in twelve-tone equal temperament, some of
-which have multiple names due to ♯ and ♭ raising and
-lowering the pitch, respectively. They are, in ascending order:
-#
-Name 1
-Name 2
-0
-A
-1
-A♯
-B♭
-2
-B
-C♭
-3
-C
-B♯
-4
-C♯
-D♭
-5
-D
-6
-D♯
-E♭
-7
-E
-F♭
-8
-F
-E♯
-9
-F♯
-G♭
-10
-G
-11
-G♯
-A♭
-A triad consists of a root note on the bottom followed by two thirds
-stacked on top of it. Thirds describe the distance between the preceding
-and following note. A third can be either of two types:
-Name
-Distance
-Example
-Minor third
-3
-A C (note 0 to note 3)
-Major third
-4
-C E (note 3 to note 7)
-Being that there are 2 thirds in a triad and each third can be of 2
-different types, there are 4 total “types” of triads. They are:
-Triad Name
-Thirds (Bottom to Top)
-Example
-Diminished Triad
-Minor, Minor
-B D F
-Minor Triad
-Minor, Major
-E G B
-Major Triad
-Major, Minor
-C E G
-Augmented Triad
-Major, Major
-D F♯ A♯
-Input:
-Triads of notes will always be written out so that the letters in the
-name used ascend by 2 between each third (wrapping back to A after G).
-Therefore, a triad consisting of notes 3, 6, and 9 may be written as
-B♯ D♯ F♯ or C E♭ G♭, but not, for example, as
-C D♯ F♯.
-The notes may appear in any order, e.g., C E G and E C G
-both may appear.
-Output:
-Chords are named by the root note followed by nothing for major,
-m for minor, ° U+00B0 for diminished, and + for
-augmented.
-The spelling of the root note in the output must match the input, e.g.
-the expected output for C E♭ G♭ is C°, not B♯°.
-Note: to find the root, look only at the letters. E G♯ C
-and E G♯ B♯ cannot be told apart by a method that only considers
-note distances. The root is the note whose letter comes 2 and 4 letters
-before the other two letters in the chord. The expected outputs are
-C+ and E+ respectively.
-Wikipedia
+## 61. musical-chords
 ```python
 import sys
 from collections import defaultdict
@@ -3132,20 +1727,7 @@ if __name__=='__main__':main()
 
 ---
 
-## n-queens
-In chess, pieces move on a board of 8 ranks and 8 files. A chess queen can
-attack along a file a rank or a diagonal. It is possible to place 8 queens
-on the board, such that no queen is under attack by another one. When we
-list the rank on which the queen is for each file, one solution looks like
-this:
-63571428
-Print all solutions to the N queens problem, one per a line, for boards of
-sizes 4-8.
-Rosetta Code,
-Wikipedia
-The output judge is order agnostic. The expected output shown is one of many valid outputs.
-Copy Answer
-Copied
+## 62. n-queens
 ```python
 def solve_n_queens(n):
  def backtrack(col,diagonals,anti_diagonals,rows,state):
@@ -3164,19 +1746,7 @@ for n in range(4,9):
 
 ---
 
-## niven-numbers
-A Niven number is a positive integer that is divisible by the sum of
-its digits.
-Print all the Niven numbers from 1 to
-100
-inclusive, each on their own line.
-Variants:
-Niven Numbers (Long)
-OEIS A005349,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 63. niven-numbers
 ```python
 def is_niven(num):
   """
@@ -3214,19 +1784,7 @@ if __name__ == "__main__":
 
 ---
 
-## niven-numbers-long
-A Niven number is a positive integer that is divisible by the sum of
-its digits.
-Print all the Niven numbers from 1 to
-10,000
-inclusive, each on their own line.
-Variants:
-Niven Numbers
-OEIS A005349,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 64. niven-numbers-long
 ```python
 def is_niven(num):
     """
@@ -3263,24 +1821,7 @@ if __name__ == "__main__":
 
 ---
 
-## number-spiral
-Print a 10×10 grid of the numbers 0 to 99 inclusive.
-Starting at the top left the numbers should spiral clockwise towards the
-centre, be right aligned, and have a space between each number.
-The full grid should look like this:
-0  1  2  3  4  5  6  7  8  9
-35 36 37 38 39 40 41 42 43 10
-34 63 64 65 66 67 68 69 44 11
-33 62 83 84 85 86 87 70 45 12
-32 61 82 95 96 97 88 71 46 13
-31 60 81 94 99 98 89 72 47 14
-30 59 80 93 92 91 90 73 48 15
-29 58 79 78 77 76 75 74 49 16
-28 57 56 55 54 53 52 51 50 17
-27 26 25 24 23 22 21 20 19 18
-Rosetta Code
-Copy Answer
-Copied
+## 65. number-spiral
 ```python
 def spiral_grid(n):
     """
@@ -3331,21 +1872,7 @@ if __name__ == "__main__":
 
 ---
 
-## odious-numbers
-An odious number is a non-negative number that has an odd number of 1s in
-its binary expansion.
-Print all the odious numbers from 0 to
-50
-inclusive, each on their own line.
-Variants:
-Evil Numbers,
-Evil Numbers (Long),
-Odious Numbers (Long)
-OEIS A000069,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 66. odious-numbers
 ```python
 def is_odious(n):
   """
@@ -3373,21 +1900,7 @@ if __name__ == "__main__":
 
 ---
 
-## odious-numbers-long
-An odious number is a non-negative number that has an odd number of 1s in
-its binary expansion.
-Print all the odious numbers from 0 to
-1,000
-inclusive, each on their own line.
-Variants:
-Evil Numbers,
-Evil Numbers (Long),
-Odious Numbers
-OEIS A000069,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 67. odious-numbers-long
 ```python
 def is_odious(n):
   """
@@ -3422,12 +1935,7 @@ if __name__ == "__main__":
 
 ---
 
-## ordinal-numbers
-For each integer argument, print the argument and its ordinal suffix
-(e.g. 1st, 2nd, 3rd, 112th).
-The integers will be in the range of 0 to 999 inclusive.
-Rosetta Code,
-Wikipedia
+## 68. ordinal-numbers
 ```python
 import sys
 def ordinal(n):
@@ -3446,11 +1954,7 @@ if __name__=='__main__':main()
 
 ---
 
-## palindromemordnilap
-Given an alphanumeric string, append minimum number of characters to get a
-palindrome and output the result.
-For example, on input Palindromemord, output
-PalindromemordnilaP.
+## 69. palindromemordnilap
 ```python
 import sys
 def make_palindrome(s):
@@ -3467,13 +1971,7 @@ if __name__=='__main__':main()
 
 ---
 
-## pangram-grep
-A pangram is a sentence that uses every letter of a given alphabet.
-Write a program that will receive various sentences as arguments and print
-those that are valid pangrams, meaning they use all letters from A to Z,
-case insensitive.
-Rosetta Code,
-Wikipedia
+## 70. pangram-grep
 ```python
 import sys
 
@@ -3505,20 +2003,7 @@ if __name__ == "__main__":
 
 ---
 
-## partition-numbers
-The nth partition number is the number of ways that n can be
-expressed as the sum of positive integers, where ordering does not matter.
-For example, 4 can be partitioned in five distinct ways:
-4
-3 + 1
-2 + 2
-1 + 2 + 1
-1 + 1 + 1 + 1
-Print the first 100 partition numbers, each on a separate line.
-OEIS A000041,
-Wikipedia
-Copy Answer
-Copied
+## 71. partition-numbers
 ```python
 def partition_numbers(n):
  p=[1]+[0]*n
@@ -3531,14 +2016,7 @@ for i,val in enumerate(p):print(val)
 
 ---
 
-## pascals-triangle
-Pascal’s triangle is a triangular pattern of integers formed by the
-binomial coefficients.
-Print the first 20 rows of Pascal’s triangle.
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 72. pascals-triangle
 ```python
 def pascal_triangle(rows):
  triangle=[[1]]
@@ -3552,21 +2030,7 @@ for row in pascal_triangle(20):print(' '.join(map(str,row)))
 
 ---
 
-## pernicious-numbers
-A pernicious number is a positive number where the sum of its binary
-expansion is a prime number.
-For example, 5 is a pernicious number since
-5 = 1012 and 1 + 1 = 2, which is prime.
-Print all the pernicious numbers from 0 to
-50
-inclusive, each on their own line.
-Variants:
-Pernicious Numbers (Long)
-OEIS A052294,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 73. pernicious-numbers
 ```python
 def is_prime(n):
     """
@@ -3598,21 +2062,7 @@ if __name__ == "__main__":
 
 ---
 
-## pernicious-numbers-long
-A pernicious number is a positive number where the sum of its binary
-expansion is a prime number.
-For example, 5 is a pernicious number since
-5 = 1012 and 1 + 1 = 2, which is prime.
-Print all the pernicious numbers from 0 to
-10,000
-inclusive, each on their own line.
-Variants:
-Pernicious Numbers
-OEIS A052294,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 74. pernicious-numbers-long
 ```python
 def is_prime(n):
     """
@@ -3656,45 +2106,7 @@ if __name__ == "__main__":
 
 ---
 
-## poker
-Given various poker hands as arguments, print what type of hand each
-argument is.
-The list of hands in ranking order are as follows:
-Hand
-Cards
-Description
-Royal Flush
-🃁🃎🃍🃋🃊
-Ten to Ace of the same suit
-Straight Flush
-🃛🃚🃙🃘🃗
-Five consecutive cards of the same suit
-Four of a Kind
-🃕🃅🂵🂥🃂
-Four cards of the same rank
-Full House
-🂦🂶🃆🃞🂾
-Three of a Kind combined with a Pair
-Flush
-🃋🃉🃈🃄🃃
-Five cards of the same suit
-Straight
-🃊🂩🂸🃇🃖
-Five consecutive cards
-Three of a Kind
-🃝🂭🂽🂹🂢
-Three cards of the same rank
-Two Pair
-🂻🂫🃓🂣🂲
-Two separate pairs
-Pair
-🂪🂺🂨🂷🃔
-Two cards of the same rank
-High Card
-🃎🃍🂧🂤🂳
-No other hand applies
-Rosetta Code,
-Wikipedia
+## 75. poker
 ```python
 import sys
 from collections import Counter
@@ -3748,17 +2160,7 @@ if __name__=='__main__':main()
 
 ---
 
-## polyominoes
-A polyomino is a 2D shape formed by joining squares along common edges, such
-that all squares are connected. Output each possible polyomino (including
-every rotation), up to a size of 6, in any order. Separate each polyomino by
-an empty line.
-There should be a total of 1 monomino, 2 dominoes, 6 trominoes,
-19 tetrominoes, 63 pentominoes, and 216 hexominoes.
-Wikipedia
-The output judge is order agnostic. The expected output shown is one of many valid outputs.
-Copy Answer
-Copied
+## 76. polyominoes
 ```python
 import sys
 from collections import deque
@@ -3814,16 +2216,7 @@ if __name__=='__main__':main()
 
 ---
 
-## prime-numbers
-Print all the prime numbers from 1 to
-100
-inclusive, each on their own line.
-Variants:
-Prime Numbers (Long)
-OEIS A000040,
-Wikipedia
-Copy Answer
-Copied
+## 77. prime-numbers
 ```python
 import math
 
@@ -3861,16 +2254,7 @@ if __name__ == "__main__":
 
 ---
 
-## prime-numbers-long
-Print all the prime numbers from 1 to
-10,000
-inclusive, each on their own line.
-Variants:
-Prime Numbers
-OEIS A000040,
-Wikipedia
-Copy Answer
-Copied
+## 78. prime-numbers-long
 ```python
 def is_prime(n):
     """
@@ -3907,17 +2291,7 @@ if __name__ == "__main__":
 
 ---
 
-## proximity-grid
-A grid is a 9x9 square of characters representing an arrangement of points,
-some of which are walls, denoted by #'s, or sources, denoted by 0's; every
-other point is passible, denoted with -'s.
-For a series of grids, compute the length of the shortest path connecting
-each passible point to a source. A path must move horizontally or
-vertically through the grid and cannot pass through walls. Output each
-grid with every passible point replaced by its distance to a source
-written in base62 (0-9 A-Z a-z); points which cannot be connected to a
-source should remain unchanged.
-Wikipedia
+## 79. proximity-grid
 ```python
 import sys
 from collections import deque
@@ -3958,51 +2332,7 @@ if __name__=='__main__':main()
 
 ---
 
-## qr-decoder(Error)
-Decode a Version-1 QR code given in this ASCII-art format, where all the
-v and ^ are filled with "#" and spaces, encoding
-a message.
-#######  vv^^ #######
-#     #  vv^^ #
-# ### # #vv^^ #
-# ### #  vv^^ #
-# ### #  vv^^ #
-#     #  vv^^ #
-####### # # # #######
-#vv^^
-### #####vv^^##   #
-vv^^vv ^^vv^^vv^^vv^^
-vv^^vv#^^vv^^vv^^vv^^
-vv^^vv ^^vv^^vv^^vv^^
-vv^^vv#^^vv^^vv^^vv^^
-#vv^^vv^^vv^^
-####### #vv^^vv^^vv^^
-#     # #vv^^vv^^vv^^
-# ### # #vv^^vv^^vv^^
-# ### #  vv^^vv^^vv^^
-# ### # #vv^^vv^^vv^^
-#     # #vv^^vv^^vv^^
-####### #vv^^vv^^vv^^
-The 10 vertical "strips" of ^^ or vv must be
-read from right to left. The bits in a strip are stored in a zig-zag
-order: ^^ zig-zags upwards, and vv zig-zags
-downwards. The bit on the right always precedes the one on its left.
-^^ ..    vv 10
-^^ 98    vv 32
-^^ 76    vv 54
-^^ 54    vv 76
-^^ 32    vv 98
-^^ 10    vv ..
-To decode a bit off of a strip, read the value from the QR code bitmap
-("#" = 1, space = 0) and invert it if (x+y)%2 = 0, where
-(x, y) are the coordinates of the bit in the bitmap with the origin
-(0, 0) at the top-left corner.
-This will yield a bitstream like:
-0100  00010001  01001000  01100101  01101100 ...
-Enc   Length    'H'       'e'       'l'
-(4)   (17)      (17-byte ASCII message)
-Print the 17 bytes of ASCII stored in the QR code.
-Wikipedia
+## 80. qr-decoder(Error)
 ```python
 def decode_qr(qr_code):
     """Decodes a Version-1 QR code from an ASCII-art representation."""
@@ -4102,15 +2432,7 @@ print(decoded_message)
 
 ---
 
-## quine
-A quine is a non-empty computer program which takes no input and
-produces a copy of its own source code as its only output. Produce such a
-program.
-Trailing whitespace is NOT stripped from the output for this hole.
-(Consequently, if your submission doesn't pass, try adding a line break at
-the end.)
-Rosetta Code,
-Wikipedia
+## 81. quine
 ```python
 s = 's = %r
 print(s %% s)'
@@ -4120,18 +2442,7 @@ print(s % s)
 
 ---
 
-## recamán
-Starting from a(0) = 0, each term of the sequence is
-a(n) = a(n-1) − n but only if a(n) > 0 and it has not
-previously generated. In case the condition doesn't hold,
-a(n) = a(n-1) + n.
-Print the first 250 terms of the sequence one per line.
-Numberphile,
-OEIS A005132,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 82. recamán
 ```python
 def generate_sequence(length=250):
     """
@@ -4163,12 +2474,7 @@ if __name__ == "__main__":
 
 ---
 
-## repeating-decimals
-For each fraction argument a/b, print its decimal expansion.
-If the decimal expands infinitely, print the finite part followed by the
-repeating part in parenthesis.
-Rosetta Code,
-Wikipedia
+## 83. repeating-decimals
 ```python
 import sys
 def get_decimal_expansion(numerator,denominator):
@@ -4211,19 +2517,7 @@ if __name__=='__main__':main()
 
 ---
 
-## reverse-polish-notation
-RPN (Reverse Polish Notation) is a way of writing
-expressions such that operators are written after their operands:
-3 2 + rather than (3+2).
-Each argument is an RPN expression, given as a space-separated list of
-tokens: either a number 0…32767 or an operator
-(addition +, subtraction -, multiplication
-* or integer division /).
-Evaluate and print the result of each expression on its own line.
-The result of each operation is a non-negative integer not exceeding
-32,767. Division is guaranteed to have an exact integer result.
-Rosetta Code,
-Wikipedia
+## 84. reverse-polish-notation
 ```python
 import sys
 def evaluate_rpn(expression):
@@ -4254,33 +2548,7 @@ if __name__=='__main__':main()
 
 ---
 
-## reversi
-Output the possible moves for O on a Reversi board.
-In Reversi, X and O take turns placing tiles on
-empty squares on the board. To determine if a move is legal, draw a
-straight line in any direction (horizontal, vertical, or diagonal)
-starting from the square. If the line intersects another friendly tile,
-separated from the square by only opponent tiles, that square is a legal move.
-For example, given:
-......
-.OXX!.
-..X...
-...!..
-O can only place on squares marked with !.
-Assume a board size of 8x8 and a position reachable on O's turn,
-from the following starting position:
-........
-........
-........
-...OX...
-...XO...
-........
-........
-........
-X moves first, so you may assume an odd number of tiles on the board.
-Your program should output the board with each possible legal O move
-replaced with !. Each output should be separated by a blank line.
-Wikipedia
+## 85. reversi
 ```python
 import sys
 DIRS=[(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
@@ -4316,29 +2584,7 @@ if __name__=='__main__':main()
 
 ---
 
-## rijndael-s-box
-Print the Rijndael S-box as a series of hex bytes:
-63 7c 77 7b f2 6b 6f c5 30 01 67 2b fe d7 ab 76
-ca 82 c9 7d fa 59 47 f0 ad d4 a2 af 9c a4 72 c0
-b7 fd 93 26 36 3f f7 cc 34 a5 e5 f1 71 d8 31 15
-04 c7 23 c3 18 96 05 9a 07 12 80 e2 eb 27 b2 75
-09 83 2c 1a 1b 6e 5a a0 52 3b d6 b3 29 e3 2f 84
-53 d1 00 ed 20 fc b1 5b 6a cb be 39 4a 4c 58 cf
-d0 ef aa fb 43 4d 33 85 45 f9 02 7f 50 3c 9f a8
-51 a3 40 8f 92 9d 38 f5 bc b6 da 21 10 ff f3 d2
-cd 0c 13 ec 5f 97 44 17 c4 a7 7e 3d 64 5d 19 73
-60 81 4f dc 22 2a 90 88 46 ee b8 14 de 5e 0b db
-e0 32 3a 0a 49 06 24 5c c2 d3 ac 62 91 95 e4 79
-e7 c8 37 6d 8d d5 4e a9 6c 56 f4 ea 65 7a ae 08
-ba 78 25 2e 1c a6 b4 c6 e8 dd 74 1f 4b bd 8b 8a
-70 3e b5 66 48 03 f6 0e 61 35 57 b9 86 c1 1d 9e
-e1 f8 98 11 69 d9 8e 94 9b 1e 87 e9 ce 55 28 df
-8c a1 89 0d bf e6 42 68 41 99 2d 0f b0 54 bb 16
-OEIS A354500,
-Wikipedia
-The output will be checked case-insensitively.
-Copy Answer
-Copied
+## 86. rijndael-s-box
 ```python
 sbox=[0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,0x04,0xc7,0x23,0xc3,0x18,0x96,0x05,0x9a,0x07,0x12,0x80,0xe2,0xeb,0x27,0xb2,0x75,0x09,0x83,0x2c,0x1a,0x1b,0x6e,0x5a,0xa0,0x52,0x3b,0xd6,0xb3,0x29,0xe3,0x2f,0x84,0x53,0xd1,0x00,0xed,0x20,0xfc,0xb1,0x5b,0x6a,0xcb,0xbe,0x39,0x4a,0x4c,0x58,0xcf,0xd0,0xef,0xaa,0xfb,0x43,0x4d,0x33,0x85,0x45,0xf9,0x02,0x7f,0x50,0x3c,0x9f,0xa8,0x51,0xa3,0x40,0x8f,0x92,0x9d,0x38,0xf5,0xbc,0xb6,0xda,0x21,0x10,0xff,0xf3,0xd2,0xcd,0x0c,0x13,0xec,0x5f,0x97,0x44,0x17,0xc4,0xa7,0x7e,0x3d,0x64,0x5d,0x19,0x73,0x60,0x81,0x4f,0xdc,0x22,0x2a,0x90,0x88,0x46,0xee,0xb8,0x14,0xde,0x5e,0x0b,0xdb,0xe0,0x32,0x3a,0x0a,0x49,0x06,0x24,0x5c,0xc2,0xd3,0xac,0x62,0x91,0x95,0xe4,0x79,0xe7,0xc8,0x37,0x6d,0x8d,0xd5,0x4e,0xa9,0x6c,0x56,0xf4,0xea,0x65,0x7a,0xae,0x08,0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16]
 for i in range(0,256,16):print(' '.join(f'{b:02x}'for b in sbox[i:i+16]))
@@ -4346,40 +2592,7 @@ for i in range(0,256,16):print(' '.join(f'{b:02x}'for b in sbox[i:i+16]))
 
 ---
 
-## rock-paper-scissors-spock-lizard
-Judge games of "rock-paper-scissors" with additional weapons:
-✂ cuts 📄 covers 💎 crushes 🦎 poisons 🖖 smashes ✂ decapitates 🦎 eats 📄
-disproves 🖖 vaporizes 💎 crushes ✂.
-Each argument is a string of two emoji encoded in UTF-8. For each argument,
-print a line like 🦎 poisons 🖖 describing the game outcome,
-or Tie if they are equal.
-The weapons are represented and encoded as follows:
-Weapon
-Emoji
-Codepoint
-UTF-8 Sequence
-Rock
-💎
-U+1F48E
-f0 9f 92 8e
-Paper
-📄
-U+1F4C4
-f0 9f 93 84
-Scissors
-✂
-U+2702
-e2 9c 82
-Spock
-🖖
-U+1F596
-f0 9f 96 96
-Lizard
-🦎
-U+1F98E
-f0 9f a6 8e
-Rules,
-Wikipedia
+## 87. rock-paper-scissors-spock-lizard
 ```python
 import sys
 rules={'✂':{'📄':'cuts','🦎':'decapitates'},'📄':{'💎':'covers','🖖':'disproves'},'💎':{'✂':'crushes','🦎':'crushes'},'🦎':{'📄':'eats','🖖':'poisons'},'🖖':{'✂':'smashes','💎':'vaporizes'}}
@@ -4392,30 +2605,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## roman-to-arabic
-For each numeric argument in Roman numerals, print the same number in
-Arabic numerals.
-The numbers range from 1 to 3999 inclusive.
-Arabic
-1
-5
-10
-50
-100
-500
-1000
-Roman
-I
-V
-X
-L
-C
-D
-M
-Variants:
-Arabic to Roman
-Rosetta Code,
-Wikipedia
+## 88. roman-to-arabic
 ```python
 import sys
 roman={'I':1,'V':5,'X':10,'L':50,'C':100,'D':500,'M':1000}
@@ -4430,26 +2620,7 @@ for s in sys.argv[1:]:
 
 ---
 
-## rot13
-ROT13, short for rotate by 13 places, is a simple substitution cipher
-derived from the Caesar cipher. It works by replacing each letter in the
-English alphabet with the letter 13 positions after it, wrapping around to
-the beginning of the alphabet if necessary.
-For uppercase letters: A becomes N, B becomes
-O, ..., Z becomes M.
-For lowercase letters: a becomes n, b becomes
-o, ..., z becomes m.
-Non-alphabetic characters (digits, punctuation, spaces) remain unchanged.
-Here's a simple table that illustrates each letter substitution with ROT13:
-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
-NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm
-Each argument consists of a sequence of random printable characters from the
-ASCII character set.
-For each argument, print the sequence with all its substitutions after
-applying the appropriate rotations, effectively encoding or decoding the
-sequence, each on their own line.
-Rosetta Code,
-Wikipedia
+## 89. rot13
 ```python
 import sys
 for s in sys.argv[1:]:print(''.join(chr((ord(c)-65+13)%26+65)if c.isupper()else chr((ord(c)-97+13)%26+97)if c.islower()else c for c in s))
@@ -4457,41 +2628,7 @@ for s in sys.argv[1:]:print(''.join(chr((ord(c)-65+13)%26+65)if c.isupper()else 
 
 ---
 
-## rule-110
-Print the first 100 rows in the Rule 110 cellular automaton
-starting from an initial single living cell.
-Each new row in the life of the automaton should be a new line, and the
-rules for whether a cell is alive or dead depends on whether it was alive
-on the previous iteration, as well as the state of the two neighbouring
-cells.
-The rules which dictate whether a cell is alive or dead in the next
-iteration are as follows:
-Previous Cells
-New Centre Cell
-1110
-1101
-1011
-1000
-0111
-0101
-0011
-0000
-where 1 is alive, 0 is dead, and the middle digit represents the previous
-state of the current cell.
-The first 10 rows are shown here:
-█
-██
-███
-██ █
-█████
-██   █
-███  ██
-██ █ ███
-███████ █
-██     ███
-Wikipedia
-Copy Answer
-Copied
+## 90. rule-110
 ```python
 w=199
 a=[0]*w
@@ -4504,10 +2641,7 @@ for _ in range(100):
 
 ---
 
-## scrambled-sort
-Given a scrambled alphabet and a set of words, print the words in
-alphabetical order according to the given alphabet. Separate the
-words by spaces for each argument.
+## 91. scrambled-sort
 ```python
 import sys
 for arg in sys.argv[1:]:
@@ -4519,30 +2653,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## set
-Set is a card game played with a deck of 81 unique cards that vary in four
-features, each of which takes on three values:
-Number of shapes: each card contains either 1, 2, or
-3 shapes.
-Color: the shapes on each card are either Red, Green, or
-Purple.
-Shading: each shape is either Solid, Half-shaded, or
-Empty.
-Shape: the shapes on each card are either Ovals, Diamonds,
-or Waves.
-A card is represented by the values of its features, with each value encoded
-by its first character. For example, 2RSW means 2
-Red Solid Waves.
-The goal of the game is to find a set of three cards, such that for
-each of the four features, either all three cards have different values or
-all three cards have the same value. For example, 2RSW,
-2PHW, and 2GEW form a set because they all have
-the same number and shape, and none of them have the same color or shading.
-Arguments consist of twelve cards that are guaranteed to contain exactly one
-set. For each argument, print the contained set with the cards in order of
-their appearance separated by spaces, one set per line.
-Rosetta Code,
-Wikipedia
+## 92. set
 ```python
 import sys
 from itertools import combinations
@@ -4559,14 +2670,7 @@ for group in sys.argv[1:]:
 
 ---
 
-## seven-segment
-Using pipes and underscores print the argument as if it were displayed on
-a seven segment display.
-For example the number 0123456789 should be displayed as:
-_     _  _     _  _  _  _  _
-| |  | _| _||_||_ |_   ||_||_|
-|_|  ||_  _|  | _||_|  ||_| _|
-Wikipedia
+## 93. seven-segment
 ```python
 import sys
 digits={'0':[' _ ','| |','|_|'],'1':['   ','  |','  |'],'2':[' _ ',' _|','|_ '],'3':[' _ ',' _|',' _|'],'4':['   ','|_|','  |'],'5':[' _ ','|_ ',' _|'],'6':[' _ ','|_ ','|_|'],'7':[' _ ','  |','  |'],'8':[' _ ','|_|','|_|'],'9':[' _ ','|_|',' _|']}
@@ -4579,96 +2683,7 @@ for arg in sys.argv[1:]:
 
 ---
 
-## si-units(Error)
-The International System of Units (SI) defines 7 base units: s
-(second), m (meter), kg (kilogram), A (ampere), K
-(kelvin), mol (mole) and cd (candela). In addition to base units,
-there are 22 derived units, which can all be represented as products of
-powers of these base units.
-Derived unit
-Base unit equivalent
-rad	1
-sr	1
-Hz	s^-1
-N	kg m s^-2
-Pa	kg m^-1 s^-2
-J	kg m^2 s^-2
-Derived unit
-Base unit equivalent
-W	kg m^2 s^-3
-C	A s
-V	kg m^2 s^-3 A^-1
-F	kg^-1 m^-2 s^4 A^2
-Ω	kg m^2 s^-3 A^-2
-S	kg^-1 m^-2 s^3 A^2
-Derived unit
-Base unit equivalent
-Wb	kg m^2 s^-2 A^-1
-T	kg s^-2 A^-1
-H	kg m^2 s^-2 A^-2
-°C	K
-lm	cd
-lx	cd m^-2
-Derived unit
-Base unit equivalent
-Bq	s^-1
-Gy	m^2 s^-2
-Sv	m^2 s^-2
-kat	mol s^-1
-SI also defines 24 symbols known as prefixes, denoting powers of ten.
-Symbol
-Factor
-Q	10^30
-R	10^27
-Y	10^24
-Z	10^21
-E	10^18
-P	10^15
-Symbol
-Factor
-T	10^12
-G	10^9
-M	10^6
-k	10^3
-h	10^2
-da	10^1
-Symbol
-Factor
-d	10^-1
-c	10^-2
-m	10^-3
-μ	10^-6
-n	10^-9
-p	10^-12
-Symbol
-Factor
-f	10^-15
-a	10^-18
-z	10^-21
-y	10^-24
-r	10^-27
-q	10^-30
-Each argument is an SI unit with a possible prefix. Print it as a product of a
-power of ten and its base units. For example, GW (gigawatt) becomes
-10^9 kg m^2 s^-3. Keep in mind the following exceptions:
-The kilogram is a base unit with an inherent prefix. Other prefixes attach
-to g (gram), and you should print their values relative to the
-kilogram: g is 10^-3 kg and Mg
-is 10^3 kg.
-Instead of 10^1, print 10.
-Instead of 10^0, print 1.
-For rad and sr, only print a power of ten. (Example: for
-Mrad, print 10^6, not 10^6 1.)
-There is no universal order among the base units. For C, you must
-output A s rather than s A. We follow the
-conventions of NIST.
-μ is U+03BC GREEK SMALL LETTER MU (UTF-8: ce bc).
-Ω is U+03A9 GREEK CAPITAL LETTER OMEGA (UTF-8: ce a9).
-° is U+00B0 DEGREE SIGN (UTF-8: c2 b0).
-NIST (Prefixes),
-NIST (Units)
-Copy as JSON
-Copied
+## 94. si-units(Error)
 ```python
 def si_unit_to_base_units(unit_string):
     """
@@ -4766,32 +2781,7 @@ def si_unit_to_base_units(unit_string):
 
 ---
 
-## serpiński-triangle
-The Sierpiński triangle is a fractal with the overall shape of an
-equilateral triangle, subdivided recursively into smaller equilateral
-triangles.
-A Sierpiński triangle of order 4 should look like this, print such an
-output:
-▲
-▲ ▲
-▲   ▲
-▲ ▲ ▲ ▲
-▲       ▲
-▲ ▲     ▲ ▲
-▲   ▲   ▲   ▲
-▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲
-▲               ▲
-▲ ▲             ▲ ▲
-▲   ▲           ▲   ▲
-▲ ▲ ▲ ▲         ▲ ▲ ▲ ▲
-▲       ▲       ▲       ▲
-▲ ▲     ▲ ▲     ▲ ▲     ▲ ▲
-▲   ▲   ▲   ▲   ▲   ▲   ▲   ▲
-▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 95. serpiński-triangle
 ```python
 def sierpinski_triangle(n):
  if n==0:return["▲"]
@@ -4810,19 +2800,7 @@ if __name__=='__main__':main()
 
 ---
 
-## smith-numbers
-A Smith number is a composite number whose digit sum is equal to the sum
-of the digits of its prime factors.
-One example of a Smith number is the number
-666 = 2 × 3 × 3 × 37, since
-6 + 6 + 6 = 2 + 3 + 3 + (3 + 7) = 18.
-Print all the Smith numbers from 0 to 10,000 inclusive,
-each on their own line.
-OEIS A006753,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 96. smith-numbers
 ```python
 def sum_digits(n):
  s=0
@@ -4862,11 +2840,7 @@ if __name__=='__main__':
 
 ---
 
-## spelling-numbers
-For each integer argument print the integer spelled out in English.
-For example: 748 becomes seven hundred and forty-eight.
-The integers will be in the range of 0 (zero) to
-1,000 (one thousand) inclusive.
+## 97. spelling-numbers
 ```python
 import sys
 def spell_number(n):
@@ -4900,14 +2874,7 @@ if __name__=='__main__':main()
 
 ---
 
-## star-wars-gpt
-You are given a series of inputs. Each input contains a text corpus
-and a dozen prompts on subsequent lines. For each prompt, output the
-most likely next word in the corpus by frequency (aka mode). If
-there is more than one mode, output the first encountered in the corpus. In
-this problem, the corpus is fixed to be the
-Star Wars Opening Crawl texts.
-Wookieepedia
+## 98. star-wars-gpt
 ```python
 import sys
 from collections import Counter
@@ -4934,48 +2901,7 @@ if __name__=='__main__':main()
 
 ---
 
-## star-wars-opening-crawl
-Format a piece of text in the style of Star Wars opening crawl. Here is an
-example. Input:
-5 21
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Corresponding output:
-Lorem ipsum dolor sit
-amet,     consectetur
-adipiscing elit, sed do
-eiusmod          tempor
-incididunt  ut  labore et
-dolore magna aliqua.
-Ut  enim  ad  minim veniam,
-quis   nostrud   exercitation
-ullamco   laboris   nisi   ut
-aliquip     ex    ea    commodo
-consequat.
-Here is how this works. Each test case consists of the following:
-A line containing the initial indentation I and the initial
-line width W, separated by a space.
-Several lines of text, each representing a paragraph of the output.
-Split the text into centred lines that get progressively longer as follows:
-The first line starts with I spaces and should contain as many words
-as you can fit in W characters (so lines may only be wrapped where
-there are spaces in the input).
-If the resulting line contains fewer than W characters, pad out the
-line by adding spaces between the words as evenly as possible to get to
-W characters in total. If some gaps require extra spaces, add them
-starting from the left. Example:
-May the Force be with you!
-This line contains 26 characters and has 5 gaps. If we had W = 33,
-the result should look like:
-May   the   Force  be  with  you!
-After every pair of lines, reduce I by 1 and increase W by 2.
-Continue this way through all of the input. The last line of each paragraph
-should not be justified (i.e. don't add any spaces to it). And
-paragraphs should be separated by an empty line that does count towards the
-progression of I and W.
-This hole contains multiple test cases (one argument per test case). Separate
-the output for multiple test cases by an empty line.
-Wookieepedia
+## 99. star-wars-opening-crawl
 ```python
 import sys
 def justify_line(words,width):
@@ -5050,36 +2976,7 @@ if __name__=='__main__':main()
 
 ---
 
-## sudoku
-Sudoku is a number puzzle where a grid of 81 digits (9×9) is filled by the
-digits 1-9 such that no row, column, or 3×3 subregion contains duplicate
-digits.
-Write a program that given an incomplete Sudoku board as 9 arguments of 9
-digits, with blanks represented by an underscore, prints a solved Sudoku
-grid using Unicode box-drawing characters like so:
-┏━━━┯━━━┯━━━┳━━━┯━━━┯━━━┳━━━┯━━━┯━━━┓
-┃ 2 │ 5 │ 8 ┃ 4 │ 1 │ 7 ┃ 6 │ 9 │ 3 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 6 │ 1 │ 7 ┃ 9 │ 2 │ 3 ┃ 8 │ 5 │ 4 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 9 │ 3 │ 4 ┃ 8 │ 6 │ 5 ┃ 1 │ 7 │ 2 ┃
-┣━━━┿━━━┿━━━╋━━━┿━━━┿━━━╋━━━┿━━━┿━━━┫
-┃ 3 │ 2 │ 5 ┃ 7 │ 8 │ 1 ┃ 4 │ 6 │ 9 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 8 │ 9 │ 6 ┃ 3 │ 5 │ 4 ┃ 2 │ 1 │ 7 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 7 │ 4 │ 1 ┃ 6 │ 9 │ 2 ┃ 5 │ 3 │ 8 ┃
-┣━━━┿━━━┿━━━╋━━━┿━━━┿━━━╋━━━┿━━━┿━━━┫
-┃ 4 │ 6 │ 9 ┃ 1 │ 3 │ 8 ┃ 7 │ 2 │ 5 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 5 │ 7 │ 3 ┃ 2 │ 4 │ 6 ┃ 9 │ 8 │ 1 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 1 │ 8 │ 2 ┃ 5 │ 7 │ 9 ┃ 3 │ 4 │ 6 ┃
-┗━━━┷━━━┷━━━┻━━━┷━━━┷━━━┻━━━┷━━━┷━━━┛
-Variants:
-Sudoku (Fill-in)
-Rosetta Code,
-Wikipedia
+## 100. sudoku
 ```python
 import sys
 def solve_sudoku(board):
@@ -5142,36 +3039,7 @@ if __name__=='__main__':main()
 
 ---
 
-## sudoku-fill-in
-Sudoku is a number puzzle where a grid of 81 digits (9×9) is filled by the
-digits 1-9 such that no row, column, or 3×3 subregion contains duplicate
-digits.
-Write a program that given an incomplete Sudoku board as an argument,
-prints the solved Sudoku board. The grid will be drawn with Unicode
-box-drawing characters like so:
-┏━━━┯━━━┯━━━┳━━━┯━━━┯━━━┳━━━┯━━━┯━━━┓
-┃ 2 │ 5 │ 8 ┃ 4 │ 1 │ 7 ┃ 6 │ 9 │ 3 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 6 │ 1 │ 7 ┃ 9 │ 2 │ 3 ┃ 8 │ 5 │ 4 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 9 │ 3 │ 4 ┃ 8 │ 6 │ 5 ┃ 1 │ 7 │ 2 ┃
-┣━━━┿━━━┿━━━╋━━━┿━━━┿━━━╋━━━┿━━━┿━━━┫
-┃ 3 │ 2 │ 5 ┃ 7 │ 8 │ 1 ┃ 4 │ 6 │ 9 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 8 │ 9 │ 6 ┃ 3 │ 5 │ 4 ┃ 2 │ 1 │ 7 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 7 │ 4 │ 1 ┃ 6 │ 9 │ 2 ┃ 5 │ 3 │ 8 ┃
-┣━━━┿━━━┿━━━╋━━━┿━━━┿━━━╋━━━┿━━━┿━━━┫
-┃ 4 │ 6 │ 9 ┃ 1 │ 3 │ 8 ┃ 7 │ 2 │ 5 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 5 │ 7 │ 3 ┃ 2 │ 4 │ 6 ┃ 9 │ 8 │ 1 ┃
-┠───┼───┼───╂───┼───┼───╂───┼───┼───┨
-┃ 1 │ 8 │ 2 ┃ 5 │ 7 │ 9 ┃ 3 │ 4 │ 6 ┃
-┗━━━┷━━━┷━━━┻━━━┷━━━┷━━━┻━━━┷━━━┷━━━┛
-Variants:
-Sudoku
-Rosetta Code,
-Wikipedia
+## 101. sudoku-fill-in
 ```python
 import sys
 def parse_formatted_board(input_string):
@@ -5232,46 +3100,7 @@ if __name__=='__main__':main()
 
 ---
 
-## ten-pin-bowling
-Given a series of ten-pin bowling scoreboards, determine the final scores
-based on the
-traditional scoring method.
-A game consists of ten frames. Each frame, players get up to two rolls to
-knock down all ten pins.
-If a player gets a strike in the final frame, they get two extra rolls. If
-they get a strike in one of the first nine frames, the value of the
-following two rolls, which may cover multiple frames, is added as a bonus.
-If a player gets a spare in the final frame, they get one extra roll. If
-they get a spare in one of the first nine frames, the value of the
-following roll is added as a bonus.
-Each argument represents one game of
-bowling for one player. For each roll, a single character represents the
-number of pins knocked down. Frames are separated by spaces. The following
-symbols are used.
-Symbol
-Description
-X
-Strike - all ten pins were knocked down on the first roll
-of a frame, or the bonus rolls of the final frame. A
-strike in the first nine frames is represented by a space
-followed by an X, as if the strike happened on the frame’s
-second roll, even though the frame consists of a single
-roll.
-/
-Spare - all remaining pins were knocked down on the second
-roll of a frame, or the second bonus roll of the final
-frame.
-F
-Foul - part of the bowler’s body went past the foul line.
--
-Miss - No pins were knocked down.
-⑤⑥⑦⑧
-Split - the foremost pin is knocked down and there is a
-gap of at least one pin between the pins that remain
-standing.
-Output the total score for each game on a separate line. The total score
-is the total number of pins knocked down plus strike and spare bonuses.
-Wikipedia
+## 102. ten-pin-bowling
 ```python
 import sys
 def calculate_score(game_string):
@@ -5307,14 +3136,7 @@ if __name__=='__main__':main()
 
 ---
 
-## tic-tac-toe
-Given a finished grid state in tic-tac-toe, determine which character wins
-the game.
-Print X or O when three consecutive characters complete a
-horizontal, vertical, or diagonal line; or - when no such line is
-completed.
-Rosetta Code,
-Wikipedia
+## 103. tic-tac-toe
 ```python
 import sys
 def check_winner(board_string):
@@ -5333,22 +3155,7 @@ if __name__=='__main__':main()
 
 ---
 
-## time-distance
-Transform a time distance given as a number of seconds to a human-friendly
-string representation.
-Zero represents the current moment,
-to be printed as now.
-Positive values represent the
-future, to be printed with the in prefix.
-Negative values represent the past,
-to be printed with the ago suffix.
-The largest possible unit of time among a second, a minute (60 seconds),
-an hour (60 minutes), a day (24 hours), a week (7 days), a month (30 days)
-and a year (365 days) is always chosen and the quantity is always rounded
-towards zero.
-The correct singular/plural of each unit must be used. If the quantity is
-1, print a month and an hour rather than
-1 month and 1 hour.
+## 104. time-distance
 ```python
 import sys
 def format_time_distance(seconds):
@@ -5381,23 +3188,7 @@ if __name__=='__main__':main()
 
 ---
 
-## tongue-twisters
-Print the following tongue twisters with a blank line between each one:
-How much wood would a woodchuck chuck,
-If a woodchuck could chuck wood?
-A woodchuck would chuck all the wood he could chuck
-If a woodchuck would chuck wood.
-Peter Piper picked a peck of pickled peppers.
-A peck of pickled peppers Peter Piper picked.
-If Peter Piper picked a peck of pickled peppers,
-Where's the peck of pickled peppers Peter Piper picked?
-She sells seashells by the seashore,
-The shells she sells are seashells, I'm sure.
-So if she sells seashells on the seashore,
-Then I'm sure she sells seashore shells.
-Wikipedia
-Copy Answer
-Copied
+## 105. tongue-twisters
 ```python
 def print_tongue_twisters():
     tongue_twisters = [
@@ -5426,9 +3217,7 @@ if __name__ == "__main__":
 
 ---
 
-## topological-sort
-Given the set of edges of a directed graph, print the linear order of its nodes. The order is always unique. Each edge is given on a separate line; an edge from node u to node v is given as u v. The nodes are numbered from 0 to N - 1, where 2 ≤ N ≤ 10 is the number of nodes in the graph.
-This is similar to the tsort utility, except that output nodes are separated with spaces instead of newlines.
+## 106. topological-sort
 ```python
 import sys
 def topological_sort(edges_string):
@@ -5460,26 +3249,7 @@ if __name__=='__main__':main()
 
 ---
 
-## transpose-sentence
-Given a list of sentences, print the transposed representation of each
-input.
-Consider the sentence: all work and no play makes jack a dull boy.
-To transpose it, first write each word on a separate line:
-₁₂₃₄₅
-↓↓↓↓↓
-all
-work
-and
-no
-play
-makes
-jack
-a
-dull
-boy
-Then read the block of text top to bottom, left to right, inserting a
-space after the last letter of each column, which yields:
-awanpmjadb lonolaauo lrdakcly kyekl s.
+## 107. transpose-sentence
 ```python
 import sys
 def transpose_sentence(sentence):
@@ -5500,67 +3270,7 @@ if __name__=='__main__':main()
 
 ---
 
-## united-states
-Given each US state (and a federal district) print the corresponding US
-Postal Service abbreviation.
-The full mapping is as follows:
-StateAbbr.
-AlabamaAL
-AlaskaAK
-ArizonaAZ
-ArkansasAR
-CaliforniaCA
-ColoradoCO
-ConnecticutCT
-DelawareDE
-District of ColumbiaDC
-FloridaFL
-GeorgiaGA
-HawaiiHI
-IdahoID
-StateAbbr.
-IllinoisIL
-IndianaIN
-IowaIA
-KansasKS
-KentuckyKY
-LouisianaLA
-MaineME
-MarylandMD
-MassachusettsMA
-MichiganMI
-MinnesotaMN
-MississippiMS
-MissouriMO
-StateAbbr.
-MontanaMT
-NebraskaNE
-NevadaNV
-New HampshireNH
-New JerseyNJ
-New MexicoNM
-New YorkNY
-North CarolinaNC
-North DakotaND
-OhioOH
-OklahomaOK
-OregonOR
-PennsylvaniaPA
-StateAbbr.
-Rhode IslandRI
-South CarolinaSC
-South DakotaSD
-TennesseeTN
-TexasTX
-UtahUT
-VermontVT
-VirginiaVA
-WashingtonWA
-West VirginiaWV
-WisconsinWI
-WyomingWY
-Copy as JSON
-Copied
+## 108. united-states
 ```python
 import sys
 def main():
@@ -5576,22 +3286,7 @@ if __name__=='__main__':main()
 
 ---
 
-## vampire-numbers
-A vampire number is a non-negative number that can be factored into two
-numbers (fangs) each with half as many digits as the original where the
-two factors contain all the digits of the original, in any order. One but
-not both fangs may have trailing zeros.
-For example 1260 = 21×60, 1395 = 15×93, 1435 = 35×41,
-1530 = 30×51, etc.
-Print all the vampire numbers from 1 to 1,000,000 inclusive,
-each on their own line.
-Be careful with the algorithmic complexity of your solution to avoid
-timing out.
-OEIS A014575,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 109. vampire-numbers
 ```python
 import sys
 def find_vampire_numbers(num_digits):
@@ -5618,24 +3313,7 @@ if __name__=='__main__':main()
 
 ---
 
-## van-eck-sequence
-The rules of the Van Eck sequence are as follows:
-The first term is zero.
-If the last term is new then the next term is zero.
-Otherwise the next term is how far back the term occurred previously.
-The first few terms are as follows:
-0         (using a)
-0 0       (using b)
-0 0 1     (using c)
-0 0 1 0   (using b)
-0 0 1 0 2 (using c)
-Print the first 1,000 terms of the Van Eck sequence, with each term
-on a new line.
-Numberphile,
-OEIS A181391,
-Rosetta Code
-Copy Answer
-Copied
+## 110. van-eck-sequence
 ```python
 def van_eck_sequence(n):
     """
@@ -5678,17 +3356,7 @@ if __name__ == "__main__":
 
 ---
 
-## zeckendorf-representation
-Every natural number can be written uniquely as the sum of Fibonacci
-numbers in a way that avoids using consecutive Fibonacci numbers.
-For example, 10 = 8 + 2, and 64 = 55 + 8 + 1.
-This sum is called the Zeckendorf representation.
-Print the Zeckendorf representation for each input argument.
-Terms should be listed in decreasing order separated by ' + '.
-For example, input 10 should produce 8 + 2.
-Inputs are in the range 1 (inclusive) to 231 (exclusive).
-Rosetta Code,
-Wikipedia
+## 111. zeckendorf-representation
 ```python
 import sys
 def get_fibonacci_sequence(limit):
@@ -5721,53 +3389,7 @@ if __name__=='__main__':main()
 
 ---
 
-## zodiac-signs
-Given a MM-DD HH:MM date and time, output the corresponding
-Zodiac sign symbol according to the first table below. If the ascending
-sign is different from the Zodiac sign (sun sign), output it as well.
-Approximate the ascending sign using the sun sign and time according to
-the second table below.
-SignSymbolDate
-Aries♈March 21 – April 19
-Taurus♉April 20 – May 20
-Gemini♊May 21 – June 21
-Cancer♋June 22 – July 22
-Leo♌July 23 – August 22
-Virgo♍August 23 – September 22
-Libra♎September 23 – October 22
-Scorpio♏October 23 – November 22
-Sagittarius♐November 23 – December 21
-Capricorn♑December 22 – January 19
-Aquarius♒January 20 – February 18
-Pisces♓February 19 – March 20
-Time/Sun Symbol
-♈♉♊♋♌♍♎♏♐♑♒♓
-00:00 - 01:59
-♒♓♈♉♊♋♌♍♎♏♐♑
-02:00 - 03:59
-♓♈♉♊♋♌♍♎♏♐♑♒
-04:00 - 05:59
-♈♉♊♋♌♍♎♏♐♑♒♓
-06:00 - 07:59
-♉♊♋♌♍♎♏♐♑♒♓♈
-08:00 - 09:59
-♊♋♌♍♎♏♐♑♒♓♈♉
-10:00 - 11:59
-♋♌♍♎♏♐♑♒♓♈♉♊
-12:00 - 13:59
-♌♍♎♏♐♑♒♓♈♉♊♋
-14:00 - 15:59
-♍♎♏♐♑♒♓♈♉♊♋♌
-16:00 - 17:59
-♎♏♐♑♒♓♈♉♊♋♌♍
-18:00 - 19:59
-♏♐♑♒♓♈♉♊♋♌♍♎
-20:00 - 21:59
-♐♑♒♓♈♉♊♋♌♍♎♏
-22:00 - 23:59
-♑♒♓♈♉♊♋♌♍♎♏♐
-Zodiac Sign Wikipedia,
-Ascending Sign Wikipedia
+## 112. zodiac-signs
 ```python
 import sys
 SUN_SIGNS=[('Capricorn','♑',(12,22),(12,31)),('Aquarius','♒',(1,20),(2,18)),('Pisces','♓',(2,19),(3,20)),('Aries','♈',(3,21),(4,19)),('Taurus','♉',(4,20),(5,20)),('Gemini','♊',(5,21),(6,21)),('Cancer','♋',(6,22),(7,22)),('Leo','♌',(7,23),(8,22)),('Virgo','♍',(8,23),(9,22)),('Libra','♎',(9,23),(10,22)),('Scorpio','♏',(10,23),(11,22)),('Sagittarius','♐',(11,23),(12,21)),('Capricorn','♑',(1,1),(1,19))]
@@ -5796,13 +3418,7 @@ if __name__=='__main__':main()
 
 ---
 
-## γ
-Print the first 1,000 decimal digits of the Euler–Mascheroni constant γ (gamma).
-OEIS A001620,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 113. γ
 ```python
 import decimal
 from decimal import Decimal as D
@@ -5833,16 +3449,7 @@ print(f"{intp}.{fracp}")
 
 ---
 
-## λ
-Conway’s constant λ is a mathematical constant related to the growth of
-the look-and-say sequence.
-It is the unique positive root of
-this large polynomial.
-Print the first 1,000 decimal digits of λ.
-OEIS A014715,
-Wikipedia
-Copy Answer
-Copied
+## 114. λ
 ```python
 POLY_COEFFS=[-6,3,-6,12,-4,7,-7,1,0,5,-2,-4,-12,2,7,12,-7,-10,-4,3,9,-7,0,-8,14,-3,9,2,-3,-10,-2,-6,1,10,-3,1,7,-7,7,-12,-5,8,6,10,-8,-8,-7,-3,9,1,6,6,-2,-3,-10,-2,3,5,2,-1,-1,-1,-1,-1,1,2,2,-1,-2,-1,0,1]
 def eval_poly(x,coeffs,scale,deriv=False):
@@ -5873,15 +3480,7 @@ if __name__=='__main__':print(compute_conway_constant())
 
 ---
 
-## π
-Print the first 1,000 decimal digits of π (pi).
-Variants:
-τ
-OEIS A000796,
-Rosetta Code,
-Wikipedia
-Copy Answer
-Copied
+## 115. π
 ```python
 import decimal
 from decimal import Decimal as D,getcontext
@@ -5910,13 +3509,7 @@ if __name__=='__main__':main()
 
 ---
 
-## τ
-Print the first 1,000 decimal digits of 2π=τ (tau).
-Variants:
-π
-Wikipedia
-Copy Answer
-Copied
+## 116. τ
 ```python
 import decimal
 from decimal import Decimal as D,getcontext
@@ -5944,12 +3537,7 @@ if __name__=='__main__':main()
 
 ---
 
-## φ
-Print the first 1,000 decimal digits of the Golden ratio φ (phi).
-OEIS A001622,
-Wikipedia
-Copy Answer
-Copied
+## 117. φ
 ```python
 from decimal import Decimal, getcontext
 
@@ -5982,12 +3570,7 @@ if __name__ == '__main__':
 
 ---
 
-## √2
-Print the first 1,000 decimal digits of √2 (Pythagoras’ constant).
-OEIS A002193,
-Wikipedia
-Copy Answer
-Copied
+## 118. √2
 ```python
 import decimal
 from decimal import Decimal as D,getcontext
@@ -6005,12 +3588,7 @@ if __name__=='__main__':main()
 
 ---
 
-## e
-Print the first 1,000 decimal digits of 𝑒 (Euler’s number).
-OEIS A001113,
-Wikipedia
-Copy Answer
-Copied
+## 119. e
 ```python
 import decimal
 from decimal import Decimal as D,getcontext
