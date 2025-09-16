@@ -1,0 +1,866 @@
+import re
+import asyncio
+import json
+import os
+import sys
+import random
+import csv
+from typing import List, Dict, Optional
+from dataclasses import dataclass
+from datetime import datetime
+import logging
+import tempfile
+import time
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules.llm import LLM
+from modules.prompt_template import (
+    VARIANT_GENERATION_PROMPT, 
+    OPTIMIZATION_PROMPT, 
+    TRICKS_PROMPT,
+    FIX_FAILED_VARIANT_PROMPT,
+    KNOWLEDGE_BASE_TRICKS_PROMPT,
+    PROVIDED_TRICKS_PROMPT
+)
+
+# Add Google Code Golf utils to path
+sys.path.append("/data/bzy/golf/google-code-golf-2025/code_golf_utils")
+from code_golf_utils import load_examples, verify_program
+
+@dataclass
+class Attempt:
+    code: str
+    passed: bool
+    length: int = 0
+    minified_code: str = ""
+    minified_length: int = 0
+    summary: str = ""
+    strategy: str = ""
+    
+    def __post_init__(self):
+        self.length = len(self.code.encode())
+        if self.minified_code:
+            self.minified_length = len(self.minified_code.encode())
+    
+    def min_length(self) -> int:
+        """Return the minified code length for consistent comparison"""
+        if not self.passed:
+            return 2**32 - 1
+        # Always use minified length for comparison if available
+        if self.minified_code and self.minified_length > 0:
+            return self.minified_length
+        return self.length
+    
+    def update_minified(self, minified_code: str):
+        """Update minified code and its length"""
+        self.minified_code = minified_code
+        self.minified_length = len(minified_code.encode())
+
+class CodeJudge:
+    def __init__(self, task_num: int, examples: Dict, timeout: int = 2):
+        self.task_num = task_num
+        self.examples = examples
+        self.timeout = timeout
+    
+    async def execute(self, code: str) -> tuple[bool, str]:
+        """Execute code against Google Code Golf test cases"""
+        try:
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+                f.write(code)
+                temp_file = f.name
+            
+            try:
+                import io
+                from contextlib import redirect_stdout
+                
+                captured_output = io.StringIO()
+                
+                with redirect_stdout(captured_output):
+                    try:
+                        verify_program(self.task_num, self.examples, temp_file)
+                        verification_output = captured_output.getvalue()
+                        
+                        if "Your code IS READY for submission!".lower() in verification_output.lower():
+                            return True, "All tests passed"
+                        else:
+                            return False, verification_output.split("The expected result is shown in green; your actual result is shown in red.")[0]
+                            
+                    except Exception as e:
+                        return False, f"Verification error: {str(e)}"
+                        
+            finally:
+                try:
+                    os.unlink(temp_file)
+                except:
+                    pass
+                    
+        except Exception as e:
+            return False, f"Runtime error: {str(e)}"
+
+async def minify_code(code: str) -> str:
+    """Advanced code minification for Google Code Golf"""
+    import re
+    
+    lines = []
+    for line in code.split('\n'):
+        line = re.sub(r'#.*', '', line)
+        if line.strip():
+            lines.append(line)
+    
+    minified = '\n'.join(lines)
+    
+    replacements = [
+        (r'\s*=\s*', '='),
+        (r'\s*\+\s*', '+'),
+        (r'\s*-\s*', '-'),
+        (r'\s*\*\s*', '*'),
+        (r'\s*/\s*', '/'),
+        (r'\s*==\s*', '=='),
+        (r'\s*!=\s*', '!='),
+        (r'\s*<=\s*', '<='),
+        (r'\s*>=\s*', '>='),
+        (r'\s*<\s*', '<'),
+        (r'\s*>\s*', '>'),
+        (r'\s*\[\s*', '['),
+        (r'\s*\]\s*', ']'),
+        (r'\s*\(\s*', '('),
+        (r'\s*\)\s*', ')'),
+        (r'\s*,\s*', ','),
+        (r'\s*:\s*', ':'),
+        (r'\n    ', '\n '),
+    ]
+    
+    for old, new in replacements:
+        minified = re.sub(old, new, minified)
+    
+    return minified
+
+class GolfAgent:
+    def __init__(
+        self, 
+        llm: LLM, 
+        task_num: int,
+        initial_solution: str,
+        n_variants: int = 10,
+        generation_factor: float = 2.0,
+        max_steps: int = 16,
+        early_stop_steps: int = 5,
+        max_iterations: int = 5,
+        use_shortest_hint: bool = False,
+        save_file: str = None,
+        logger: logging.Logger = None
+    ):
+        self.project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        self.llm = llm
+        self.task_num = task_num
+        self.examples = load_examples(task_num)
+        self.judge = CodeJudge(task_num, self.examples)
+        self.initial_solution = initial_solution
+        
+        # Configuration for advanced strategy
+        self.n_variants = n_variants
+        self.generation_factor = generation_factor  # Generate generation_factor * n variants, then select n
+        self.use_shortest_hint = use_shortest_hint
+        self.shortest_known = self._load_shortest_length() if use_shortest_hint else None
+        
+        # Existing configuration
+        self.max_steps = max_steps
+        self.early_stop_steps = early_stop_steps
+        self.max_iterations = max_iterations
+        self.save_file = save_file
+        # set logger path
+        logs_dir = os.path.join(self.project_path, 'logs')
+        os.makedirs(logs_dir, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = f"{logs_dir}/task_{task_num:03d}_{timestamp}.log"
+        
+        # Print to console for immediate feedback
+        print(f"Initializing GolfAgent for task {task_num}")
+        print(f"Log file will be: {log_file}")
+        
+        self.logger = logger or self._setup_logger(log_file=log_file)
+        
+        # Immediate log to verify logger is working
+        self.logger.info(f"GolfAgent initialized for task {task_num}")
+        self.logger.info(f"Project path: {self.project_path}")
+        self.logger.info(f"Log file: {log_file}")
+        
+        # Load generator code and tricks
+        self.generator_code = self._load_generator_code()
+        self.tricks = self._load_tricks()
+        
+        # State tracking
+        self.step = 0
+        self.total_llm_calls = 0
+        self.all_attempts: List[List[Attempt]] = []  # Attempts for each variant path
+        self.best_attempt: Optional[Attempt] = None
+        
+        # Prompt logging tracking
+        self.logged_prompts = set()  # Track which prompt types have been logged
+        
+    def _setup_logger(self, log_file) -> logging.Logger:
+        """Setup a basic logger if none provided"""
+        # Use a unique logger name to avoid conflicts
+        logger_name = f'GolfAgent_task{self.task_num}_{datetime.now().strftime("%H%M%S")}'
+        logger = logging.getLogger(logger_name)
+        logger.setLevel(logging.INFO)
+        
+        # Clear any existing handlers to avoid duplicates
+        logger.handlers.clear()
+        
+        # Always add console handler
+        console_handler = logging.StreamHandler()
+        console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        console_handler.setFormatter(console_formatter)
+        logger.addHandler(console_handler)
+
+        # Add file handler if log_file is provided
+        if log_file:
+            try:
+                file_handler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
+                file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+                file_handler.setFormatter(file_formatter)
+                logger.addHandler(file_handler)
+                logger.info(f"Logger initialized for task {self.task_num}, log file: {log_file}")
+            except Exception as e:
+                logger.warning(f"Failed to create file handler for {log_file}: {e}")
+        
+        return logger
+    
+    def _log_prompt_once(self, prompt_type: str, prompt: str):
+        """Log a prompt only if it hasn't been logged before"""
+        if prompt_type not in self.logged_prompts:
+            self.logger.info(f"\n{'='*60}")
+            self.logger.info(f"FIRST {prompt_type.upper()} PROMPT")
+            self.logger.info(f"{'='*60}")
+            self.logger.info(prompt)
+            self.logger.info(f"{'='*60}\n")
+            self.logged_prompts.add(prompt_type)
+    
+    def _load_shortest_length(self) -> Optional[int]:
+        """Load shortest known solution length from CSV"""
+        try:
+            with open(f'{self.project_path}/files/shortest_solutions_len.csv', 'r') as f:
+                reader = csv.reader(f)
+                lengths = list(reader)
+                if self.task_num <= len(lengths):
+                    return int(lengths[self.task_num - 1][0])
+        except Exception as e:
+            self.logger.warning(f"Could not load shortest length: {e}")
+        return None
+    
+    def _load_generator_code(self) -> str:
+        """Load generator code for the task"""
+        try:
+            with open(f'{self.project_path}/generate/task{self.task_num:03d}.py', 'r') as f:
+                code = f.read()
+                return "def " + code.split("def")[1].strip()
+        except Exception as e:
+            self.logger.warning(f"Could not load generator code: {e}")
+            return ""
+    
+    def _load_tricks(self) -> List[Dict]:
+        """Load code golf tricks from JSON"""
+        try:
+            with open(f'{self.project_path}/files/tricks.json', 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            self.logger.warning(f"Could not load tricks: {e}")
+            return []
+    
+    def _extract_code(self, response: str) -> Optional[str]:
+        """Extract Python code from markdown blocks"""
+        patterns = [
+            r"```(?:python|py|python3)\s+(.*?)\s*```",
+            r"```\s*(.*?)\s*```"
+        ]
+        
+        for pattern in patterns:
+            matches = re.findall(pattern, response, re.DOTALL)
+            if matches:
+                code = matches[-1].strip()
+                if 'def solve(' in code:
+                    code = code.replace('def solve(', 'def p(')
+                elif 'def ' not in code:
+                    lines = code.split('\n')
+                    indented_lines = [' ' + line if line.strip() else line for line in lines]
+                    code = 'def p(g):\n' + '\n'.join(indented_lines)
+                return code
+        return None
+    
+    def _extract_variants(self, response: str) -> List[tuple[str, str]]:
+        """Extract multiple code variants from LLM response"""
+        variants = []
+        
+        # Look for sections like "### Variant 1:", "### Variant 2:", etc.
+        sections = re.split(r'(?:##|###)\s*(?:Strategy|Variant|Approach)\s*\d+[:\s]*', response)
+        
+        for section in sections[1:]:  # Skip first empty section
+            # Extract strategy description from **Strategy:** field
+            strategy_match = re.search(r'\*\*Strategy:\*\*\s*(.*?)(?:\*\*|```|$)', section, re.DOTALL)
+            if strategy_match:
+                strategy = strategy_match.group(1).strip()
+                # Clean up the strategy text
+                strategy = re.sub(r'\s+', ' ', strategy)
+                strategy = strategy.split('\n')[0]  # Take first line only
+            else:
+                # Fallback: extract first meaningful line
+                lines = section.strip().split('\n')
+                strategy = ""
+                for line in lines:
+                    line = line.strip()
+                    if line and not line.startswith('**') and not line.startswith('```'):
+                        strategy = line
+                        break
+                if not strategy:
+                    strategy = "Unknown Strategy"
+            
+            # Extract code
+            code = self._extract_code(section)
+            if code and strategy:
+                variants.append((code, strategy))
+                
+            # Also check for variant end marker
+            if "**End of Variant" in section:
+                continue
+        
+        return variants
+    
+    def _create_variant_generation_prompt(self) -> str:
+        """Create prompt for generating multiple code variants"""
+        examples_str = self._format_examples()
+        
+        shortest_hint = ""
+        if self.shortest_known:
+            shortest_hint = f"\nNote: The shortest known solution for this task is {self.shortest_known} bytes. Try to approach or beat this length."
+        
+        return VARIANT_GENERATION_PROMPT.format(
+            n_variants=int(self.n_variants * self.generation_factor),
+            examples_str=examples_str,
+            generator_code=self.generator_code,
+            initial_solution=self.initial_solution,
+            shortest_hint=shortest_hint
+        )
+    
+    def _create_optimization_prompt(self, code: str, attempt_history: List[Attempt], iteration: int) -> str:
+        """Create prompt for optimizing a specific variant"""
+        examples_str = self._format_examples()
+        
+        # Build history context
+        history_str = ""
+        if attempt_history:
+            history_str = "\nOptimization History:\n"
+            for i, attempt in enumerate(attempt_history[-3:]):
+                status = "✓ PASSED" if attempt.passed else "✗ FAILED"
+                length = attempt.min_length() if attempt.passed else "N/A"
+                history_str += f"Attempt {i+1}: {status}, {length} bytes\n"
+                if attempt.summary:
+                    history_str += f"Notes: {attempt.summary}\n"
+        
+        shortest_hint = ""
+        if self.shortest_known:
+            shortest_hint = f"\nTarget: The shortest known solution is {self.shortest_known} bytes. Try to approach or beat this length."
+        
+        return OPTIMIZATION_PROMPT.format(
+            examples_str=examples_str,
+            generator_code=self.generator_code,
+            code=code,
+            history_str=history_str,
+            shortest_hint=shortest_hint
+        )
+    
+    def _create_tricks_prompt(self, code: str) -> str:
+        """Create prompt for applying specific golf tricks"""
+        tricks_str = ""
+        for i, trick in enumerate(self.tricks):
+            tricks_str += f"\n{i+1}. {trick['trick']}\n"
+            tricks_str += f"   Before: {trick['input']}\n"
+            tricks_str += f"   After: {trick['output']}\n"
+            tricks_str += f"   Note: {trick['note']}\n"
+        
+        return TRICKS_PROMPT.format(
+            code=code,
+            tricks_str=tricks_str
+        )
+    
+    def _format_examples(self) -> str:
+        """Format examples for display in prompt, combining train, test, and arc-gen."""
+        result = "Examples:\n"
+        total_length = 0
+        max_length = 8000  # Maximum total length of examples
+        max_examples = 10  # Maximum number of examples to include
+
+        # Combine examples from train, test, and arc-gen
+        all_examples = (
+            self.examples.get('train', []) +
+            self.examples.get('test', []) +
+            self.examples.get('arc-gen', [])
+        )
+
+        for i, example in enumerate(all_examples[:max_examples]):
+            example_str = (
+                f"Example {i+1}:\n"
+                f"Input: {example['input']}\n"
+                f"Output: {example['output']}\n\n"
+            )
+            if total_length + len(example_str) > max_length:
+                break
+
+            result += example_str
+            total_length += len(example_str)
+
+        return result
+    
+    async def _generate_variants(self) -> List[Attempt]:
+        """Generate multiple code variants using different strategies"""
+        self.logger.info(f"Generating {int(self.n_variants * self.generation_factor)} code variants...")
+        
+        prompt = self._create_variant_generation_prompt()
+        self._log_prompt_once("variant_generation", prompt)
+        
+        self.total_llm_calls += 1
+        
+        # 变体生成：高温度以获得创造性，结构化输出
+        response = await self.llm.chat(
+            [{"role": "user", "content": prompt}],
+            temperature=0.8,
+            reasoning_effort="high",
+            response_format={"type": "text"}  # 使用文本格式，因为需要解析多个代码块
+        )
+        
+        # Extract variants
+        variants_data = self._extract_variants(response)
+        variants = []
+        
+        for code, strategy in variants_data:
+            if code:
+                # Test the variant
+                passed, info = await self.judge.execute(code)
+                attempt = Attempt(code=code, passed=passed, summary=info, strategy=strategy)
+                
+                # Always try to minify the code
+                try:
+                    minified = await minify_code(code)
+                    attempt.update_minified(minified)
+                except Exception as e:
+                    self.logger.warning(f"Failed to minify code: {e}")
+                
+                variants.append(attempt)
+                self.logger.info(f"[VARIANT_GEN] {strategy} - {'PASSED' if passed else 'FAILED'} - {attempt.min_length()} bytes")
+        
+        # Select best variants (prioritize working ones, then by length)
+        working_variants = [v for v in variants if v.passed]
+        failed_variants = [v for v in variants if not v.passed]
+        
+        # Sort working variants by length, take best ones
+        working_variants.sort(key=lambda x: x.min_length())
+        selected = working_variants[:self.n_variants]
+        
+        # If we don't have enough working variants, try to fix some failed ones
+        if len(selected) < self.n_variants:
+            remaining = self.n_variants - len(selected)
+            fixed_variants = await self._fix_failed_variants(failed_variants[:remaining * 2])  # Try to fix more than needed
+            selected.extend(fixed_variants[:remaining])
+        
+        self.logger.info(f"[VARIANT_GEN] Selected {len(selected)} variants for optimization ({len([v for v in selected if v.passed])} working)")
+        return selected
+    
+    async def _fix_failed_variants(self, failed_variants: List[Attempt]) -> List[Attempt]:
+        """Try to fix failed variants by addressing their specific issues"""
+        fixed_variants = []
+        
+        for variant in failed_variants:
+            self.logger.info(f"[VARIANT_FIX] Attempting to fix variant: {variant.strategy}\nCode: {variant.code}\nError Summary: {variant.summary}\n")
+            
+            fix_prompt = FIX_FAILED_VARIANT_PROMPT.format(
+                error_summary=variant.summary,
+                original_code=variant.code,
+                strategy=variant.strategy
+            )
+            self._log_prompt_once("fix_failed_variant", fix_prompt)
+
+            try:
+                self.total_llm_calls += 1
+                # 修复失败变体：中等温度，专注于问题解决
+                response = await self.llm.chat(
+                    [{"role": "user", "content": fix_prompt}],
+                    temperature=0.4,
+                    reasoning_effort="high",
+                    response_format={"type": "text"}
+                )
+                
+                fixed_code = self._extract_code(response)
+                if fixed_code:
+                    # Test the fixed code
+                    passed, info = await self.judge.execute(fixed_code)
+                    fixed_attempt = Attempt(code=fixed_code, passed=passed, summary=info, strategy=f"Fixed: {variant.strategy}")
+                    
+                    # Minify the fixed code
+                    try:
+                        minified = await minify_code(fixed_code)
+                        fixed_attempt.update_minified(minified)
+                    except:
+                        pass
+                    
+                    if passed:
+                        self.logger.info(f"[VARIANT_FIX] Successfully fixed variant: {fixed_attempt.strategy} - {fixed_attempt.min_length()} bytes")
+                        fixed_variants.append(fixed_attempt)
+                    else:
+                        self.logger.warning(f"[VARIANT_FIX] Fixed variant still failed: {info}")
+                        
+            except Exception as e:
+                self.logger.warning(f"[VARIANT_FIX] Failed to fix variant: {e}")
+        
+        return fixed_variants
+    
+    async def _optimize_variant(self, initial_attempt: Attempt, variant_id: int) -> List[Attempt]:
+        """Optimize a single variant through sequential improvement"""
+        path_prefix = f"[PATH_{variant_id:02d}]"
+        self.logger.info(f"{path_prefix} Starting optimization: {initial_attempt.strategy}")
+        
+        attempts = [initial_attempt]
+        current_best = initial_attempt
+        improvements = []
+        
+        # Regular optimization steps
+        for step in range(self.max_steps):
+            self.logger.info(f"{path_prefix} Step {step+1}/{self.max_steps}")
+            
+            # Create conversation history for this optimization
+            history = []
+            best_before = current_best.min_length()
+            
+            # Generate optimization prompt
+            prompt = self._create_optimization_prompt(current_best.code, attempts[-3:], step)
+            if variant_id == 0:  # Only log the first variant's optimization prompt
+                self._log_prompt_once("optimization", prompt)
+            
+            history = [{"role": "user", "content": prompt}]
+            
+            # Try to get improved code
+            for iteration in range(self.max_iterations):
+                self.total_llm_calls += 1
+                # 代码优化：低温度以获得精确性
+                response = await self.llm.chat(
+                    history,
+                    temperature=0.3,
+                    reasoning_effort="high",
+                    response_format={"type": "text"}
+                )
+                history.append({"role": "assistant", "content": response})
+                
+                code = self._extract_code(response)
+                if not code:
+                    history.append({
+                        "role": "user", 
+                        "content": "Please provide your optimized code in a Python code block."
+                    })
+                    continue
+                
+                # Test the code
+                passed, info = await self.judge.execute(code)
+                attempt = Attempt(code=code, passed=passed, summary=info, strategy=current_best.strategy)
+                
+                # Always try to minify the code
+                try:
+                    minified = await minify_code(code)
+                    attempt.update_minified(minified)
+                except Exception as e:
+                    self.logger.warning(f"Failed to minify code: {e}")
+                
+                if passed:
+                    break
+                else:
+                    if iteration < self.max_iterations - 1:
+                        history.append({
+                            "role": "user",
+                            "content": f"Code failed: {info}.\n Please fix and try again."
+                        })
+            
+            attempts.append(attempt)
+            
+            # Check for improvement
+            if attempt.passed and attempt.min_length() < best_before:
+                improvement = best_before - attempt.min_length()
+                current_best = attempt
+                improvements.append(True)
+                self.logger.info(f"{path_prefix} ✓ Improved by {improvement} bytes to {attempt.min_length()}")
+            else:
+                improvements.append(False)
+                self.logger.info(f"{path_prefix} ⚬ No improvement, best remains {current_best.min_length()}")
+            
+            # Early stopping
+            if len(improvements) >= self.early_stop_steps:
+                recent = improvements[-self.early_stop_steps:]
+                if not any(recent):
+                    self.logger.info(f"{path_prefix} Early stopping - no improvements in {self.early_stop_steps} steps")
+                    break
+        
+        # Apply tricks if optimization stalled
+        if current_best.passed and len(improvements) >= 2 and not any(improvements[-2:]):
+            self.logger.info(f"{path_prefix} Applying golf tricks...")
+            tricks_result = await self._apply_tricks_iteratively(current_best, variant_id)
+            if tricks_result and tricks_result.passed and tricks_result.min_length() < current_best.min_length():
+                attempts.append(tricks_result)
+                current_best = tricks_result
+                self.logger.info(f"{path_prefix} ✓ Tricks improved to {tricks_result.min_length()} bytes")
+        
+        self.logger.info(f"{path_prefix} Final result: {current_best.min_length()} bytes ({'PASSED' if current_best.passed else 'FAILED'})")
+        return attempts
+    
+    async def _apply_tricks_iteratively(self, current_best: Attempt, variant_id: int = -1) -> Optional[Attempt]:
+        """Apply golf tricks iteratively until no more improvements"""
+        path_prefix = f"[PATH_{variant_id:02d}]" if variant_id >= 0 else "[TRICKS]"
+        self.logger.info(f"{path_prefix} Starting iterative tricks application...")
+        
+        best_so_far = current_best
+        iteration = 0
+        max_trick_iterations = 5  # Prevent infinite loops
+        
+        while iteration < max_trick_iterations:
+            iteration += 1
+            self.logger.info(f"{path_prefix} Tricks iteration {iteration}")
+            
+            # First, scan knowledge base for applicable tricks
+            knowledge_tricks = await self._scan_knowledge_base_tricks(best_so_far, variant_id)
+            
+            # Then apply provided tricks
+            provided_tricks = await self._apply_provided_tricks(best_so_far, variant_id)
+            
+            # Try both approaches and pick the best
+            candidates = [best_so_far]
+            if knowledge_tricks and knowledge_tricks.passed:
+                candidates.append(knowledge_tricks)
+            if provided_tricks and provided_tricks.passed:
+                candidates.append(provided_tricks)
+            
+            # Find the best candidate
+            new_best = min(candidates, key=lambda x: x.min_length())
+            
+            # Check if we made progress
+            if new_best.min_length() < best_so_far.min_length():
+                improvement = best_so_far.min_length() - new_best.min_length()
+                self.logger.info(f"{path_prefix} Tricks iteration {iteration}: ✓ Improved by {improvement} bytes to {new_best.min_length()}")
+                best_so_far = new_best
+            else:
+                self.logger.info(f"{path_prefix} Tricks iteration {iteration}: ⚬ No improvement, stopping")
+                break
+        
+        return best_so_far if best_so_far != current_best else None
+    
+    async def _scan_knowledge_base_tricks(self, current_best: Attempt, variant_id: int = -1) -> Optional[Attempt]:
+        """Scan LLM's knowledge base for applicable golf tricks"""
+        scan_prompt = KNOWLEDGE_BASE_TRICKS_PROMPT.format(
+            code=current_best.code
+        )
+        if variant_id == 0:  # Only log the first variant's knowledge base tricks prompt
+            self._log_prompt_once("knowledge_base_tricks", scan_prompt)
+
+        try:
+            self.total_llm_calls += 1
+            # 知识库扫描：中等温度，专注于技巧应用
+            response = await self.llm.chat(
+                [{"role": "user", "content": scan_prompt}],
+                temperature=0.5,
+                reasoning_effort="medium",
+                response_format={"type": "text"}
+            )
+            
+            code = self._extract_code(response)
+            if not code or code == current_best.code:
+                return None
+            
+            passed, info = await self.judge.execute(code)
+            attempt = Attempt(code=code, passed=passed, summary=f"Knowledge base tricks: {info}", strategy=current_best.strategy)
+            
+            if passed:
+                try:
+                    minified = await minify_code(code)
+                    attempt.update_minified(minified)
+                except:
+                    pass
+            
+            return attempt
+        except Exception as e:
+            path_prefix = f"[PATH_{variant_id:02d}]" if variant_id >= 0 else "[TRICKS]"
+            self.logger.warning(f"{path_prefix} Knowledge base tricks failed: {e}")
+            return None
+    
+    async def _apply_provided_tricks(self, current_best: Attempt, variant_id: int = -1) -> Optional[Attempt]:
+        """Apply tricks from the provided tricks database"""
+        tricks_str = ""
+        for i, trick in enumerate(self.tricks):
+            tricks_str += f"\n{i+1}. {trick['trick']}\n"
+            tricks_str += f"   Before: {trick['input']}\n"
+            tricks_str += f"   After: {trick['output']}\n"
+            tricks_str += f"   Note: {trick['note']}\n"
+        
+        prompt = PROVIDED_TRICKS_PROMPT.format(
+            code=current_best.code,
+            tricks_str=tricks_str
+        )
+        if variant_id == 0:  # Only log the first variant's provided tricks prompt
+            self._log_prompt_once("provided_tricks", prompt)
+
+        try:
+            self.total_llm_calls += 1
+            # 提供技巧应用：低温度，高精确性
+            response = await self.llm.chat(
+                [{"role": "user", "content": prompt}],
+                temperature=0.2,
+                reasoning_effort="high",
+                response_format={"type": "text"}
+            )
+            
+            if "NO_APPLICABLE_TRICKS" in response:
+                return None
+            
+            code = self._extract_code(response)
+            if not code or code == current_best.code:
+                return None
+            
+            passed, info = await self.judge.execute(code)
+            attempt = Attempt(code=code, passed=passed, summary=f"Provided tricks: {info}", strategy=current_best.strategy)
+            
+            if passed:
+                try:
+                    minified = await minify_code(code)
+                    attempt.update_minified(minified)
+                except:
+                    pass
+            
+            return attempt
+        except Exception as e:
+            path_prefix = f"[PATH_{variant_id:02d}]" if variant_id >= 0 else "[TRICKS]"
+            self.logger.warning(f"{path_prefix} Provided tricks application failed: {e}")
+            return None
+    
+    async def _apply_tricks(self, current_best: Attempt) -> Optional[Attempt]:
+        """Legacy single tricks application - kept for compatibility"""
+        return await self._apply_provided_tricks(current_best)
+    
+    async def run(self) -> Attempt:
+        """Run the advanced golf optimization process"""
+        self.logger.info(f"Starting advanced golf optimization for task {self.task_num}...")
+        
+        # Verify initial solution
+        initial_passed, info = await self.judge.execute(self.initial_solution)
+        if not initial_passed:
+            self.logger.error("Initial solution doesn't pass verification!")
+            self.logger.error(info)
+            return None
+        
+        # Phase 1: Generate diverse variants
+        variants = await self._generate_variants()
+        
+        if not variants:
+            self.logger.error("No variants generated!")
+            return None
+        
+        # Phase 2: Optimize each variant in parallel - 这是关键的并行处理部分
+        self.logger.info(f"Starting parallel optimization of {len(variants)} variants...")
+        self.logger.info("=" * 80)
+        
+        # 创建并行任务列表
+        optimization_tasks = []
+        for i, variant in enumerate(variants):
+            task = self._optimize_variant(variant, i)
+            optimization_tasks.append(task)
+        
+        # 并行执行所有优化任务
+        all_paths_attempts = await asyncio.gather(*optimization_tasks)
+        self.all_attempts = all_paths_attempts
+        
+        self.logger.info("=" * 80)
+        self.logger.info("All parallel optimizations completed")
+        
+        # Phase 3: Select best result from all paths
+        best_attempts = []
+        for i, path_attempts in enumerate(all_paths_attempts):
+            # Find best attempt in this path
+            valid_attempts = [a for a in path_attempts if a.passed]
+            if valid_attempts:
+                path_best = min(valid_attempts, key=lambda x: x.min_length())
+                best_attempts.append(path_best)
+                self.logger.info(f"[PATH_{i:02d}] Best result: {path_best.min_length()} bytes ({path_best.strategy})")
+            else:
+                self.logger.info(f"[PATH_{i:02d}] No valid solutions found")
+        
+        if not best_attempts:
+            self.logger.error("No valid solutions found!")
+            return None
+        
+        # Select overall best
+        self.best_attempt = min(best_attempts, key=lambda x: x.min_length())
+        
+        # Final summary
+        initial_length = len(self.initial_solution.encode())
+        final_length = self.best_attempt.min_length()
+        total_improvement = initial_length - final_length
+        
+        self.logger.info("=== Advanced Golf Optimization Complete ===")
+        self.logger.info(f"Task: {self.task_num}")
+        self.logger.info(f"Variants generated: {len(variants)}")
+        self.logger.info(f"LLM calls: {self.total_llm_calls}")
+        self.logger.info(f"Initial: {initial_length} bytes")
+        self.logger.info(f"Final: {final_length} bytes")
+        self.logger.info(f"Improvement: {total_improvement} bytes ({100*total_improvement/initial_length:.1f}%)")
+        self.logger.info(f"Best strategy: {self.best_attempt.strategy}")
+        
+        # Save final code
+        if self.best_attempt:
+            final_code = self.best_attempt.minified_code or self.best_attempt.code
+            output_file = f"task{self.task_num:03d}_advanced_optimized.py"
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(final_code)
+            self.logger.info(f"Final optimized code saved to {output_file}")
+        
+        return self.best_attempt
+
+# Example usage
+if __name__ == "__main__":
+    import asyncio
+    
+    async def main():
+        task_num = 4
+        
+        # Load initial solution
+        try:
+            with open(f'/data/bzy/golf/solutions/latest/task{task_num:03d}.py', 'r') as f:
+                initial_solution = f.read()
+        except:
+            initial_solution = """def p(g):
+    return g  # placeholder
+"""
+        
+        # Initialize LLM and agent
+        model_id = "deepseek-reasoner"
+        print(f"Initializing LLM with model: {model_id}")
+        llm = LLM(model_id=model_id)
+        
+        print(f"Creating GolfAgent for task {task_num}...")
+        agent = GolfAgent(
+            llm=llm, 
+            task_num=task_num,
+            initial_solution=initial_solution,
+            n_variants=10,
+            generation_factor=1.5,
+            max_steps=16,
+            early_stop_steps=5,
+            use_shortest_hint=True,
+            save_file=f"advanced_golf_state_task{task_num:03d}.json"
+        )
+        
+        print(f"Starting optimization for task {task_num}...")
+        # Run optimization
+        best_solution = await agent.run()
+        
+        if best_solution:
+            print(f"\nBest solution for task {task_num} ({best_solution.min_length()} bytes):")
+            print(best_solution.code)
+            if best_solution.minified_code:
+                print(f"\nMinified ({len(best_solution.minified_code.encode())} bytes):")
+                print(best_solution.minified_code)
+    
+    asyncio.run(main())

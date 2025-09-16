@@ -1,0 +1,1094 @@
+[
+    {
+        "original": "a,b,c=0,0,0",
+        "optimized": "a=b=c=0",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "if a<b:return a\nelse:return b",
+        "optimized": "return (b,a)[a<b]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 12
+    },
+    {
+        "original": "if a>1 and b>1 and 3>a and 5>b: foo()",
+        "optimized": "if 3>a>1<b<5: foo()",
+        "python_versions": ["2", "3"],
+        "byte_saving": 18
+    },
+    {
+        "original": "for x in range(10):\nfor y in range(100): print(x,y)",
+        "optimized": "r=range\nfor x in r(10):\nfor y in r(100): print(x,y)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "a=lambda b:lambda c:lambda d:lambda e:lambda f:0",
+        "optimized": "exec\"a=`b:`c:`d:`e:`f:0\".replace('`','lambda ')",
+        "python_versions": ["2"],
+        "byte_saving": 1
+    },
+    {
+        "original": "if 1:\n if 1:\n  pass",
+        "optimized": "if 1:\nif 1:\n pass",
+        "python_versions": ["2"],
+        "byte_saving": 2
+    },
+    {
+        "original": "3714>>i&1",
+        "optimized": "3714>>i&1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "for x in 0,1,2: print(['foo','bar','baz'][x])",
+        "optimized": "for x in 0,1,2: print('fbboaaorz'[x::3])",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "for i in range(m):\n for j in range(n): do_stuff(i,j)",
+        "optimized": "for k in range(m*n): do_stuff(k//n,k%n)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 13
+    },
+    {
+        "original": "str(n)",
+        "optimized": "`n`",
+        "python_versions": ["2"],
+        "byte_saving": 3
+    },
+    {
+        "original": "n+1",
+        "optimized": "-~n",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "if i==4 and j==4:",
+        "optimized": "if i==4and j==4:",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "x=list('abcde')",
+        "optimized": "*x,='abcde'",
+        "python_versions": ["3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "a=L[-1]",
+        "optimized": "*_,a=L",
+        "python_versions": ["3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "for i in range(8): pass",
+        "optimized": "for i in [1]*8: pass",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "[1, 2, 3, 4][::-1]",
+        "optimized": "[4, 3, 2, 1]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "L[-i-1]",
+        "optimized": "L[~i]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']",
+        "optimized": "map(chr,range(97,123))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 83
+    },
+    {
+        "original": "y if condition else x",
+        "optimized": "[x,y][condition]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "e in S",
+        "optimized": "{e}&S",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "if a and b:",
+        "optimized": "if a*b:",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "match a:\n case 1: runCodeOne()\n case 2: runCodeTwo()\n case 3: runCodeThree()\n case _: runDefault()",
+        "optimized": "exec{1:\"runCodeOne()\",2:\"runCodeTwo()\",3:\"runCodeThree()\"}[a]",
+        "python_versions": ["3"],
+        "byte_saving": 37
+    },
+    {
+        "original": "set(T)",
+        "optimized": "{*T}",
+        "python_versions": ["3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "math.ceil(n)",
+        "optimized": "-(-n//1)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "for x in range(3):",
+        "optimized": "for x in 0,1,2:",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "A.append(B)",
+        "optimized": "A+=B,",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "import math as m",
+        "optimized": "from math import*",
+        "python_versions": ["2", "3"],
+        "byte_saving": -1
+    },
+    {
+        "original": "if a not in b:",
+        "optimized": "if(a in b)^1:",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "def c(a):\n if a<3: return a+10\n else: return a-5",
+        "optimized": "c=lambda a:a<3and a+10or a-5",
+        "python_versions": ["2", "3"],
+        "byte_saving": 20
+    },
+    {
+        "original": "''.join(['a','b','c'])",
+        "optimized": "'abc'",
+        "python_versions": ["2", "3"],
+        "byte_saving": 17
+    },
+    {
+        "original": "lambda s:s.strip()+s.strip()[::-1]",
+        "optimized": "lambda s:(t:=s.strip())+t[::-1]",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "f=lambda n,i=1,p=1:n*[0]and p%i*[i]+f(n-p%i,i+1,p*i*i)",
+        "optimized": "f=lambda n,i=1,p=1:n*[0]and p%i*[i]+f(n-p%i,i+1,p*i*i)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "n==0",
+        "optimized": "0**n",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "print(s,end='')",
+        "optimized": "print(end=s)",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "for _ in iter(lambda:0,1):",
+        "optimized": "for()in iter(set,1):",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "while foo(a):\n print a;a*=2",
+        "optimized": "while foo(a):print a;a*=2",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "for i in range(x):s+=input()",
+        "optimized": "exec's+=input();'*x",
+        "python_versions": ["2"],
+        "byte_saving": 9
+    },
+    {
+        "original": "((2**n+1)**n>>n*k)%2**n",
+        "optimized": "((2**n+1)**n>>n*k)%2**n",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "s.replace('a','b')",
+        "optimized": "s.replace(*'ab')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "l[:1]==[x]",
+        "optimized": "l[:1]==[x]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "import sys; s=sys.stdin.read()",
+        "optimized": "import os; s=os.read(0,1e9)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "i=itertools;",
+        "optimized": "import itertools as i",
+        "python_versions": ["2", "3"],
+        "byte_saving": -9
+    },
+    {
+        "original": "map(lambda x,y:...,zip(a,b))",
+        "optimized": "map(lambda x,y:...,a,b)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "[x if x!=a else b for x in L]",
+        "optimized": "list(map({a:b}.get,L,L))",
+        "python_versions": ["2"],
+        "byte_saving": 5
+    },
+    {
+        "original": "if not C:",
+        "optimized": "if C<1:",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "zip(*[iter(l)]*4)",
+        "optimized": "zip(*[iter(l)]*4)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "def baz(i):\n if i==0:i=1;print i;bar()\n while i:i+=foo(i-1)",
+        "optimized": "def baz(i):\nif i==0:i=1;print i;bar()\nwhile i:i+=foo(i-1)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "def f(a):\n l=[1,2,3]\n return sum(a==i for i in l)",
+        "optimized": "def f(a,l=[1,2,3]):\n return sum(a==i for i in l)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "filter(None,L)",
+        "optimized": "filter(None,L)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "type(x)==C",
+        "optimized": "'K'in`x`",
+        "python_versions": ["2"],
+        "byte_saving": 2
+    },
+    {
+        "original": "list(iter(input,eof))",
+        "optimized": "list(iter(input,eof))",
+        "python_versions": ["3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "l.insert(x,y)",
+        "optimized": "l[x:x]=y,",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "f=lambda n,i=1:n/i and f(n,i+1)if n%i else[i]+f(n/i)",
+        "optimized": "f=lambda n,i=1:n/i and(n%i and f(n,i+1)or[i]+f(n/i))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "range(123,790,111).count",
+        "optimized": "range(123,790,111).count",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "'  <|>  '",
+        "optimized": "'<|>'.center(7)",
+        "python_versions": ["2", "3"],
+        "byte_saving": -6
+    },
+    {
+        "original": "for x in-2,2: print\"WoolrlledH\"[::x]",
+        "optimized": "for x in-2,2: print\"WoolrlledH\"[::x]",
+        "python_versions": ["2"],
+        "byte_saving": 0
+    },
+    {
+        "original": "a=1, 2, 3",
+        "optimized": "a=1,2,3",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "M=[[0]*4]*3",
+        "optimized": "M=eval(`[[0]*4]*3`)",
+        "python_versions": ["2"],
+        "byte_saving": -8
+    },
+    {
+        "original": "s.startswith(t)",
+        "optimized": "t<=s<t+'~'",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "n%2==0",
+        "optimized": "~n&1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "r=0\nfor x in input():r=e(x)-r\nprint r",
+        "optimized": "a,b=[e(x)for x in input()]\nprint b-a",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "for i in range(len(l)):DoStuff(i,l[i])",
+        "optimized": "i=0\nfor x in l:DoStuff(i,x);i+=1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "((x[0]-y[0])**2+(x[1]-y[1])**2)**.5",
+        "optimized": "abs(complex(*x)-complex(*y))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 7
+    },
+    {
+        "original": "for _ in[0]*x:a=\"blah\"",
+        "optimized": "for a in[\"blah\"]*x:",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "l='Python';b=40;print('%s, %d bytes'%(l,b))",
+        "optimized": "l='Python';b=40;print(f'{l}, {b} bytes')",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "for n in range(100):f(n)<2or print(n)",
+        "optimized": "for n in range(100):f(n)<2==print(n)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "random.randint(0,9)",
+        "optimized": "os.urandom(1)[0]%10",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "[2,3,5,7,11,13,17,19,23]",
+        "optimized": "b\"\\x02\\x03\\x05\\x07\\x0b\\x0d\\x11\\x13\\x17\"",
+        "python_versions": ["3"],
+        "byte_saving": -15
+    },
+    {
+        "original": "l.insert(0,x)",
+        "optimized": "l[:0]=x,",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "math.cos(d*math.pi/180)",
+        "optimized": "(1j**(d/90)).real",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "n&(n-1)==0",
+        "optimized": "n^n-1>=n",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "not all(...)",
+        "optimized": "0in(...)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "False or 5",
+        "optimized": "False or 5",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "if d>list('XXXXXXXXX'):\n for z in D:d.pop()\n c=['X']",
+        "optimized": "if d>list('XXXXXXXXX'):[d.pop()for z in D];c=['X']",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "for x in l:y=f(x);_",
+        "optimized": "for y in map(f,l):_",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "lambda s:[s]+f(s[1:])+f(s[:-1])",
+        "optimized": "lambda s:[s]+f(s[1:])+f(s[:-1])",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "lambda x,y:...",
+        "optimized": "lambda*x:...",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "if a not in b:",
+        "optimized": "(a in b)^1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "10000",
+        "optimized": "1e4",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "exec\"...\"",
+        "optimized": "exec\"...\"",
+        "python_versions": ["2"],
+        "byte_saving": 0
+    },
+    {
+        "original": "{'a':1,'e':4,'i':9}",
+        "optimized": "dict(a=1,e=4,i=9)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "print 'YNeos'[x::2]",
+        "optimized": "print 'YNeos'[x::2]",
+        "python_versions": ["2"],
+        "byte_saving": 0
+    },
+    {
+        "original": "if c:s='a'",
+        "optimized": "s=c*'a'",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "math.ceil(3/2)",
+        "optimized": "-(-3//2)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "(a<b)*2-1",
+        "optimized": "-(a>b)|1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "l==[]",
+        "optimized": "l==[]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "a%b==a",
+        "optimized": "0<=a<b",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "''.join([f(x)for x in l])",
+        "optimized": "s=\"\"\nfor x in l:s+=f(x)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "for k in range(m*n): do_stuff(k//n,k%n)",
+        "optimized": "for k in range(m*n): do_stuff(k//n,k%n)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "[*map(f,l)]",
+        "optimized": "map(f,l)",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "itertools.combinations_with_replacement('ABC',2)",
+        "optimized": "eval(dir()[7])('ABC',2)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 25
+    },
+    {
+        "original": "[s[i]for i in range(len(s))if s[i-1]!=s[i]]",
+        "optimized": "e=\"\"\nf=[c for c in s if e!=(e:=c)]",
+        "python_versions": ["3"],
+        "byte_saving": 9
+    },
+    {
+        "original": "shortList = []\nfor x in range(10):\n shortList += [x * 2]",
+        "optimized": "shortList = [x*2 for x in range(10)]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 20
+    },
+    {
+        "original": "int(c>0)",
+        "optimized": "+(c>0)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "try:\n for c in s:\n  for i in l:\n   if ord(c)==i:print i,c;break\n if q:break\nexcept:0",
+        "optimized": "try:[1/(ord(c)-i)for c in s for i in l]\nexcept:print i,c",
+        "python_versions": ["2", "3"],
+        "byte_saving": 28
+    },
+    {
+        "original": "print('x')",
+        "optimized": "exit('x')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "itertools.product(x,repeat=n)",
+        "optimized": "product(*tee(x,n))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 11
+    },
+    {
+        "original": "s=sys.stdin.readlines()",
+        "optimized": "s=list(iter(input,''))",
+        "python_versions": ["3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "l.reverse()",
+        "optimized": "l[::-1]=l",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "[i for i in range(n*n)if p(i)][n]",
+        "optimized": "f=lambda n,i=1:n and-~f(n-p(i),i+1)",
+        "python_versions": ["2", "3"],
+        "byte_saving": -2
+    },
+    {
+        "original": "\"We are in year: %s\" % (date.strftime('%y'))",
+        "optimized": "f\"We are in year: {date:%y}\"",
+        "python_versions": ["3"],
+        "byte_saving": 16
+    },
+    {
+        "original": "lambda*l:eval('e(%s)-'*2%l+'0')",
+        "optimized": "lambda*l:eval('e(%s)-'*2%l+'0')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "'\\n'.join(''.join(i)for i in M)",
+        "optimized": "'\\n'.join(map(''.join,M))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "(a<b)*2-1",
+        "optimized": "-(a>b)|1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "math.comb(n,k)",
+        "optimized": "math.comb(n,k)",
+        "python_versions": ["3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "for _ in[0]*x:doSomething()\na=\"blah\"",
+        "optimized": "for a in[\"blah\"]*x:doSomething()",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "print(' '.join(str(i**2)for i in range(11)))",
+        "optimized": "print(*(i**2for i in range(11)))",
+        "python_versions": ["3"],
+        "byte_saving": 12
+    },
+    {
+        "original": "'\\x01\\x02\\x03'",
+        "optimized": "'\\x01\\x02\\x03'",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "while 1:print(x);...",
+        "optimized": "while[print(x)]:...",
+        "python_versions": ["3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "isdigit(a) and isdigit(b) and isdigit(c)",
+        "optimized": "all(map(isdigit,[a,b,c]))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 15
+    },
+    {
+        "original": "i=__import__;s=i('string');x=i('itertools')",
+        "optimized": "i=__import__;s=i('string');x=i('itertools')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "s.splitlines()",
+        "optimized": "s.split('\\n')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "{...}.get(k,d)",
+        "optimized": "{k:d,...}[k]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "[x for x in L if x not in locals()['_[1]']]",
+        "optimized": "[x for x in L if x not in locals()['_[1]']]",
+        "python_versions": ["2"],
+        "byte_saving": 0
+    },
+    {
+        "original": "tuple(iterable)",
+        "optimized": "(*iterable,)",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "a=x[:]",
+        "optimized": "b=[*x]",
+        "python_versions": ["3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "not(x)",
+        "optimized": "1-x",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "[k for k in G if G[k]]",
+        "optimized": "filter(G.get,G)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 7
+    },
+    {
+        "original": "int.from_bytes(...)",
+        "optimized": "0 .from_bytes(...)",
+        "python_versions": ["3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "i%3==0 or i%5==0 or i%7==0",
+        "optimized": "0in[i%3,i%5,i%7]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 10
+    },
+    {
+        "original": "a not in b",
+        "optimized": "(a in b)^1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "10000",
+        "optimized": "1e4",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "for i in range(18):\n if n%3!=1:...",
+        "optimized": "exec\"...\"*18",
+        "python_versions": ["2"],
+        "byte_saving": 22
+    },
+    {
+        "original": "print(' '.join(str(i)for i in l))",
+        "optimized": "print(' '.join(map(str,l)))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "open('f','rb').read().decode('zip')",
+        "optimized": "open('f','rb').read().decode('zip')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "t=a;a=b;b=t",
+        "optimized": "a,b=b,a",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "isinstance(x,C)",
+        "optimized": "type(x)==C",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "s=input()\nwhile s!='':...",
+        "optimized": "for s in iter(input,''):...",
+        "python_versions": ["3"],
+        "byte_saving": -2
+    },
+    {
+        "original": "def f(n,k,L=[]):...",
+        "optimized": "def f(n,k,*T):...",
+        "python_versions": ["3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "a=(1,2,3)",
+        "optimized": "a=1,2,3",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "round(1 * 0.5)",
+        "optimized": "round(1 * 0.5)",
+        "python_versions": ["2"],
+        "byte_saving": 0
+    },
+    {
+        "original": "f=lambda s:[s]+f(s[1:])+f(s[:-1])",
+        "optimized": "f=lambda s:[s]+f(s[1:])+f(s[:-1])",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "b=['7e','30','6d','79','33','5b','5f','70','7f','7b'][d]",
+        "optimized": "b='7367355777e0d93bf0fb'[d::10]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 25
+    },
+    {
+        "original": "a, b, *c = [1, 2, 3, 4, 5]",
+        "optimized": "a, b, *c = [1, 2, 3, 4, 5]",
+        "python_versions": ["3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "new_a=list(map(f,a))",
+        "optimized": "new_a=[*map(f,a)]",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "a,b=[1,2],[3,4]",
+        "optimized": "a,b=[1,2],[3,4]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "def a(b):yield b",
+        "optimized": "def a(b):yield b",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "random.randint(0,9999)",
+        "optimized": "hash('V~')%10000",
+        "python_versions": ["2", "3"],
+        "byte_saving": 6
+    },
+    {
+        "original": "def f(s):return s+s[::-1]",
+        "optimized": "lambda s:s+s[::-1]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 7
+    },
+    {
+        "original": "\"P\" if x>0 else \"N\" if x<0 else \"Z\"",
+        "optimized": "\"ZPN\"[cmp(x,0)]",
+        "python_versions": ["2"],
+        "byte_saving": 20
+    },
+    {
+        "original": "lambda i:sleep(.06) or print(i) or print(ord(i))",
+        "optimized": "lambda i:sleep(.06) or print(i) or print(ord(i))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "c < d",
+        "optimized": "c<d",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "'#fff'",
+        "optimized": "~0",
+        "python_versions": ["2", "3"],
+        "byte_saving": 4
+    },
+    {
+        "original": "2 * True",
+        "optimized": "2 * True",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "a==[]",
+        "optimized": "a==[]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "1000000000000",
+        "optimized": "0xe8d4a51000",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "math.floor(n)",
+        "optimized": "n//1",
+        "python_versions": ["2", "3"],
+        "byte_saving": 9
+    },
+    {
+        "original": "while a:f(a);a-=1",
+        "optimized": "while a:f(a)or a-1",
+        "python_versions": ["2", "3"],
+        "byte_saving": -1
+    },
+    {
+        "original": "base64.b64encode(code.encode()).decode()",
+        "optimized": "base64.b64encode(code.encode()).decode()",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "exec((\"%s=\"*3)%('x','y','z')+':1,2,3')",
+        "optimized": "x=1;y=2;z=3",
+        "python_versions": ["2", "3"],
+        "byte_saving": 27
+    },
+    {
+        "original": "math.copysign(1,x)",
+        "optimized": "(x>0)-(x<0)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 7
+    },
+    {
+        "original": "sum([[1,2],[3,4]],[])",
+        "optimized": "sum([[1,2],[3,4]],[])",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "c:print(c%c)='c:print(c%%c)=%s'",
+        "optimized": "c:print(c%c)='c:print(c%%c)=%s'",
+        "python_versions": ["3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "p>0and[v]or f(x)",
+        "optimized": "[v][:p]or f(x)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "math.factorial(n)",
+        "optimized": "math.perm(n)",
+        "python_versions": ["3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "[i for i,x in enumerate(l)if x==element]",
+        "optimized": "filter(lambda x:l[x]==element,range(len(l)))",
+        "python_versions": ["2", "3"],
+        "byte_saving": -4
+    },
+    {
+        "original": "import string\ndef _(x,y):\n for c,f in zip(string.letters,[x.__dict__[q]for q in dir(x)if q in x.__dict__ and(len(q)>2)*type(x.__dict__[q]).__name__.find('eth')>0]):globals()[y+c]=f",
+        "optimized": "import string\ndef _(x,y):\n for c,f in zip(string.letters,[x.__dict__[q]for q in dir(x)if q in x.__dict__ and(len(q)>2)*type(x.__dict__[q]).__name__.find('eth')>0]):globals()[y+c]=f",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "'0'if x==0else'1'if x>0else'-1'",
+        "optimized": "['0','1','-1'][x]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 14
+    },
+    {
+        "original": "for e, queue[e] in enumerate(L):",
+        "optimized": "for e, queue[e] in enumerate(L):",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "import os.path as p\nimport glob\nd = p.join(p.dirname(p.abspath(__file__))), 'foo', '*.py')",
+        "optimized": "import pathlib as p\nd = p.Path(__file__).absolute().parent / 'foo'",
+        "python_versions": ["3"],
+        "byte_saving": 24
+    },
+    {
+        "original": "[f(x)for x in l]+[g(x)for x in l]",
+        "optimized": "sum([[f(x),g(x)]for x in l],[])",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "from lib import func as F",
+        "optimized": "from lib import*;F=func",
+        "python_versions": ["2", "3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "for i in range(255):print...",
+        "optimized": "exec\"print...;\"*255",
+        "python_versions": ["2"],
+        "byte_saving": 9
+    },
+    {
+        "original": "not bool and int==odd_int",
+        "optimized": "~bool&int==odd_int",
+        "python_versions": ["2", "3"],
+        "byte_saving": 7
+    },
+    {
+        "original": "def f(x):return 1 if x==1 else x*f(x-1)",
+        "optimized": "f=lambda x:1 if x==1 else x*f(x-1)",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "from math import*\nx=sqrt(4)",
+        "optimized": "x=4**.5",
+        "python_versions": ["2", "3"],
+        "byte_saving": 20
+    },
+    {
+        "original": "f'{i}'*bool(i%3and i%5)+'Fizz'*(i%3==0)+'Buzz'*(i%5==0)",
+        "optimized": "f'{i}'*bool(i%3and i%5)+'Fizz'*(i%3==0)+'Buzz'*(i%5==0)",
+        "python_versions": ["3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "for x in s[::-1]:f(x);g(x)",
+        "optimized": "while s:*s,x=s;f(x);g(x)",
+        "python_versions": ["3"],
+        "byte_saving": 2
+    },
+    {
+        "original": "0--n//d",
+        "optimized": "n//d",
+        "python_versions": ["2", "3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "repr(a)",
+        "optimized": "'%r'%a",
+        "python_versions": ["3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "sum([[1,2],[3,4]],[])",
+        "optimized": "sum([[1,2],[3,4]],[])",
+        "python_versions": ["2", "3"],
+        "byte_saving": 0
+    },
+    {
+        "original": "True if x//2==x/2 else False",
+        "optimized": "x//2==x/2",
+        "python_versions": ["2", "3"],
+        "byte_saving": 19
+    },
+    {
+        "original": "if x==3:\n print \"yes\"\nelse:\n print \"no\"",
+        "optimized": "print \"yes\" if x==3 else \"no\"",
+        "python_versions": ["2", "3"],
+        "byte_saving": 10
+    },
+    {
+        "original": "(a>b)-(a<b)",
+        "optimized": "cmp(a,b)",
+        "python_versions": ["3"],
+        "byte_saving": 3
+    },
+    {
+        "original": "pixels[idx+2], pixels[idx] = pixels[idx], pixels[idx+2]",
+        "optimized": "pixels[2:l:3], pixels[0:l:3] = pixels[0:l:3], pixels[2:l:3]",
+        "python_versions": ["2", "3"],
+        "byte_saving": -4
+    },
+    {
+        "original": "if 'foo' not in d:\n res = d['foo'] = 'bar'",
+        "optimized": "res = d.setdefault('foo', 'bar')",
+        "python_versions": ["2", "3"],
+        "byte_saving": 10
+    },
+    {
+        "original": "a!=b",
+        "optimized": "a^b",
+        "python_versions": ["2", "3"],
+        "byte_saving": 1
+    },
+    {
+        "original": "n+c+k < n*k",
+        "optimized": "n+c < (n-1)*k",
+        "python_versions": ["2", "3"],
+        "byte_saving": -2
+    },
+    {
+        "original": "a=int(input())\nb=int(input())\nc=int(input())",
+        "optimized": "a,b,c=map(int,open(0))",
+        "python_versions": ["3"],
+        "byte_saving": 22
+    },
+    {
+        "original": "a==123or b==123",
+        "optimized": "123in[a,b]",
+        "python_versions": ["2", "3"],
+        "byte_saving": 5
+    },
+    {
+        "original": "list(map(lambda c: c.strip(), lines))",
+        "optimized": "list(map(str.strip, lines))",
+        "python_versions": ["2", "3"],
+        "byte_saving": 10
+    },
+    {
+        "original": "eval(ENCODEFUNC(long_code))",
+        "optimized": "long_code",
+        "python_versions": ["2", "3"],
+        "byte_saving": 18
+    }
+]
