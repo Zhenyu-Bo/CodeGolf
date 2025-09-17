@@ -3,106 +3,59 @@ Prompt templates for Golf Agent
 """
 
 # Variant generation prompt template
-VARIANT_GENERATION_PROMPT = """You are an expert Python programmer specializing in code golf for Google Code Golf 2025 and abstract reasoning puzzles.
+VARIANT_GENERATION_PROMPT = """You are an expert Python programmer specializing in code golf and abstract reasoning puzzles. You need to understand and finish the following task:
 
-**Task Description:**
-You will be given a `task_id` and a series of input/output pairs.
--   **Input:** A grid, represented as a 2D list of integers (`list[list[int]]`).
--   **Output:** A transformed grid, also a 2D list of integers.
+## Task Description:
+You are given a grid transformation task where you need to generate multiple fundamentally different algorithmic variants to solve the same problem.
+I will provide you with:
+1. The input-output examples of the task. The input is a grid represented as a list of lists of integers, and the output is the transformed grid following a hidden rule.
+2. The code that generates these examples (the generator)
+3. The current solution code named `p` which has been proved correct
 
-Your task is to analyze the given problem and generate {n_variants} COMPLETELY DIFFERENT algorithmic approaches to solve it.
+Your task is to analyze the given problem and generate {n_variants} DIFFERENT algorithmic approaches to solve it.
 
-## Problem Analysis
+## Problem Context
+Here are the provided informations about the task:
 
-### Step 1: Analyze Input-Output Examples
-Here are the input-output examples of the task:
+1. Input-output examples:
 {examples_str}
 
-Your code should implement the function `p(g)` where `g` is the input grid (list of lists of integers), and return the modified output grid.
-
-### Step 2: Analyze Generator Code
-Here is the code that generates the input-output examples. Analyze it carefully to understand the underlying transformation rules:
+2. Generator code:
 ```python
 {generator_code}
 ```
 
-**Analysis Instructions:**
-- Identify what patterns the generator creates in the input
-- Understand how the transformation from input to output works
-- Look for implicit constraints or conditions in the generation process
-- Identify key parameters and their relationships
-
-### Step 3: Analyze Current Solution
-Here is the current solution code which has been proved correct:
+3. Current solution code:
 ```python
 {initial_solution}
 ```
 
-**Analysis Instructions:**
-- Understand the core logic and transformation rule implemented
-- Identify the key algorithmic steps and data structures used
-- Look for potential redundancies or optimization opportunities
-- Understand which parts of the generator constraints this solution leverages
+## Analysis and Understanding Instructions
+Here are some instructions to help you analyze and generate the variants:
 
-### Step 4: Identify Core Transformation Rules
-Based on your analysis above:
-1. **Primary Rule:** [State the main transformation rule in one clear sentence]
-2. **Edge Cases:** [Identify any special cases or boundary conditions]
-3. **Constraints:** [List any implicit constraints from the generator]
-4. **Key Insights:** [Important observations that affect implementation]
+**Problem Analysis Instructions:**
+1. Analyze the input-output examples, the generator code, and the current solution code to understand the transformation rule.
+2. Analyze the generator code again to identify any implicit constraints or conditions that can help simplify the solution.
+3. Understand the core logic and transformation rule implemented in the current solution. Then try to identify fundamentally different approaches to achieve the same result.
 
-## Variant Generation Requirements
+**Note:**
+1. the generator code is very important to the task because it may contain implicit constraints and conditions that you can use to reduce some unnecessary processing in the provided code so that shorten it.
+For example:
+    a. If the generator only creates grids with certain properties (e.g., specific value ranges, patterns), you can leverage these properties to simplify your variants.
+    b. If the generator generates different connected components with unique color, you can directly collect all pixel positions by color instead of using traditional algorithms for finding connected components such as DFS or BFS.
+2. The logic and transformation rule implemented in the current solution are correct, but there may be more concise logic or rules. Even if the rule is one and only, there may be multiple ways to express it more concisely. So you need to analyze and understand the input-output examples and generator code carefully to identify any potential simplifications or optimizations.
 
-Generate {n_variants} fundamentally different approaches that:
-1. **Implement the SAME transformation rule** but use different algorithms
-2. **Focus on algorithmic diversity**, not just code golf optimizations
-3. **Each approach must be complete and functional**
-4. **Preserve exact functionality** while using different strategies
+## Requirements
+Here are the requirements and guidelines for generating the variants:
 
-## Strategy Diversity Guidelines
-
-### GOOD Diversity Examples:
-- **Data Structure Change:** Original uses dictionary → Alternative uses 2D array indexing
-- **Processing Order:** Original processes row-by-row → Alternative processes column-by-column
-- **Algorithm Paradigm:** Original uses iterative approach → Alternative uses recursive approach
-- **Coordinate System:** Original uses (row,col) → Alternative uses linear indexing
-- **Detection Method:** Original scans patterns → Alternative uses mathematical formulas
-- **Construction Method:** Original builds incrementally → Alternative creates full result then modifies
-
-### BAD Diversity Examples (Avoid):
-- Same algorithm with different variable names only
-- Same logic with minor syntax variations
-- Same approach with different loop styles only
-- Simple code golf tricks without algorithmic changes
-
-## Implementation Strategies to Consider
-
-1. **Different Iteration Patterns:**
-   - Row-major vs column-major traversal
-   - Spiral or diagonal traversal
-   - Backwards vs forwards iteration
-
-2. **Different Data Structures:**
-   - Lists vs dictionaries vs sets
-   - Single-pass vs multi-pass processing
-   - In-place modification vs creating new grid
-
-3. **Different Algorithmic Approaches:**
-   - Scanning and replacement
-   - Mathematical calculation
-   - Pattern matching and transformation
-   - State machine or rule-based processing
-
-4. **Different Coordinate Systems:**
-   - (row, col) indexing
-   - Linear indexing with math conversion
-   - Relative positioning
-   - Offset-based calculations
-
-## Output Format
-
-For each variant, use this EXACT format:
-
+1.  **Algorithmic Diversity:** Focus on fundamentally different strategies (e.g., iteration pattern, data structures, recursive vs. iterative) or different algorithms. Avoid trivial changes.
+2.  **Correctness:** All variants must pass the examples and adhere to the rule defined by the generator code. Test your logic mentally against the examples before providing code.
+3.  **Length:** Try to using more concise strategies or data structures and generate shorter code, but do not sacrifice clarity or correctness.
+4.  **Completeness:** Each variant must be a complete, runnable function.
+5.  **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid.
+6.  **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+7.  **Output Format:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+<answer_begin>
 ### Variant 1: [Descriptive Strategy Name]
 **Core Strategy:** [Explain the main algorithmic approach in 1-2 clear sentences]
 **Key Differences:** [Specifically how this differs from the original solution's approach]
@@ -128,23 +81,23 @@ def p(g):
 ```
 
 (Continue for all {n_variants} variants...)
+</answer_end>
 
-## Critical Requirements:
-- Each variant must implement the SAME transformation rule correctly
-- Code must be syntactically correct and complete
-- Focus on algorithmic diversity, not micro-optimizations
-- Each approach should be genuinely different in its core strategy
-- Test your logic mentally against the examples before providing code
-
-{shortest_hint}
-
-Begin your analysis and variant generation now:"""
+Follow the above instructions and requirements, begin your analysis and variant generation now:"""
 
 # Optimization prompt template
-OPTIMIZATION_PROMPT = """You are an expert Python programmer specializing in code golf for Google Code Golf 2025.
+OPTIMIZATION_PROMPT = """You are an expert Python programmer specializing in code golf and abstract reasoning puzzles. You need to understand and finish the following task:
 
-**Task Description:**
-Your task is to optimize the given Python code to reduce byte count while maintaining EXACT functionality.
+## Task Description:
+You are given a grid transformation task where you need to generate multiple fundamentally different algorithmic variants to solve the same problem.
+I will provide you with:
+1. The input-output examples of the task. The input is a grid represented as a list of lists of integers, and the output is the transformed grid following a hidden rule.
+2. The code that generates these examples (the generator)
+3. The current solution code named `p` which has been proved correct
+4. The history of previous optimization attempts
+
+Your task is to analyze the given problem and optimize the current solution code `p` to make it as short as possible while maintaining its exact functionality and correctness.
+You had better focus on global optimizations rather than local ones, such as changing the algorithm or data structures used, rather than just tweaking syntax.
 
 ## Problem Context
 
@@ -158,80 +111,56 @@ Here is the code that generates the input-output examples. Analyze it carefully 
 {generator_code}
 ```
 
-**Note that the generator code is very important to the task because it may contain implicit constraints and conditions that you can use to reduce some unnecessary processing in the provided code so that shorten it.**
-
-
-
-**Analysis Instructions:**
-- Identify what patterns the generator creates in the input
-- Understand how the transformation from input to output works
-- Look for implicit constraints or conditions in the generation process
-- Identify key parameters and their relationships
-
-### Current Code to Optimize:
-Here is the current solution code that needs optimization:
+### Current Code to shorten:
+Here is the current solution code that needs shortening:
 ```python
 {code}
 ```
 
+### History of Previous Shortening Attempts:
+Here is the history of previous shortening attempts, if any. You can analyze these attempts to identify what has already been tried and what worked or didn't work, and use this information to guide your shortening process:
+
 {history_str}
 
-## Optimization Strategy
+## Analysis and Understanding Instructions
+Here are some instructions to help you analyze and optimize the code:
+**Problem Analysis Instructions:**
+1. Analyze the input-output examples, the generator code, and the current solution code to understand the transformation rule.
+2. Analyze the generator code again to identify any implicit constraints or conditions that can help simplify the solution.
+3. Understand the core logic and transformation rule implemented in the current solution. Then try to identify areas where the code can be shortened without changing its functionality.
+4. Review the history of previous shortening attempts to avoid repeating ineffective strategies and to build upon successful ones.
+5. Focus on both algorithmic and syntactic optimizations to achieve the shortest possible code.
 
-### Step 1: Analyze Problem
-1. **Understand the core logic** and transformation rule implemented
-2. **Carefully read the generator code and analyze if it contains any implicit constraints or conditions that you can use to reduce some unnecessary processing in the provided code.**
-3. **Identify redundancies** or unnecessary operations
-4. **Trace variable usage** and data flow
-5. **Check alignment with generator constraints** to avoid redundant processing
+**Note:**
+1. the generator code is very important to the task because it may contain implicit constraints and conditions that you can use to reduce some unnecessary processing in the provided code so that shorten it.
+For example:
+    a. If the generator only creates grids with certain properties (e.g., specific value ranges, patterns), you can leverage these properties to simplify your variants.
+    b. If the generator generates different connected components with unique color, you can directly collect all pixel positions by color instead of using traditional algorithms for finding connected components such as DFS or BFS.
+2. The logic and transformation rule implemented in the current solution are correct, but there may be more concise logic or rules. Even if the rule is one and only, there may be multiple ways to express it more concisely. So you need to analyze and understand the input-output examples and generator code carefully to identify any potential simplifications or optimizations.
 
-### Step 2: Systematic Optimization Process
+## Requirements
+Here are the requirements and guidelines for shortening the code:
 
-#### A. Algorithmic Optimizations
-- **Eliminate redundant computations** or data structures
-- **Combine multiple passes** into single iterations where possible
-- **Simplify logic flow** by removing unnecessary conditions
-- **Use mathematical shortcuts** instead of iterative approaches
+1.  **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid.
+2.  **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+3.  **Correctness:** The shortened code must produce the same output as the original code for all valid inputs defined by the generator. You must mentally verify the correctness of your shortened code against the provided examples.
+4.  **Length:** Focus on achieving the shortest possible code while maintaining clarity and correctness. Avoid unnecessary complexity that does not contribute to shortening.
+5.  **Big Change Encouragement:** You are encouraged to make significant changes to the algorithm or data structures used if it leads to a shorter implementation, rather than just making minor syntactic tweaks.
+6.  **Output Format:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+<answer_begin>
+My Strategy: [expplain your optimization strategy briefly]
 
-#### B. Python-Specific Optimizations
-- **Variable name reduction:** Use single letters (i,j,r,c,x,y,z,n,m,k,v,w,h)
-- **Walrus operator:** `if x:=expr():` instead of `x=expr(); if x:`
-- **Tuple unpacking:** `a,b=b,a` for swaps, `*args` for expansion
-- **Comprehensions:** Replace loops with list/dict/set comprehensions when shorter
-- **Boolean shortcuts:** `x and y or z` instead of `if x: y else: z` (when safe)
-- **Chained comparisons:** `a<b<c` instead of `a<b and b<c`
-- **Built-in functions:** `sum()`, `max()`, `min()`, `any()`, `all()`, `enumerate()`
-
-#### C. Syntactic Optimizations
-- **Remove unnecessary spaces:** Around operators, after commas (where safe)
-- **Remove unnecessary parentheses:** In expressions and conditions
-- **Combine statements:** Use semicolons where appropriate
-- **Shorter alternatives:** `x//1` for int(), `x or y` for default values
-
-#### D. Advanced Golf Techniques
-- **String/sequence operations:** Slicing tricks, join operations
-- **Mathematical shortcuts:** Bitwise operations, modulo arithmetic
-- **Lambda functions:** For simple transformations
-- **Generator expressions:** When memory efficient and shorter
-
-### Step 3: Verify Optimization
-1. **Functionality check:** Ensure the optimized code produces identical outputs
-2. **Edge case verification:** Test against boundary conditions and edge cases
-3. **Byte count measurement:** Use `len(code.encode())` to verify reduction
-4. **Alignment with generator constraints:** Ensure no redundant processing
-
-## Output Requirements
-
-Provide ONLY the optimized code in a clean Python code block:
-
+My optimized code:
 ```python
 def p(g):
     # Your optimized implementation
     # Focus on shortest byte count while preserving functionality
     pass
 ```
+</answer_end>
 
-**Optimization Objective:** Achieve maximum byte count reduction while maintaining exact functionality and correctness."""
+Follow the above instructions and requirements, begin your optimization now({shortest_hint}):
+"""
 
 # Tricks application prompt template
 TRICKS_PROMPT = """Apply specific code golf tricks to make this code shorter while maintaining correctness.
@@ -245,12 +174,25 @@ TRICKS_PROMPT = """Apply specific code golf tricks to make this code shorter whi
 {tricks_str}
 
 ## Instructions:
-1. Analyze which tricks can be safely applied to the current code and shorten the current code indeed
+1. Scan the tricks list and your own knowledge base, analyze which tricks can be safely applied to the current code and shorten the current code indeed
 2. Apply applicable tricks step by step
 3. Ensure the function still works correctly
 4. Provide the final optimized code and explain which tricks were applied
 
-Apply the tricks and provide your result:"""
+## Output Format:
+Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+<answer_begin>
+Applied Tricks: [List the tricks you applied]
+Optimized Code:
+```python
+def p(g):
+    # Your optimized implementation
+    # Focus on shortest byte count while preserving functionality
+    pass
+```
+</answer_end>
+
+Now apply the tricks and provide your result: """
 
 # Failed variant fixing prompt template
 FIX_FAILED_VARIANT_PROMPT = """You are an expert Python debugger and problem solver specializing in code golf.
@@ -270,120 +212,25 @@ A code variant has failed and needs to be fixed while preserving its core algori
 ### Original Strategy: 
 {strategy}
 
-## Systematic Debugging Process
-
-### Step 1: Error Classification and Analysis
-
-#### A. Identify Error Type:
-- **Syntax Error:** Missing colons, parentheses, indentation issues, invalid syntax
-- **Runtime Error:** IndexError, KeyError, TypeError, AttributeError, ValueError
-- **Logic Error:** Wrong algorithm implementation, incorrect edge case handling
-- **Test Failure:** Code runs but produces incorrect output for some inputs
-
-#### B. Analyze Error Context:
-- **Where does the error occur?** (line, function, operation)
-- **What conditions trigger it?** (specific inputs, edge cases)
-- **What was the intended behavior?** (based on the strategy)
-
-### Step 2: Systematic Error Resolution
-
-#### A. For Syntax Errors:
-- **Check indentation:** Consistent spacing (4 spaces per level)
-- **Check colons:** After if/for/while/def statements
-- **Check parentheses/brackets:** Proper matching and nesting
-- **Check variable names:** Valid Python identifiers
-
-#### B. For Runtime Errors:
-- **IndexError:** Add bounds checking, handle empty sequences
-  - Use `if i < len(list):` before accessing `list[i]`
-  - Check grid dimensions before accessing `g[r][c]`
-- **KeyError:** Use `.get()` method or check key existence
-  - Replace `dict[key]` with `dict.get(key, default)`
-- **TypeError:** Ensure correct data types and handle None values
-  - Check for None before operations
-  - Ensure consistent data types in operations
-
-#### C. For Logic Errors:
-- **Re-examine the core strategy:** {strategy}
-- **Trace through algorithm** with simple test cases
-- **Check edge cases:** Empty grids, single cells, boundary conditions
-- **Verify transformation logic** against expected behavior
-
-### Step 3: Strategy Preservation Guidelines
-
-**Critical Requirements:**
-- **Maintain the same core approach:** {strategy}
-- **Preserve algorithmic structure** and data flow
-- **Keep the same data structures** and processing order
-- **Fix only the specific error** without changing the fundamental logic
-
-**What TO Fix:**
-- Syntax errors and typos
-- Index bounds and safety checks
-- Type errors and None handling
-- Off-by-one errors in loops or indexing
-
-**What NOT TO Change:**
-- Core algorithmic approach
-- Overall code structure
-- Variable usage patterns (unless causing errors)
-- The fundamental strategy implementation
-
-### Step 4: Verification Process
-
-After fixing, mentally verify:
-1. **Syntax correctness:** Code parses without syntax errors
-2. **Runtime safety:** No index/key/type errors on valid inputs
-3. **Logic correctness:** Implements the intended transformation
-4. **Strategy preservation:** Still follows the original approach
-5. **Edge case handling:** Works with boundary conditions
-
-## Common Fixes by Error Pattern
-
-### IndexError Patterns:
-```python
-# BEFORE (Error-prone):
-g[r][c] = value
-# AFTER (Safe):
-if 0 <= r < len(g) and 0 <= c < len(g[0]):
-    g[r][c] = value
-```
-
-### KeyError Patterns:
-```python
-# BEFORE (Error-prone):
-value = dict[key]
-# AFTER (Safe):
-value = dict.get(key, default)
-```
-
-### TypeError Patterns:
-```python
-# BEFORE (Error-prone):
-if item:  # item might be None
-    process(item)
-# AFTER (Safe):
-if item is not None:
-    process(item)
-```
-
-## Output Requirements
-
-Provide ONLY the corrected code that:
-- **Fixes the specific error** mentioned above
-- **Preserves the core strategy:** {strategy}
-- **Maintains the same algorithmic approach**
-- **Ensures function signature** remains `def p(g):`
-
+## Requirements
+1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid.
+2. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+3. **Correctness:** The fixed code must pass the provided examples and adhere to the rule defined by the generator code. You must mentally verify the correctness of your fixed code against the provided examples.
+4. **Algorithm Preservation:** If the original algorithmic approach is correct, preserve it as much as possible. If not, there are no restrictions on changing the algorithm.
+5. **Output Requirements:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+<answer_begin>
+Problem Analysis: [Briefly analyze the error and identify the root cause]
+Applied Fixes: [List the specific fixes you applied]
+Fixed Code:
 ```python
 def p(g):
-    # Your corrected implementation
-    # Preserves strategy: {strategy}
-    # Fixes error: {error_summary}
+    # Your fixed implementation
+    # Ensure it works correctly and preserves the original approach
     pass
 ```
+</answer_end>
 
-Focus on minimal, targeted fixes that resolve the error while preserving the original algorithmic approach."""
+Follow the above instructions and requirements, begin your debugging and fixing now:"""
 
 # Knowledge base tricks scanning prompt template
 KNOWLEDGE_BASE_TRICKS_PROMPT = """You are an expert Python code golf specialist with deep knowledge of optimization techniques.
@@ -397,78 +244,39 @@ Your task is to analyze the given code and apply proven code golf optimizations 
 {code}
 ```
 
-## Systematic Optimization Analysis
-
-### Step 1: Code Structure Analysis
-1. **Identify patterns** that can be optimized using known techniques
-2. **Map code constructs** to potential golf transformations
-3. **Analyze variable usage** and scope optimization opportunities
-4. **Detect algorithmic redundancies** or simplification opportunities
-
-### Step 2: Knowledge Base Application
-
-#### A. Variable and Namespace Optimization
-**Target:** Reduce character count through naming and scope
-- **Long variable names → Single letters:** Use `i,j,k,r,c,x,y,z,n,m,v,w,h`
-- **Reduce variable count:** Combine or eliminate temporary variables
-- **Reuse variables:** Use same variable for different purposes when scope allows
-- **Global variables:** Use when it reduces total character count
-
-#### B. Expression and Operator Optimization
-**Target:** Compact expressions and leverage Python operator features
-- **Walrus operator:** `x=expr(); if x:` → `if x:=expr():`
-- **Chained comparisons:** `a<b and b<c` → `a<b<c`
-- **Boolean algebra:** `not(not x)` → `bool(x)`, `x==True` → `x`
-- **Tuple indexing:** `if cond: a else b` → `(b,a)[cond]` (when safe)
-- **Mathematical shortcuts:** `x//1` for int(), `x**2` vs `x*x`
-- **Bitwise operations:** When applicable and shorter
-
-#### C. Loop and Iteration Optimization
-**Target:** Reduce iteration overhead and combine operations
-- **List comprehensions:** Replace simple loops when shorter
-- **Generator expressions:** For memory efficiency and syntax reduction
-- **Enumerate vs range:** Use `enumerate()` instead of manual indexing
-- **Zip operations:** Parallel iteration over multiple sequences
-- **All/any shortcuts:** Replace boolean accumulation loops
-- **Flatten nested loops:** Convert to single loop with math when possible
-
-#### D. Built-in Function Leverage
-**Target:** Use Python built-ins instead of manual implementation
-- **Aggregation functions:** `sum()`, `max()`, `min()` instead of loops
-- **Sequence operations:** `map()`, `filter()` for transformations
-- **String operations:** `str.join()`, slicing tricks
-- **Set operations:** For unique elements, intersections
-- **Sorting shortcuts:** `sorted()` with key functions
-
-#### E. Data Structure Optimization
-**Target:** Choose optimal data structures for minimal code
-- **List vs dict vs set:** Choose based on access patterns
-- **In-place modification:** Modify input instead of creating new structures
-- **Tuple unpacking:** `a,b,c = sequence` for multiple assignment
-- **Default dict patterns:** Use `dict.get()` or `setdefault()`
-
-#### F. Control Flow Optimization
-**Target:** Simplify conditional logic and flow control
-- **Early returns:** Reduce nesting with guard clauses
-- **Ternary operators:** `x if condition else y` when appropriate
-- **Short-circuit evaluation:** Leverage `and`/`or` for control flow
-- **Exception handling:** Use try/except when shorter than checks
-
-### Step 3: Space and Syntax Optimization
-**Target:** Remove unnecessary characters while maintaining readability
-- **Remove unnecessary spaces:** Around operators, after commas (where safe)
-- **Remove unnecessary parentheses:** In expressions and conditions
-- **Combine statements:** Use semicolons where appropriate
-- **Line breaks:** Optimize for minimal total characters
-
-### Step 4: Advanced Golf Patterns
-**Target:** Apply sophisticated optimization patterns
-- **String manipulation tricks:** Slicing, indexing, formatting shortcuts
-- **Lambda optimizations:** For simple function definitions
-- **Recursive patterns:** When they reduce code vs iterative approaches
-- **Mathematical formulas:** Replace algorithmic computation when possible
-
-## Application Strategy
+Instructions:
+1. Analyze the current code structure and identify patterns that can be optimized.
+2. Scan your knowledge base of code golf tricks and techniques, identifying those that can be applied to the current code.
+3. If you can not find any applicable by yourself, consider the following tricks:
+    - Structural optimizations:
+        - **String manipulation tricks:** Slicing, indexing, formatting shortcuts
+        - **Lambda optimizations:** For simple function definitions
+        - **Recursive patterns:** When they reduce code vs iterative approaches
+        - **Mathematical formulas:** Replace algorithmic computation when possible
+    - Loop and iteration optimizations: 
+        - Use list comprehensions or generator expressions instead of loops where possible.
+        - Use `enumerate()` instead of manual indexing.
+        - Use `zip()` for parallel iteration over multiple sequences.
+        - Use `all()` or `any()` for boolean accumulation instead of loops.
+        - Flatten nested loops into a single loop with mathematical calculations when possible.
+    - Expression and operator optimizations:
+        - Use the walrus operator (`:=`) to combine assignment and condition checks.
+        - Use chained comparisons (e.g., `a < b < c`) instead of multiple `and` conditions.
+        - Simplify boolean expressions using boolean algebra (e.g., `not(not x)` to `bool(x)`).
+        - Use tuple indexing for conditional assignments (e.g., `(b, a)[cond]`).
+        - Use mathematical shortcuts (e.g., `x // 1` for `int(x)`, `x ** 2` instead of `x * x`).
+        - Use bitwise operations when applicable and shorter.
+        - Use built-in functions like `sum()`, `max()`, `min()` instead of manual loops for aggregation.
+        - Use `map()` and `filter()` for sequence transformations.
+        - Use string methods like `str.join()` and slicing tricks for string manipulations.
+        - Use set operations for unique elements and intersections.
+        - Use `sorted()` with key functions for sorting.
+        - Use tuple unpacking for multiple assignments (e.g., `a, b, c = sequence`).
+        - Use `dict.get()` or `setdefault()` for default dictionary patterns.
+    - Control flow optimizations:
+        - Short-circuit evaluation with `and`/`or`.
+        - Remove early returns(need to guarantee correctness).
+4. Apply the identified tricks step by step, ensuring that the code remains correct and functional.
 
 ### Priority Order:
 1. **High-impact algorithmic changes** (biggest byte savings)
@@ -484,16 +292,23 @@ Your task is to analyze the given code and apply proven code golf optimizations 
 
 ## Output Requirements
 
-Apply ALL applicable optimizations from your knowledge base and provide ONLY the final optimized code:
-
+Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+<answer_begin>
+Applied Tricks: [List the tricks you applied]
 ```python
 def p(g):
     # Your fully optimized code
     # Apply maximum safe optimizations
     pass
 ```
+</answer_end>
 
-**Optimization Goal:** Achieve maximum byte count reduction while preserving exact functionality and correctness."""
+If NO tricks can safely improve this code, respond with exactly:
+<answer_begin>
+NO_APPLICABLE_TRICKS
+</answer_end>
+
+Now follow the above instructions, find and apply all the useful tricks and provide your optimized code({shortest_hint}):"""
 
 # Provided tricks application prompt template
 PROVIDED_TRICKS_PROMPT = """Apply specific code golf tricks to make this code shorter while maintaining correctness.
@@ -526,15 +341,20 @@ PROVIDED_TRICKS_PROMPT = """Apply specific code golf tricks to make this code sh
 - Are there any Python version compatibility issues?
 - Does it maintain the correct function signature `def p(g):`?
 
-## Output Instructions:
-If you can apply any tricks to reduce the code size:
+## Output Requirements:
+Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+<answer_begin>
+Applied Tricks: [List the tricks you applied]
 ```python
 def p(g):
     # Your optimized code with tricks applied
     pass
 ```
+</answer_end>
 
 If NO tricks can safely improve this code, respond with exactly:
+<answer_begin>
 NO_APPLICABLE_TRICKS
+</answer_end>
 
-Apply the most effective applicable tricks:"""
+Now follow the above instructions, find and apply all the useful tricks and provide your optimized code: """

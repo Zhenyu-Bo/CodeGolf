@@ -24,3 +24,4 @@ logs
 solutions
 submission*
 modules/__pycache__/
+venv/

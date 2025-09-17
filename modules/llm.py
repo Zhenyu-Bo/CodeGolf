@@ -3,9 +3,6 @@ from openai import AsyncOpenAI
 import os
 import asyncio
 
-from dotenv import load_dotenv
-load_dotenv()  # Load environment variables from .env file
-
 class ABC:
     def __init__(self):
         pass
@@ -28,9 +25,12 @@ class LLM(ABC):
         if 'deepseek' in model_id.lower():
             api_key = os.getenv("DEEPSEEK_API_KEY")
             base_url = "https://api.deepseek.com"
+        elif 'gemini' in model_id.lower():
+            api_key = os.getenv("GEMINI_API_KEY")
+            base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
         else:
             api_key = os.getenv("OPENAI_API_KEY")
-            base_url = "https://openrouter.ai/api/v1"
+            base_url = "https://api.openai.com/v1/"
         
         if api_key is None:
             raise ValueError(f"API key is required. Set API Key for {model_id} environment variable or pass api_key parameter.")
@@ -57,15 +57,16 @@ class LLM(ABC):
                 model=self.model_id,
                 messages=messages,
                 temperature=temperature,
-                reasoning_effort=reasoning_effort,
+                # reasoning_effort=reasoning_effort,
                 # response_format=response_format,
                 top_p=1.0,  # Add nucleus sampling parameter (default to 1.0)
                 n=1,  # Number of completions to generate
                 stream=False,  # Disable streaming for simplicity
             )
+            # print("Completion received:", completion)
             return completion.choices[0].message.content
         except Exception as e:
-            print(f"Error calling OpenRouter API: {e}")
+            print(f"Error calling API: {e}")
             raise
 
 if __name__ == "__main__":
@@ -73,7 +74,7 @@ if __name__ == "__main__":
     try:
         # Make sure to set your API key as environment variable:
         # export OPENROUTER_API_KEY="your_api_key_here"
-        model_id = "gpt-4o"
+        model_id = "gemini-2.5-flash"
         llm = LLM(model_id=model_id)
         messages = [
             {"role": "system", "content": "You are a helpful assistant"},
