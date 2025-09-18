@@ -48,13 +48,13 @@ For example:
 ## Requirements
 Here are the requirements and guidelines for generating the variants:
 
-1.  **Algorithmic Diversity:** Focus on fundamentally different strategies (e.g., iteration pattern, data structures, recursive vs. iterative) or different algorithms. Avoid trivial changes.
-2.  **Correctness:** All variants must pass the examples and adhere to the rule defined by the generator code. Test your logic mentally against the examples before providing code.
-3.  **Length:** Try to using more concise strategies or data structures and generate shorter code, but do not sacrifice clarity or correctness.
-4.  **Completeness:** Each variant must be a complete, runnable function.
-5.  **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid.
-6.  **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
-7.  **Output Format:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+1. **Algorithmic Diversity:** Focus on fundamentally different strategies (e.g., iteration pattern, data structures, recursive vs. iterative) or different algorithms. Avoid trivial changes.
+2. **Correctness:** All variants must pass the examples and adhere to the rule defined by the generator code. Test your logic mentally against the examples before providing code.
+3. **Length:** Try to using more concise strategies or data structures and generate shorter code, but do not sacrifice clarity or correctness.
+4. **Completeness:** Each variant must be a complete, runnable function.
+5. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
+6. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+7. **Output Format:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
 <answer_begin>
 ### Variant 1: [Descriptive Strategy Name]
 **Core Strategy:** [Explain the main algorithmic approach in 1-2 clear sentences]
@@ -83,7 +83,8 @@ def p(g):
 (Continue for all {n_variants} variants...)
 </answer_end>
 
-Follow the above instructions and requirements, begin your analysis and variant generation now:"""
+Now follow the above instructions and requirements, begin your analysis and variant generation, finally provide {n_variants} different variants in the required format.
+"""
 
 # Optimization prompt template
 OPTIMIZATION_PROMPT = """You are an expert Python programmer specializing in code golf and abstract reasoning puzzles. You need to understand and finish the following task:
@@ -141,12 +142,12 @@ For example:
 ## Requirements
 Here are the requirements and guidelines for shortening the code:
 
-1.  **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid.
-2.  **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
-3.  **Correctness:** The shortened code must produce the same output as the original code for all valid inputs defined by the generator. You must mentally verify the correctness of your shortened code against the provided examples.
-4.  **Length:** Focus on achieving the shortest possible code while maintaining clarity and correctness. Avoid unnecessary complexity that does not contribute to shortening.
-5.  **Big Change Encouragement:** You are encouraged to make significant changes to the algorithm or data structures used if it leads to a shorter implementation, rather than just making minor syntactic tweaks.
-6.  **Output Format:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
+2. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+3. **Correctness:** The shortened code must produce the same output as the original code for all valid inputs defined by the generator. You must mentally verify the correctness of your shortened code against the provided examples.
+4. **Length:** Focus on achieving the shortest possible code while maintaining clarity and correctness. Avoid unnecessary complexity that does not contribute to shortening.
+5. **Big Change Encouragement:** You are encouraged to make significant changes to the algorithm or data structures used if it leads to a shorter implementation, rather than just making minor syntactic tweaks.
+6. **Output Format:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
 <answer_begin>
 My Strategy: [expplain your optimization strategy briefly]
 
@@ -159,7 +160,7 @@ def p(g):
 ```
 </answer_end>
 
-Follow the above instructions and requirements, begin your optimization now({shortest_hint}):
+Now, follow the above instructions and requirements, begin your optimization, finally provided your answer in the required format({shortest_hint}).
 """
 
 # Tricks application prompt template
@@ -179,6 +180,12 @@ TRICKS_PROMPT = """Apply specific code golf tricks to make this code shorter whi
 3. Ensure the function still works correctly
 4. Provide the final optimized code and explain which tricks were applied
 
+## Requirements:
+1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
+2. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+3. **Correctness:** The optimized code must produce the same output as the original code for all valid inputs defined by the generator. You must mentally verify the correctness of your optimized code against the provided examples.
+4. **Length:** Focus on achieving the shortest possible code while maintaining clarity and correctness. Avoid unnecessary complexity that does not contribute to shortening.
+
 ## Output Format:
 Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
 <answer_begin>
@@ -192,7 +199,8 @@ def p(g):
 ```
 </answer_end>
 
-Now apply the tricks and provide your result: """
+Now follow the above instructions and requirements, begin your optimization, finally provide your answer in the required format({shortest_hint}).
+"""
 
 # Failed variant fixing prompt template
 FIX_FAILED_VARIANT_PROMPT = """You are an expert Python debugger and problem solver specializing in code golf.
@@ -213,7 +221,7 @@ A code variant has failed and needs to be fixed while preserving its core algori
 {strategy}
 
 ## Requirements
-1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid.
+1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
 2. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
 3. **Correctness:** The fixed code must pass the provided examples and adhere to the rule defined by the generator code. You must mentally verify the correctness of your fixed code against the provided examples.
 4. **Algorithm Preservation:** If the original algorithmic approach is correct, preserve it as much as possible. If not, there are no restrictions on changing the algorithm.
@@ -230,7 +238,8 @@ def p(g):
 ```
 </answer_end>
 
-Follow the above instructions and requirements, begin your debugging and fixing now:"""
+Follow the above instructions and requirements, begin your debugging and fixing now.
+"""
 
 # Knowledge base tricks scanning prompt template
 KNOWLEDGE_BASE_TRICKS_PROMPT = """You are an expert Python code golf specialist with deep knowledge of optimization techniques.
@@ -290,9 +299,13 @@ Instructions:
 - **Keep readability sufficient** for verification
 - **Test each optimization** mentally against examples
 
-## Output Requirements
+## Requirements
 
-Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
+1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
+2. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+3. **Correctness:** The optimized code must produce the same output as the original code for all valid inputs defined by the generator. You must mentally verify the correctness of your optimized code against the provided examples.
+4. **Length:** Focus on achieving the shortest possible code while maintaining clarity and correctness. Avoid unnecessary complexity that does not contribute to shortening.
+5. **Output Requirements:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
 <answer_begin>
 Applied Tricks: [List the tricks you applied]
 ```python
@@ -308,7 +321,8 @@ If NO tricks can safely improve this code, respond with exactly:
 NO_APPLICABLE_TRICKS
 </answer_end>
 
-Now follow the above instructions, find and apply all the useful tricks and provide your optimized code({shortest_hint}):"""
+Now follow the above instructions, find and apply all the useful tricks and provide your optimized code({shortest_hint}).
+"""
 
 # Provided tricks application prompt template
 PROVIDED_TRICKS_PROMPT = """Apply specific code golf tricks to make this code shorter while maintaining correctness.
@@ -341,7 +355,12 @@ PROVIDED_TRICKS_PROMPT = """Apply specific code golf tricks to make this code sh
 - Are there any Python version compatibility issues?
 - Does it maintain the correct function signature `def p(g):`?
 
-## Output Requirements:
+## Requirements:
+1. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
+2. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.
+3. **Correctness:** The optimized code must produce the same output as the original code for all valid inputs defined by the generator. You must mentally verify the correctness of your optimized code against the provided examples.
+4. **Length:** Focus on achieving the shortest possible code while maintaining clarity and correctness. Avoid unnecessary complexity that does not contribute to shortening.
+5. **Output Requirements:** Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
 Your output wrapped in a single <answer_begin>...</answer_end> block, and must follow the following specified format:
 <answer_begin>
 Applied Tricks: [List the tricks you applied]
@@ -357,4 +376,5 @@ If NO tricks can safely improve this code, respond with exactly:
 NO_APPLICABLE_TRICKS
 </answer_end>
 
-Now follow the above instructions, find and apply all the useful tricks and provide your optimized code: """
+Now follow the above instructions, find and apply all the useful tricks and provide your optimized code.
+"""
