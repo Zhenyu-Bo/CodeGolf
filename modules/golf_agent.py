@@ -25,7 +25,7 @@ from modules.prompt_template import (
 
 # Add Google Code Golf utils to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print("Project root:", PROJECT_ROOT)
+# print("Project root:", PROJECT_ROOT)
 # print("Adding code golf utils path:", os.path.join(PROJECT_ROOT, "google-code-golf-2025", "code_golf_utils"))
 sys.path.append(os.path.join(PROJECT_ROOT, "google-code-golf-2025", "code_golf_utils"))
 from code_golf_utils import load_examples, verify_program
@@ -150,7 +150,6 @@ class GolfAgent:
         early_stop_steps: int = 5,
         max_iterations: int = 5,
         use_shortest_hint: bool = False,
-        save_file: str = None,
         logger: logging.Logger = None,
         record_prompts: bool = True,
         record_details: bool = True,
@@ -173,7 +172,6 @@ class GolfAgent:
         self.max_steps = max_steps
         self.early_stop_steps = early_stop_steps
         self.max_iterations = max_iterations
-        self.save_file = save_file
         # set logger path
         logs_dir = os.path.join(self.project_path, 'logs')
         os.makedirs(logs_dir, exist_ok=True)
@@ -184,7 +182,7 @@ class GolfAgent:
         print(f"Initializing GolfAgent for task {task_num}")
         print(f"Log file will be: {log_file}")
         
-        self.logger = logger or self._setup_logger(log_file=log_file)
+        self.logger = logger or self._setup_logger()
         
         # Immediate log to verify logger is working
         self.logger.info(f"GolfAgent initialized for task {task_num}")
@@ -205,9 +203,16 @@ class GolfAgent:
         self.logged_prompts = set()  # Track which prompt types have been logged
 
         self.record_prompts = record_prompts
+        self.record_details = record_details
         
-    def _setup_logger(self, log_file) -> logging.Logger:
+    def _setup_logger(self) -> logging.Logger:
         """Setup a basic logger if none provided"""
+        # Create a directory the task logs if it doesn't exist
+        logs_dir = os.path.join(self.project_path, 'logs', f"task{self.task_num:03d}")  
+        os.makedirs(logs_dir, exist_ok=True)
+        # Generate a timestamped log file name
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = os.path.join(logs_dir, f"{timestamp}.log")
         # Use a unique logger name to avoid conflicts
         logger_name = f'GolfAgent_task{self.task_num}_{datetime.now().strftime("%H%M%S")}'
         logger = logging.getLogger(logger_name)
@@ -218,20 +223,16 @@ class GolfAgent:
         
         # Always add console handler
         console_handler = logging.StreamHandler()
-        console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        console_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         console_handler.setFormatter(console_formatter)
         logger.addHandler(console_handler)
 
         # Add file handler if log_file is provided
-        if log_file:
-            try:
-                file_handler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
-                file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-                file_handler.setFormatter(file_formatter)
-                logger.addHandler(file_handler)
-                logger.info(f"Logger initialized for task {self.task_num}, log file: {log_file}")
-            except Exception as e:
-                logger.warning(f"Failed to create file handler for {log_file}: {e}")
+        file_handler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
+        file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
+        logger.info(f"Logger initialized for task {self.task_num}, log file: {log_file}")
         
         return logger
     
@@ -239,8 +240,7 @@ class GolfAgent:
         """Log a prompt only if it hasn't been logged before"""
         if self.record_prompts and prompt_type not in self.logged_prompts:
             self.logger.info(f"\n{'='*60}")
-            self.logger.info(f"FIRST {prompt_type.upper()} PROMPT")
-            self.logger.info(f"{'='*60}")
+            self.logger.info(f"FIRST {prompt_type.upper()} PROMPT:\n")
             self.logger.info(prompt)
             self.logger.info(f"{'='*60}\n")
             self.logged_prompts.add(prompt_type)
@@ -344,7 +344,7 @@ class GolfAgent:
             matches = re.findall(pattern, answer_content, re.DOTALL)
             if matches:
                 code = matches[-1].strip()
-                if 'def solve(' in code:
+                if 'def p(' not in code and 'def solve(' in code:
                     code = code.replace('def solve(', 'def p(')
                 elif 'def ' not in code:
                     lines = code.split('\n')
@@ -440,7 +440,7 @@ class GolfAgent:
             generator_code=self.generator_code,
             code=code,
             history_str=history_str,
-            shortest_hint=shortest_hint
+            shortest_hint=shortest_hint if self.shortest_known else "",
         )
     
     def _create_tricks_prompt(self, code: str) -> str:
@@ -452,9 +452,13 @@ class GolfAgent:
             tricks_str += f"   After: {trick['output']}\n"
             tricks_str += f"   Note: {trick['note']}\n"
         
+        if self.shortest_known:
+            shortest_hint = f"\nNote: The shortest known solution is {self.shortest_known} bytes. Try to approach or beat this length.\n"
+
         return TRICKS_PROMPT.format(
             code=code,
-            tricks_str=tricks_str
+            tricks_str=tricks_str,
+            shortest_hint=shortest_hint if self.shortest_known else "",
         )
     
     def _format_examples(self) -> str:
@@ -495,16 +499,18 @@ class GolfAgent:
         self.total_llm_calls += 1
         messages = [{"role": "user", "content": prompt}]
         
-        # 变体生成：高温度以获得创造性，结构化输出
+        # set temperature higher for more diversity
+        self.logger.info(f"[VARIANT_GEN] Call LLM to generate variants...")
         response = await self.llm.chat(
             messages,
             temperature=0.8,
             reasoning_effort="high",
-            response_format={"type": "text"}  # 使用文本格式，因为需要解析多个代码块
+            response_format={"type": "text"}  # Use text format to parse multiple code blocks
         )
         
         # Log the conversation
         self._log_llm_conversation("VARIANT_GENERATION", messages, response)
+        generate_history = [{"role": "user", "content": prompt}, {"role": "assistant", "content": response}]
         
         # Extract variants
         variants_data = self._extract_variants(response)
@@ -548,7 +554,7 @@ class GolfAgent:
         if len(selected) < self.n_variants:
             remaining = self.n_variants - len(selected)
             self.logger.info(f"[VARIANT_GEN] Need {remaining} more variants, attempting to fix failed ones...")
-            fixed_variants = await self._fix_failed_variants(failed_variants[:remaining * 2])  # Try to fix more than needed
+            fixed_variants = await self._fix_failed_variants(failed_variants, generate_history, remaining)  # Try to fix more than needed
             selected.extend(fixed_variants[:remaining])
         
         self.logger.info(f"[VARIANT_GEN] Selected {len(selected)} variants for optimization ({len([v for v in selected if v.passed])} working)")
@@ -559,70 +565,144 @@ class GolfAgent:
             self.logger.info(f"[VARIANT_GEN] Selected {i+1}: {status} {variant.min_length()} bytes - {variant.strategy}")
         
         return selected
-    
-    async def _fix_failed_variants(self, failed_variants: List[Attempt]) -> List[Attempt]:
-        """Try to fix failed variants by addressing their specific issues"""
+
+    async def _fix_failed_variants(self, failed_variants: List[Attempt], generate_history, fix_num) -> List[Attempt]:
+        """Try to fix failed variants by addressing their specific issues with multiple iterations and parallel processing"""
         fixed_variants = []
         
-        self.logger.info(f"[VARIANT_FIX] Attempting to fix {len(failed_variants)} failed variants")
+        self.logger.info(f"[VARIANT_FIX] Attempting to fix {len(failed_variants)} failed variants, need {fix_num} successful fixes")
         
+        # Create tasks for parallel processing
+        fix_tasks = []
         for i, variant in enumerate(failed_variants):
-            self.logger.info(f"[VARIANT_FIX] Fixing variant {i+1}/{len(failed_variants)}: {variant.strategy}")
-            self.logger.info(f"[VARIANT_FIX] Original code:\n{variant.code}")
-            self.logger.info(f"[VARIANT_FIX] Error: {variant.summary}")
-            
-            fix_prompt = FIX_FAILED_VARIANT_PROMPT.format(
-                error_summary=variant.summary,
-                original_code=variant.code,
-                strategy=variant.strategy
-            )
-            self._log_prompt_once("fix_failed_variant", fix_prompt)
+            task = asyncio.create_task(self._fix_single_variant(variant, generate_history, i))  # Wrap coroutine as Task
+            fix_tasks.append(task)
+        
+        # Process variants in parallel and collect results as they complete
+        completed_count = 0
+        for completed_task in asyncio.as_completed(fix_tasks):
+            try:
+                fixed_attempt = await completed_task
+                if fixed_attempt and fixed_attempt.passed:
+                    fixed_variants.append(fixed_attempt)
+                    self.logger.info(f"[VARIANT_FIX] ✓ Successfully fixed variant ({len(fixed_variants)}/{fix_num}): {fixed_attempt.strategy} - {fixed_attempt.min_length()} bytes")
+                    
+                    # Stop when we have enough successful fixes
+                    if len(fixed_variants) >= fix_num:
+                        self.logger.info(f"[VARIANT_FIX] Reached target of {fix_num} successful fixes, stopping")
+                        break
+                
+                completed_count += 1
+                if completed_count >= len(failed_variants):
+                    self.logger.info(f"[VARIANT_FIX] All variants processed")
+                    break
+                    
+            except Exception as e:
+                self.logger.warning(f"[VARIANT_FIX] ✗ Failed to process variant task: {e}")
+                completed_count += 1
+        
+        # Cancel remaining tasks if we reached the target
+        for task in fix_tasks:
+            if not task.done():
+                task.cancel()
+        
+        self.logger.info(f"[VARIANT_FIX] Successfully fixed {len(fixed_variants)}/{len(failed_variants)} variants")
+        return fixed_variants[:fix_num]
+    
+    async def _fix_single_variant(self, variant: Attempt, generate_history: List[Dict], variant_index: int) -> Optional[Attempt]:
+        """Fix a single variant with multiple iterations and conversation history"""
+        variant_prefix = f"[FIX_{variant_index:02d}]"
+        self.logger.info(f"{variant_prefix} Starting fix for variant: {variant.strategy}")
+        self.logger.info(f"{variant_prefix} Original code:\n{variant.code}")
+        self.logger.info(f"{variant_prefix} Error: {variant.summary}")
+        
+        # Initialize conversation history with generation context
+        history = generate_history[:]  # Copy the generation history
+        
+        # Add initial fix request
+        initial_fix_message = f"""The following code variant failed during testing:
 
+**Strategy:** {variant.strategy}
+
+**Failed Code:**
+```python
+{variant.code}
+```
+
+**Error:** {variant.summary}
+
+Please fix this code. Provide the corrected code in a Python code block, which means using triple backticks (```python ... ```). The fixed code should also follows the previous requirements."""
+
+        history.append({"role": "user", "content": initial_fix_message})
+        
+        for iteration in range(self.max_iterations):
             try:
                 self.total_llm_calls += 1
-                messages = [{"role": "user", "content": fix_prompt}]
+                self.logger.info(f"{variant_prefix} Fix attempt {iteration+1}/{self.max_iterations}")
                 
-                # 修复失败变体：中等温度，专注于问题解决
+                # Call LLM with conversation history
+                self.logger.info(f"{variant_prefix} Call LLM to fix variant...")
                 response = await self.llm.chat(
-                    messages,
+                    history,
                     temperature=0.4,
                     reasoning_effort="high",
                     response_format={"type": "text"}
                 )
                 
-                # Log the conversation
-                self._log_llm_conversation("VARIANT_FIX", messages, response)
+                # Log the conversation for first few iterations
+                self._log_llm_conversation("VARIANT_FIX", history[-1:], response)
                 
+                # Add LLM response to history
+                history.append({"role": "assistant", "content": response})
+                
+                # Extract and test the fixed code
                 fixed_code = self._extract_code(response)
-                if fixed_code:
-                    # Test the fixed code
-                    passed, info = await self.judge.execute(fixed_code)
-                    fixed_attempt = Attempt(code=fixed_code, passed=passed, summary=info, strategy=f"Fixed: {variant.strategy}")
-                    
-                    # Log execution details
-                    self._log_code_execution(fixed_code, passed, info, f"Fixed variant: {variant.strategy}")
-                    
+                if not fixed_code:
+                    self.logger.warning(f"{variant_prefix} No code extracted from response on iteration {iteration+1}")
+                    if iteration < self.max_iterations - 1:
+                        history.append({
+                            "role": "user", 
+                            "content": "No code extracted from your response. Please provide the fixed code in a Python code block, using triple backticks (```python ... ```). The fixed code should also follows the previous requirements."
+                        })
+                    continue
+                
+                # Test the fixed code
+                passed, info = await self.judge.execute(fixed_code)
+                fixed_attempt = Attempt(code=fixed_code, passed=passed, summary=info, strategy=f"Fixed: {variant.strategy}")
+                
+                # Log execution details
+                self._log_code_execution(fixed_code, passed, info, f"Fixed variant iteration {iteration+1}", variant_index)
+                
+                if passed:
                     # Minify the fixed code
                     try:
                         minified = await minify_code(fixed_code)
                         fixed_attempt.update_minified(minified)
-                        self.logger.info(f"[VARIANT_FIX] Minified from {len(fixed_code.encode())} to {len(minified.encode())} bytes")
-                    except:
-                        pass
+                        self.logger.info(f"{variant_prefix} Minified from {len(fixed_code.encode())} to {len(minified.encode())} bytes")
+                    except Exception as e:
+                        self.logger.warning(f"Failed to minify code: {e}")
                     
-                    if passed:
-                        self.logger.info(f"[VARIANT_FIX] ✓ Successfully fixed variant: {fixed_attempt.strategy} - {fixed_attempt.min_length()} bytes")
-                        fixed_variants.append(fixed_attempt)
-                    else:
-                        self.logger.warning(f"[VARIANT_FIX] ✗ Fixed variant still failed: {info}")
+                    self.logger.info(f"{variant_prefix} ✓ Successfully fixed on iteration {iteration+1}")
+                    return fixed_attempt
                 else:
-                    self.logger.warning(f"[VARIANT_FIX] ✗ Could not extract code from fix response")
-                        
+                    self.logger.warning(f"{variant_prefix} ✗ Fix attempt {iteration+1} failed: {info}")
+                    if iteration < self.max_iterations - 1:
+                        # Add failure feedback to conversation
+                        history.append({
+                            "role": "user",
+                            "content": f"The code still failed with error:\n{info}. Please fix this issue and provide the corrected code in a Python code block, using triple backticks (```python ... ```). The fixed code should also follows the previous requirements."
+                        })
+                    
             except Exception as e:
-                self.logger.warning(f"[VARIANT_FIX] ✗ Failed to fix variant: {e}")
+                self.logger.warning(f"{variant_prefix} ✗ Exception during fix attempt {iteration+1}: {e}")
+                if iteration < self.max_iterations - 1:
+                    history.append({
+                        "role": "user",
+                        "content": "There was an error processing your response. Please provide the fixed code again in the required format, using triple backticks (```python ... ```), and ensure it follows the previous requirements."
+                    })
         
-        self.logger.info(f"[VARIANT_FIX] Successfully fixed {len(fixed_variants)}/{len(failed_variants)} variants")
-        return fixed_variants
+        self.logger.warning(f"{variant_prefix} ✗ Failed to fix variant after {self.max_iterations} attempts")
+        return None
     
     async def _optimize_variant(self, initial_attempt: Attempt, variant_id: int) -> List[Attempt]:
         """Optimize a single variant through sequential improvement"""
@@ -654,6 +734,7 @@ class GolfAgent:
                 self.logger.info(f"{path_prefix} Step {step+1}, Iteration {iteration+1}/{self.max_iterations}")
                 
                 # 代码优化：低温度以获得精确性
+                self.logger.info(f"{path_prefix} Call LLM to optimize code...")
                 response = await self.llm.chat(
                     history,
                     temperature=0.3,
@@ -662,8 +743,7 @@ class GolfAgent:
                 )
                 
                 # Log conversation for first path or on important steps
-                if variant_id == 0 or step % 5 == 0:  # Log every 5 steps for path 0
-                    self._log_llm_conversation("OPTIMIZATION", history[-1:], response, variant_id, step)
+                self._log_llm_conversation("OPTIMIZATION", history[-1:], response, variant_id, step)
                 
                 history.append({"role": "assistant", "content": response})
                 
@@ -672,7 +752,7 @@ class GolfAgent:
                     self.logger.warning(f"{path_prefix} No code extracted from response")
                     history.append({
                         "role": "user", 
-                        "content": "Please provide your optimized code in a Python code block."
+                        "content": "Please provide your optimized code in a Python code block, using triple backticks (```python ... ```). The optimized code should also follows the previous requirements."
                     })
                     continue
                 
@@ -700,7 +780,7 @@ class GolfAgent:
                     if iteration < self.max_iterations - 1:
                         history.append({
                             "role": "user",
-                            "content": f"Code failed: {info}.\n Please fix and try again."
+                            "content": f"Code failed:\n{info}.\n Please fix and try again. Provide the corrected code in a Python code block, using triple backticks (```python ... ```). The fixed code should also follows the previous requirements."
                         })
                     else:
                         self.logger.warning(f"{path_prefix} All iterations failed for this step")
@@ -787,7 +867,7 @@ class GolfAgent:
         
         scan_prompt = KNOWLEDGE_BASE_TRICKS_PROMPT.format(
             code=current_best.code,
-            shortest_hint=shortest_hint
+            shortest_hint=shortest_hint if self.shortest_known else "",
         )
         if variant_id == 0:  # Only log the first variant's knowledge base tricks prompt
             self._log_prompt_once("knowledge_base_tricks", scan_prompt)
@@ -797,6 +877,7 @@ class GolfAgent:
             messages = [{"role": "user", "content": scan_prompt}]
             
             # 知识库扫描：中等温度，专注于技巧应用
+            self.logger.info(f"{path_prefix} Call LLM to scan knowledge base for tricks...")
             response = await self.llm.chat(
                 messages,
                 temperature=0.5,
@@ -805,10 +886,9 @@ class GolfAgent:
             )
             
             # Log conversation for first variant
-            if variant_id == 0:
-                self._log_llm_conversation("KNOWLEDGE_BASE_TRICKS", messages, response, variant_id)
+            self._log_llm_conversation("KNOWLEDGE_BASE_TRICKS", messages, response, variant_id)
             
-            if "NO_APPLICABLE_TRICKS" in response:
+            if "NO_APPLICABLE_TRICKS".lower() in response.lower():
                 self.logger.info(f"{path_prefix} LLM found no applicable knowledge base tricks")
                 return None
             
@@ -865,6 +945,7 @@ class GolfAgent:
             messages = [{"role": "user", "content": prompt}]
             
             # 提供技巧应用：低温度，高精确性
+            self.logger.info(f"{path_prefix} Call LLM to apply provided tricks...")
             response = await self.llm.chat(
                 messages,
                 temperature=0.2,
@@ -873,10 +954,9 @@ class GolfAgent:
             )
             
             # Log conversation for first variant
-            if variant_id == 0:
-                self._log_llm_conversation("PROVIDED_TRICKS", messages, response, variant_id)
+            self._log_llm_conversation("PROVIDED_TRICKS", messages, response, variant_id)
             
-            if "NO_APPLICABLE_TRICKS" in response:
+            if "NO_APPLICABLE_TRICKS".lower() in response.lower():
                 self.logger.info(f"{path_prefix} LLM found no applicable provided tricks")
                 return None
             
@@ -1023,19 +1103,19 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, default="deepseek-reasoner", help="LLM model ID")
     parser.add_argument("--n_variants", type=int, default=20, help="Number of variants to generate")
     parser.add_argument("--generation_factor", type=float, default=1.5, help="Generation factor for variants")
-    parser.add_argument("--max_steps", type=int, default=64, help="Max optimization steps per variant")
+    parser.add_argument("--max_steps", type=int, default=32, help="Max optimization steps per variant")
     parser.add_argument("--early_stop_steps", type=int, default=5, help="Early stopping steps")
     parser.add_argument("--max_iterations", type=int, default=5, help="Max iterations per optimization step")
     parser.add_argument("--use_shortest_hint", type=str, default="True", help="Use shortest hint")
-    parser.add_argument("--record_prompts", type=str, default="False", help="Whether to record prompts in logs")
+    parser.add_argument("--record_prompts", type=str, default="True", help="Whether to record prompts in logs")
     parser.add_argument("--record_details", type=str, default="True", help="Whether to record detailed information in logs")
+    parser.add_argument("--timeout", type=int, default=600, help="Timeout for LLM calls in seconds")
 
     args = parser.parse_args()
 
-    if args.use_shortest_hint == "True":
-        args.use_shortest_hint = True
-    else:
-        args.use_shortest_hint = False
+    args.use_shortest_hint = args.use_shortest_hint.lower() == "true"
+    args.record_prompts = args.record_prompts.lower() == "true"
+    args.record_details = args.record_details.lower() == "true"
 
     async def main():
         task_num = args.task
@@ -1052,7 +1132,7 @@ if __name__ == "__main__":
         # Initialize LLM and agent
         model_id = args.model
         print(f"Initializing LLM with model: {model_id}")
-        llm = LLM(model_id=model_id)
+        llm = LLM(model_id=model_id, timeout=args.timeout)
         
         print(f"Creating GolfAgent for task {task_num}...")
         agent = GolfAgent(
@@ -1065,9 +1145,8 @@ if __name__ == "__main__":
             max_iterations=args.max_iterations,
             early_stop_steps=args.early_stop_steps,
             use_shortest_hint=args.use_shortest_hint,
-            save_file=f"advanced_golf_state_task{task_num:03d}.json",
-            record_prompts=args.record_prompts == "True",
-            record_details=args.record_details == "True",
+            record_prompts=args.record_prompts,
+            record_details=args.record_details,
         )
         
         print(f"Starting optimization for task {task_num}...")
