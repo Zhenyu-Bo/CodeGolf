@@ -4,6 +4,7 @@ import os
 import asyncio
 import re
 import json
+import httpx
 
 class ABC:
     def __init__(self):
@@ -13,7 +14,7 @@ class ABC:
         raise NotImplementedError("Subclasses should implement this method")
 
 class LLM(ABC):
-    def __init__(self, model_id="gpt-5", timeout=600):
+    def __init__(self, model_id="gpt-5", timeout=3600):
         """
         Args:
             model_id: Model name on OpenRouter
@@ -37,15 +38,21 @@ class LLM(ABC):
         if api_key is None:
             raise ValueError(f"API key is required. Set API Key for {model_id} environment variable or pass api_key parameter.")
         
+        connect_timeout = max(15, timeout / 10)  # Connection timeout should be less than total timeout
+        write_timeout = max(15, timeout / 10)
+        read_timeout = max(60, timeout - connect_timeout - write_timeout)
+        self.timeout = connect_timeout + write_timeout + read_timeout
+        granular_timeout = httpx.Timeout(self.timeout, connect=connect_timeout, read=read_timeout, write=write_timeout)
+
         self.client = AsyncOpenAI(
             base_url=base_url,
             api_key=api_key,
-            timeout=timeout
+            timeout=granular_timeout,
         )
         self.model_id = model_id
 
     def _extract_unsupported_params(self, error_message):
-        """
+        """  
         Extract unsupported parameter names from error messages
         Returns a list of parameter names that are not supported
         """
@@ -106,7 +113,9 @@ class LLM(ABC):
         """
         # Build params dict, exclude None values
         if "gemini-2.0-flash" in self.model_id.lower():
-            reasoning_effort = None  # Not supported (sorry for ugly hardcoding)
+            reasoning_effort = None  # hardcoding
+        if any(model in self.model_id.lower() for model in ["gpt-5-nano", "o4-mini"]):
+            temperature = None  # hardcoding
         params = {'model': self.model_id, 'messages': messages}
         if temperature is not None:
             params['temperature'] = temperature
@@ -116,7 +125,7 @@ class LLM(ABC):
             params['response_format'] = response_format
         
         # Add default params
-        params.update({'top_p': 1.0, 'n': 1, 'stream': False})
+        params.update({'top_p': 1.0, 'n': 1, 'stream': False, 'timeout': self.timeout})
         
         try:
             completion = await self.client.chat.completions.create(**params)

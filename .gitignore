@@ -25,3 +25,5 @@ solutions
 submission*
 modules/__pycache__/
 venv/
+node_modules/
+*.json

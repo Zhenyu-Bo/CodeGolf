@@ -87,41 +87,26 @@ Now follow the above instructions and requirements, begin your analysis and vari
 """
 
 # Optimization prompt template
-OPTIMIZATION_PROMPT = """You are an expert Python programmer specializing in code golf and abstract reasoning puzzles. You need to understand and finish the following task:
+OPTIMIZATION_PROMPT = """Continue optimizing this code variant to make it even shorter while maintaining exact functionality.
 
-## Task Description:
-You are given a grid transformation task where you need to generate multiple fundamentally different algorithmic variants to solve the same problem.
-I will provide you with:
-1. The input-output examples of the task. The input is a grid represented as a list of lists of integers, and the output is the transformed grid following a hidden rule.
-2. The code that generates these examples (the generator)
-3. The current solution code named `p` which has been proved correct
-4. The history of previous optimization attempts
-
-Your task is to analyze the given problem and optimize the current solution code `p` to make it as short as possible while maintaining its exact functionality and correctness.
-You had better focus on global optimizations rather than local ones, such as changing the algorithm or data structures used, rather than just tweaking syntax.
-
-## Problem Context
-
-### Task Examples:
-Here are the input-output examples of the task:
-{examples_str}
-
-### Generator Code:
-Here is the code that generates the input-output examples. Analyze it carefully to understand the underlying transformation rules:
-```python
-{generator_code}
-```
-
-### Current Code to shorten:
-Here is the current solution code that needs shortening:
+## Current Variant
+**Strategy:** {variant_strategy}
+**Current Code:**
 ```python
 {code}
 ```
 
-### History of Previous Shortening Attempts:
-Here is the history of previous shortening attempts, if any. You can analyze these attempts to identify what has already been tried and what worked or didn't work, and use this information to guide your shortening process:
+## Critical Context
+**Generator Code (IMPORTANT - analyze for optimization opportunities):**
+```python
+{generator_code}
+```
 
-{history_str}
+### Current Code to Optimize:
+Here is the current solution code that needs optimization:
+```python
+{code}
+```
 
 ## Analysis and Understanding Instructions
 Here are some instructions to help you analyze and optimize the code:
@@ -129,7 +114,7 @@ Here are some instructions to help you analyze and optimize the code:
 1. Analyze the input-output examples, the generator code, and the current solution code to understand the transformation rule.
 2. Analyze the generator code again to identify any implicit constraints or conditions that can help simplify the solution.
 3. Understand the core logic and transformation rule implemented in the current solution. Then try to identify areas where the code can be shortened without changing its functionality.
-4. Review the history of previous shortening attempts to avoid repeating ineffective strategies and to build upon successful ones.
+4. If this is part of an ongoing optimization conversation, build upon previous attempts and feedback to achieve better results.
 5. Focus on both algorithmic and syntactic optimizations to achieve the shortest possible code.
 
 **Note:**
