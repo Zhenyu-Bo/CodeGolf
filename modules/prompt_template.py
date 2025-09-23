@@ -12,7 +12,7 @@ I will provide you with:
 2. The code that generates these examples (the generator)
 3. The current solution code named `p` which has been proved correct
 
-Your task is to analyze the given problem and generate {n_variants} DIFFERENT algorithmic approaches to solve it.
+Your task is to analyze the given problem and generate {n_variants} DIFFERENT algorithmic approaches to solve it. And the more concise your approach is, the better.
 
 ## Problem Context
 Here are the provided informations about the task:
@@ -50,7 +50,7 @@ Here are the requirements and guidelines for generating the variants:
 
 1. **Algorithmic Diversity:** Focus on fundamentally different strategies (e.g., iteration pattern, data structures, recursive vs. iterative) or different algorithms. Avoid trivial changes.
 2. **Correctness:** All variants must pass the examples and adhere to the rule defined by the generator code. Test your logic mentally against the examples before providing code.
-3. **Length:** Try to using more concise strategies or data structures and generate shorter code, but do not sacrifice clarity or correctness.
+3. **Length and Conciseness:** Try to using more concise strategies or data structures and generate shorter code, but do not sacrifice clarity or correctness.
 4. **Completeness:** Each variant must be a complete, runnable function.
 5. **Entry Point:** The solution code must define a callable object named `p` (e.g., a function or a lambda). This callable must accept one argument (the input grid) and return the corresponding output grid. Note: Your code must include function `p`, but it does not have to be the only function or class in your code, which means you can define helper functions or classes if needed.
 6. **Libraries:** You are **only allowed to use standard Python libraries**. No third-party libraries like `numpy`, `scipy`, etc., are permitted.

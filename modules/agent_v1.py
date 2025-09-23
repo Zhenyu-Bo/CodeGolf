@@ -22,6 +22,7 @@ from modules.prompt_template import (
     KNOWLEDGE_BASE_TRICKS_PROMPT,
     PROVIDED_TRICKS_PROMPT
 )
+from utils.extract import extract_code, extract_variants
 
 # Add Google Code Golf utils to path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,6 +30,9 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # print("Adding code golf utils path:", os.path.join(PROJECT_ROOT, "google-code-golf-2025", "code_golf_utils"))
 sys.path.append(os.path.join(PROJECT_ROOT, "google-code-golf-2025", "code_golf_utils"))
 from code_golf_utils import load_examples, verify_program
+
+os.environ["http_proxy"] = "http://localhost:7897"
+os.environ["https_proxy"] = "http://localhost:7897"
 
 @dataclass
 class Attempt:
@@ -152,6 +156,10 @@ class GolfAgent:
         reasoning_effort: str = "high",  # New parameter for reasoning effort
     ):
         self.project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.append(os.path.join(self.project_path, "google-code-golf-2025", "code_golf_utils"))
+        # Import utils dynamically
+        global load_examples, verify_program
+        from code_golf_utils import load_examples, verify_program
 
         self.llm = llm
         self.reasoning_effort = reasoning_effort
@@ -344,12 +352,13 @@ class GolfAgent:
         prefix = f"[PATH_{variant_id:02d}]" if variant_id >= 0 else "[EXECUTION]"
         status = "✓ PASSED" if passed else "✗ FAILED"
         
-        self.logger.info(f"\n{prefix} CODE EXECUTION - {status}")
-        if context:
-            self.logger.info(f"Context: {context}")
+        if self.record_details:
+            self.logger.info(f"\n{prefix} CODE EXECUTION - {status}")
+            if context:
+                self.logger.info(f"Context: {context}")
+            self.logger.info(f"Code:\n{code}")
+            self.logger.info(f"Execution result: {info}")
         self.logger.info(f"Code length: {len(code.encode())} bytes")
-        self.logger.info(f"Code:\n{code}")
-        self.logger.info(f"Execution result: {info}")
         self.logger.info("")
     
     def _load_shortest_length(self) -> Optional[int]:
@@ -568,85 +577,6 @@ class GolfAgent:
         except Exception as e:
             self.logger.error(f'Failed to load state from {self.save_file}: {e}')
             return False
-
-    def _extract_code(self, response: str) -> Optional[str]:
-        """Extract Python code from response, considering answer_begin/answer_end format"""
-        # First try to extract content from <answer_begin>...</answer_end> blocks
-        answer_block_pattern = r'<answer_begin>(.*?)<answer_end>'
-        answer_match = re.search(answer_block_pattern, response, re.DOTALL)
-        
-        if answer_match:
-            answer_content = answer_match.group(1).strip()
-        else:
-            # Fallback to full response if no answer block found
-            answer_content = response
-        
-        # Now extract code from markdown blocks within the answer content
-        patterns = [
-            r"```(?:python|py|python3)\s+(.*?)\s*```",
-            r"```\s*(.*?)\s*```"
-        ]
-        
-        for pattern in patterns:
-            matches = re.findall(pattern, answer_content, re.DOTALL)
-            if matches:
-                code = matches[-1].strip()
-                if 'def p(' not in code and 'def solve(' in code:
-                    code = code.replace('def solve(', 'def p(')
-                elif 'def ' not in code:
-                    lines = code.split('\n')
-                    indented_lines = [' ' + line if line.strip() else line for line in lines]
-                    code = 'def p(g):\n' + '\n'.join(indented_lines)
-                return code
-        return None
-    
-    def _extract_variants(self, response: str) -> List[tuple[str, str]]:
-        """Extract multiple code variants from LLM response"""
-        variants = []
-        
-        # First extract content from <answer_begin>...</answer_end> block
-        answer_block_pattern = r'<answer_begin>(.*?)<answer_end>'
-        answer_match = re.search(answer_block_pattern, response, re.DOTALL)
-        
-        if answer_match:
-            answer_content = answer_match.group(1).strip()
-        else:
-            # Fallback to full response if no answer block found
-            answer_content = response
-        
-        # Look for sections like "### Variant 1:", "### Variant 2:", etc.
-        sections = re.split(r'(?:##|###)\s*(?:Strategy|Variant|Approach)\s*\d+[:\s]*', answer_content)
-        
-        for section in sections[1:]:  # Skip first empty section
-            # Extract strategy description from **Strategy:** field
-            strategy_match = re.search(r'\*\*(?:Strategy|Core Strategy):\*\*\s*(.*?)(?:\*\*|```|$)', section, re.DOTALL)
-            if strategy_match:
-                strategy = strategy_match.group(1).strip()
-                # Clean up the strategy text
-                strategy = re.sub(r'\s+', ' ', strategy)
-                strategy = strategy.split('\n')[0]  # Take first line only
-            else:
-                # Fallback: extract first meaningful line
-                lines = section.strip().split('\n')
-                strategy = ""
-                for line in lines:
-                    line = line.strip()
-                    if line and not line.startswith('**') and not line.startswith('```'):
-                        strategy = line
-                        break
-                if not strategy:
-                    strategy = "Unknown Strategy"
-            
-            # Extract code
-            code = self._extract_code(section)
-            if code and strategy:
-                variants.append((code, strategy))
-                
-            # Also check for variant end marker
-            if "**End of Variant" in section:
-                continue
-        
-        return variants
     
     def _create_variant_generation_prompt(self) -> str:
         """Create prompt for generating multiple code variants"""
@@ -723,9 +653,48 @@ class GolfAgent:
         return result
     
     async def _generate_variants(self) -> List[Attempt]:
-        """Generate multiple code variants using different strategies"""
+        """Generate multiple code variants using different strategies, including initial solution as variant 0"""
         self.logger.info(f"Generating {int(self.n_variants * self.generation_factor)} code variants...")
         
+        # Initialize list to store all variants (including initial solution)
+        variants = []
+        self.variant_histories = []
+        
+        # Step 1: Add initial solution as variant 0
+        self.logger.info(f"[VARIANT_0] Adding initial solution as variant 0")
+        
+        # Test the initial solution
+        initial_passed, initial_info = await self.judge.execute(self.initial_solution)
+        initial_attempt = Attempt(
+            code=self.initial_solution, 
+            passed=initial_passed, 
+            summary=initial_info, 
+            strategy="Initial Solution",
+            variant_index=0
+        )
+        
+        # Create empty conversation history for initial solution (not LLM-generated)
+        initial_history = [{
+            "role": "system", 
+            "content": f"Initial solution provided for task {self.task_num}"
+        }]
+        self.variant_histories.append(initial_history)
+        
+        # Log execution details for initial solution
+        self._log_code_execution(self.initial_solution, initial_passed, initial_info, "Initial Solution (Variant 0)")
+        
+        # Try to minify the initial solution
+        try:
+            minified = await minify_code(self.initial_solution)
+            initial_attempt.update_minified(minified)
+            self.logger.info(f"[VARIANT_0] Minified from {len(self.initial_solution.encode())} to {len(minified.encode())} bytes")
+        except Exception as e:
+            self.logger.warning(f"Failed to minify initial solution: {e}")
+        
+        variants.append(initial_attempt)
+        self.logger.info(f"[VARIANT_0] Initial Solution - {'PASSED' if initial_passed else 'FAILED'} - {initial_attempt.min_length()} bytes")
+        
+        # Step 2: Generate LLM variants (these will be variants 1, 2, 3, ...)
         prompt = self._create_variant_generation_prompt()
         self._log_prompt_once("variant_generation", prompt)
         
@@ -733,7 +702,7 @@ class GolfAgent:
         messages = [{"role": "user", "content": prompt}]
         
         # set temperature higher for more diversity
-        self.logger.info(f"[VARIANT_GEN] Call LLM to generate variants...")
+        self.logger.info(f"[VARIANT_GEN] Call LLM to generate additional variants...")
         response = await self.llm.chat(
             messages,
             temperature=0.8,
@@ -749,18 +718,16 @@ class GolfAgent:
         
         generate_history = [{"role": "user", "content": prompt}, {"role": "assistant", "content": response}]
         
-        # Extract variants
-        variants_data = self._extract_variants(response)
-        variants = []
+        # Extract LLM-generated variants
+        variants_data = extract_variants(response)
         
         self.logger.info(f"[VARIANT_GEN] Extracted {len(variants_data)} variants from LLM response")
         
-        # Initialize variant_histories for each variant with the shared generation context
-        self.variant_histories = []
-        
+        # Process LLM-generated variants (starting from index 1)
         for i, (code, strategy) in enumerate(variants_data):
             if code:
-                self.logger.info(f"[VARIANT_GEN] Testing variant {i+1}: {strategy}")
+                variant_index = i + 1  # Start from 1 since 0 is reserved for initial solution
+                self.logger.info(f"[VARIANT_{variant_index}] Testing LLM variant {variant_index}: {strategy}")
                 
                 # Create conversation history for this variant starting with generation context
                 variant_history = generate_history[:]  # Copy the shared generation context
@@ -769,22 +736,22 @@ class GolfAgent:
                 # Test the variant
                 passed, info = await self.judge.execute(code)
                 attempt = Attempt(code=code, passed=passed, summary=info, strategy=strategy)
-                # Store the original variant index for later reference
-                attempt.variant_index = i
+                # Store the adjusted variant index for later reference
+                attempt.variant_index = variant_index
                 
                 # Log execution details
-                self._log_code_execution(code, passed, info, f"Variant {i+1}: {strategy}")
+                self._log_code_execution(code, passed, info, f"LLM Variant {variant_index}: {strategy}")
                 
                 # Always try to minify the code
                 try:
                     minified = await minify_code(code)
                     attempt.update_minified(minified)
-                    self.logger.info(f"[VARIANT_GEN] Minified from {len(code.encode())} to {len(minified.encode())} bytes")
+                    self.logger.info(f"[VARIANT_{variant_index}] Minified from {len(code.encode())} to {len(minified.encode())} bytes")
                 except Exception as e:
                     self.logger.warning(f"Failed to minify code: {e}")
                 
                 variants.append(attempt)
-                self.logger.info(f"[VARIANT_GEN] {strategy} - {'PASSED' if passed else 'FAILED'} - {attempt.min_length()} bytes")
+                self.logger.info(f"[VARIANT_{variant_index}] {strategy} - {'PASSED' if passed else 'FAILED'} - {attempt.min_length()} bytes")
         
         # Select best variants (prioritize working ones, then by length)
         working_variants = [v for v in variants if v.passed]
@@ -915,7 +882,7 @@ Provide the corrected code in a Python code block, which means using triple back
                 history.append({"role": "assistant", "content": response})
                 
                 # Extract and test the fixed code
-                fixed_code = self._extract_code(response)
+                fixed_code = extract_code(response)
                 if not fixed_code:
                     self.logger.warning(f"{variant_prefix} No code extracted from response on iteration {iteration+1}")
                     if iteration < self.max_iterations - 1:
@@ -1023,14 +990,14 @@ Provide the corrected code in a Python code block, which means using triple back
                 )
                 
                 # Log conversation for first path or on important steps
-                self._log_llm_conversation("OPTIMIZATION", variant_history[-1:], response, variant_id, step)
+                self._log_llm_conversation("OPTIMIZATION", variant_history[-1:], response, original_variant_id, step)
                 
                 # Save conversation in real-time to variant file
                 self._append_conversation_realtime(variant_history[-1:], response, "OPTIMIZATION", variant_id=original_variant_id)
                 
                 variant_history.append({"role": "assistant", "content": response})
                 
-                code = self._extract_code(response)
+                code = extract_code(response)
                 if not code:
                     self.logger.warning(f"{path_prefix} No code extracted from response")
                     follow_up = "Please provide your optimized code in a Python code block, using triple backticks (```python ... ```). The optimized code should also follows the previous requirements."
@@ -1214,7 +1181,7 @@ Provide the corrected code in a Python code block, which means using triple back
                 self.logger.info(f"{path_prefix} LLM found no applicable knowledge base tricks")
                 return None
             
-            code = self._extract_code(response)
+            code = extract_code(response)
             if not code or code == current_best.code:
                 self.logger.info(f"{path_prefix} No new code from knowledge base tricks")
                 return None
@@ -1287,7 +1254,7 @@ Provide the corrected code in a Python code block, which means using triple back
                 self.logger.info(f"{path_prefix} LLM found no applicable provided tricks")
                 return None
             
-            code = self._extract_code(response)
+            code = extract_code(response)
             if not code or code == current_best.code:
                 self.logger.info(f"{path_prefix} No new code from provided tricks")
                 return None
@@ -1320,18 +1287,18 @@ Provide the corrected code in a Python code block, which means using triple back
         """Run the advanced golf optimization process"""
         self.logger.info(f"Starting advanced golf optimization for task {self.task_num}...")
         
-        # Verify initial solution
-        initial_passed, info = await self.judge.execute(self.initial_solution)
-        if not initial_passed:
-            self.logger.error("Initial solution doesn't pass verification!")
-            self.logger.error(info)
-            return None
-        
-        # Phase 1: Generate diverse variants
+        # Phase 1: Generate diverse variants (including initial solution as variant 0)
         variants = await self._generate_variants()
         
         if not variants:
             self.logger.error("No variants generated!")
+            return None
+        
+        # Check if initial solution (variant 0) passed
+        initial_variant = variants[0]  # Initial solution is always the first variant
+        if not initial_variant.passed:
+            self.logger.error("Initial solution doesn't pass verification!")
+            self.logger.error(initial_variant.summary)
             return None
         
         # Record initial variant generation

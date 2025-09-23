@@ -14,7 +14,7 @@ class ABC:
         raise NotImplementedError("Subclasses should implement this method")
 
 class LLM(ABC):
-    def __init__(self, model_id="gpt-5", timeout=3600):
+    def __init__(self, model_id="gpt-5", timeout=3600, stream=False):
         """
         Args:
             model_id: Model name on OpenRouter
@@ -50,6 +50,7 @@ class LLM(ABC):
             timeout=granular_timeout,
         )
         self.model_id = model_id
+        self.stream = stream
 
     def _extract_unsupported_params(self, error_message):
         """  
@@ -116,6 +117,8 @@ class LLM(ABC):
             reasoning_effort = None  # hardcoding
         if any(model in self.model_id.lower() for model in ["gpt-5-nano", "o4-mini"]):
             temperature = None  # hardcoding
+        if "gpt-5-chat-latest" in self.model_id.lower():
+            reasoning_effort = None  # hardcoding
         params = {'model': self.model_id, 'messages': messages}
         if temperature is not None:
             params['temperature'] = temperature
@@ -125,11 +128,24 @@ class LLM(ABC):
             params['response_format'] = response_format
         
         # Add default params
-        params.update({'top_p': 1.0, 'n': 1, 'stream': False, 'timeout': self.timeout})
+        params.update({'top_p': 1.0, 'n': 1, 'stream': self.stream, 'timeout': self.timeout})
         
         try:
-            completion = await self.client.chat.completions.create(**params)
-            return completion.choices[0].message.content
+            if self.stream:
+                response = ""
+                stream = await self.client.chat.completions.create(**params)
+                async for chunk in stream:
+                    if hasattr(chunk, 'choices') and len(chunk.choices) > 0:
+                        delta = chunk.choices[0].delta
+                        if hasattr(delta, 'content') and delta.content:
+                            content = delta.content
+                            response += content
+                            # print(content, end='', flush=True)
+                # print()  # Newline after streaming
+                return response
+            else:
+                completion = await self.client.chat.completions.create(**params)
+                return completion.choices[0].message.content
         except Exception as e:
             error_msg = str(e)
             print(f"Error calling API: {error_msg}")
@@ -153,12 +169,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Test LLM API call")
     parser.add_argument("--model", type=str, default="gpt-5", help="Model ID to use")
     parser.add_argument("--timeout", type=int, default=600, help="Timeout for LLM calls in seconds")
+    parser.add_argument("--stream", type=str, default="false", help="Enable streaming for responses")
     args = parser.parse_args()
+    args.stream = args.stream.lower() == "true"
     # Example usage with API
     try:
         # Make sure to set your API key as environment variable:
         # export OPENROUTER_API_KEY="your_api_key_here"
-        llm = LLM(model_id=args.model, timeout=args.timeout)
+        llm = LLM(model_id=args.model, timeout=args.timeout, stream=args.stream)
         messages = [
             {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": "Explain how AI works in simple terms."},
