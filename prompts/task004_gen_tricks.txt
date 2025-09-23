@@ -1,0 +1,162 @@
+You are an expert Python programmer specializing in code golf and abstract reasoning puzzles.
+
+## Task description:
+
+I will provide you with:
+1. The input-output examples of the task. The input is a grid represented as a list of lists of integers, and the output is the transformed grid following a hidden rule.
+2. The code that generates these examples (the generator)
+3. Serveal solutions named `p` which have been proved correct with different lengths.
+
+Your task is to analyze the problem context and understand the problem, then summarize the tricks for shortening the code from the provided solutions (note that the methods need to be universal and can be transferred to other similar problems)
+
+## Problem Context
+
+### Input-Output Examples
+
+Here are the input-output examples of the task:
+Examples:
+Example 1:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 6, 6, 0, 0, 0, 0, 0], [0, 6, 0, 0, 6, 0, 0, 0, 0], [0, 0, 6, 0, 0, 6, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0], [0, 0, 0, 0, 6, 6, 6, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 2, 2, 0, 0, 0, 0], [0, 0, 2, 0, 0, 2, 0, 0, 0], [0, 0, 0, 2, 2, 2, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 6, 6, 0, 0, 0, 0], [0, 0, 6, 0, 0, 6, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0], [0, 0, 0, 0, 6, 0, 6, 0, 0], [0, 0, 0, 0, 6, 6, 6, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 2, 2, 2, 0, 0, 0], [0, 0, 0, 2, 0, 2, 0, 0, 0], [0, 0, 0, 2, 2, 2, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 2:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 8, 8, 8, 8, 8, 0, 0, 0], [0, 8, 0, 0, 0, 0, 8, 0, 0], [0, 0, 8, 0, 0, 0, 0, 8, 0], [0, 0, 0, 8, 0, 0, 0, 0, 8], [0, 0, 0, 0, 8, 8, 8, 8, 8], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 8, 8, 8, 8, 8, 0, 0], [0, 0, 8, 0, 0, 0, 0, 8, 0], [0, 0, 0, 8, 0, 0, 0, 0, 8], [0, 0, 0, 0, 8, 0, 0, 0, 8], [0, 0, 0, 0, 8, 8, 8, 8, 8], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 3:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 4, 4, 4, 4, 4, 4, 0, 0, 0], [0, 4, 0, 0, 0, 0, 0, 4, 0, 0], [0, 0, 4, 0, 0, 0, 0, 0, 4, 0], [0, 0, 0, 4, 0, 0, 0, 0, 0, 4], [0, 0, 0, 0, 4, 4, 4, 4, 4, 4], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 4, 4, 4, 4, 4, 4, 0, 0], [0, 0, 4, 0, 0, 0, 0, 0, 4, 0], [0, 0, 0, 4, 0, 0, 0, 0, 0, 4], [0, 0, 0, 0, 4, 0, 0, 0, 0, 4], [0, 0, 0, 0, 4, 4, 4, 4, 4, 4], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 4:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [8, 8, 8, 0, 0, 0, 0, 0, 0], [8, 0, 0, 8, 0, 0, 0, 0, 0], [0, 8, 0, 0, 8, 0, 0, 0, 0], [0, 0, 8, 0, 0, 8, 0, 0, 0], [0, 0, 0, 8, 0, 0, 8, 0, 0], [0, 0, 0, 0, 8, 0, 0, 8, 0], [0, 0, 0, 0, 0, 8, 8, 8, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 4, 4, 4, 0, 0], [0, 0, 0, 0, 4, 0, 0, 4, 0], [0, 0, 0, 0, 0, 4, 0, 0, 4], [0, 0, 0, 0, 0, 0, 4, 4, 4]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 8, 8, 8, 0, 0, 0, 0, 0], [0, 8, 0, 0, 8, 0, 0, 0, 0], [0, 0, 8, 0, 0, 8, 0, 0, 0], [0, 0, 0, 8, 0, 0, 8, 0, 0], [0, 0, 0, 0, 8, 0, 0, 8, 0], [0, 0, 0, 0, 0, 8, 0, 8, 0], [0, 0, 0, 0, 0, 8, 8, 8, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 4, 4, 4, 0], [0, 0, 0, 0, 0, 4, 0, 0, 4], [0, 0, 0, 0, 0, 0, 4, 0, 4], [0, 0, 0, 0, 0, 0, 4, 4, 4]]
+
+Example 5:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 5, 5, 0], [0, 0, 0, 0, 0, 5, 0, 0, 5], [0, 0, 0, 0, 0, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 9, 9, 9, 9, 0, 0, 0, 0], [0, 9, 0, 0, 0, 9, 0, 0, 0], [0, 0, 9, 0, 0, 0, 9, 0, 0], [0, 0, 0, 9, 9, 9, 9, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 6, 6, 6, 6, 0, 0, 0], [0, 6, 0, 0, 0, 0, 6, 0, 0], [0, 0, 6, 0, 0, 0, 0, 6, 0], [0, 0, 0, 6, 6, 6, 6, 6, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0, 5, 0, 5], [0, 0, 0, 0, 0, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 9, 9, 9, 9, 0, 0, 0], [0, 0, 9, 0, 0, 0, 9, 0, 0], [0, 0, 0, 9, 0, 0, 9, 0, 0], [0, 0, 0, 9, 9, 9, 9, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 6, 6, 6, 6, 0, 0], [0, 0, 6, 0, 0, 0, 0, 6, 0], [0, 0, 0, 6, 0, 0, 0, 6, 0], [0, 0, 0, 6, 6, 6, 6, 6, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 6:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 0, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0], [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0], [0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0], [0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 7:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 0, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 8:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0], [7, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0], [0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0], [0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0], [0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0], [0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0], [0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0], [0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 7, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 9:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 7, 7, 7, 7, 0, 0, 0], [0, 0, 0, 7, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 2, 2, 2, 2, 2, 0, 0, 0, 0], [0, 2, 0, 0, 0, 0, 2, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 2, 0, 0], [0, 0, 0, 2, 2, 2, 2, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 7, 7, 7, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 7, 0, 0, 7, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 2, 2, 2, 2, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 2, 0, 0], [0, 0, 0, 2, 0, 0, 0, 2, 0, 0], [0, 0, 0, 2, 2, 2, 2, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+### Generator Code
+
+Here is the code that generates the input-output examples. Analyze it carefully to understand the underlying transformation rules:
+```python
+def generate(width=None, height=None, rows=None, cols=None, wides=None,
+             talls=None, colors=None):
+  """Returns input and output grids according to the given parameters.
+
+  Args:
+    width: the width of the input grid
+    height: the height of the input grid
+    rows: a list of vertical coordinates where pixels should be placed
+    cols: a list of horizontal coordinates where pixels should be placed
+    wides: a list of box widths
+    talls: a list of box heights
+    colors: a list of colors to be used for pixels
+  """
+  if rows is None:
+    width, height = common.randint(8, 16), common.randint(8, 16)
+    rows, cols, wides, talls = [], [], [], []
+    row = 1
+    while True:
+      wide = common.randint(4, width - 1)
+      tall = common.randint(3, wide - 1)
+      if row + tall > height: break
+      col = common.randint(0, width - wide)
+      rows.append(row)
+      cols.append(col)
+      wides.append(wide)
+      talls.append(tall)
+      row += tall + 1
+    colors = common.random_colors(len(rows))
+
+  grid, output = common.grids(width, height)
+  for row, col, wide, tall, color in zip(rows, cols, wides, talls, colors):
+    # Horizontal stuff.
+    for c in range(wide - tall + 2):
+      grid[row][col + c] = color
+      grid[row + tall - 1][col + c + tall - 2] = color
+      output[row][col + c + 1] = color
+      output[row + tall - 1][col + c + tall - 2] = color
+    # Diagonal stuff
+    for r in range(1, tall - 1):
+      grid[row + r][col + r - 1] = color
+      grid[row + r][col + r + wide - tall + 1] = color
+      output[row + r][col + r] = color
+      output[row + r][min(col + r + wide - tall + 2, col + wide - 1)] = color
+  return {"input": grid, "output": output}
+```
+
+### Current Solutions
+Here is the current solutions which have been proved correct:
+#### Solution 1 with 432 bytes
+```python
+def p(g):
+    if not g: return g
+    h,w=len(g),len(g[0]); s={}
+    for r in range(h-1,-1,-1):
+        row=g[r]
+        for c in range(w-1,-1,-1):
+            v=row[c]
+            if v:
+                t=s.get(v)
+                if not t:
+                    s[v]=(r,c)
+                else:
+                    A,M=t
+                    if r!=A and c!=M and c+1<w:
+                        g[r][c+1]=v; row[c]=0
+    return g
+```
+
+#### Solution 2 with 198 bytes
+```python
+D=range
+def p(g):
+	E=len(g[0]);F=[[0]*E for A in g];G={}
+	for A in D(len(g)-1,-1,-1):
+		for B in D(E-1,-1,-1):
+			C=g[A][B]
+			if C:H,I=G.setdefault(C,[A,B]);F[A][min(B+(A!=H),I)]=C
+	return F
+```
+
+#### Solution 3 with 148 bytes
+```python
+def p(g):
+ f=0
+ for r in g[::-1]:
+  if f:r[B-1]|=r[B];r[:B+1]=[0]+r[:B]
+  else:f=1;B=max(j*(c>0)for(j,c)in enumerate(r))
+  f&=any(r)
+ return g
+```
+
+#### Solution 4 with 83 bytes
+```python
+p=lambda g,B=0:g and p(g,[(r:=g.pop()).index(m:=max(r)),-1][m*B!=0])+[[r.pop(B)]+r]
+```
+
+## Analysis Instructions
+
+1. Carefully analyze the problem context, including input-output examples which define the problem exactly, generator code which implicts the rule to generate input-output examples, serveal correct solutions which implement the transformation rule.
+2. Find the transformation rule from input grid to output grid.
+3. Analyze what changes occurred in the transition process from the initial longest solution to the last shortest solution.
+4. Summarize general and universal trciks which can be transferred to other similar problems from above analyses. Note that each trick needs to include textual explanations and before-after examples. 
+   A before-after example is a pair of code, the "after" code is the result of applying tricks to the "before" code, and the "after" code should be shorter than the "before" code.
+
+Now follow the above instructions, begin your thinking and provide your summarized tricks.

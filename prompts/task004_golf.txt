@@ -1,0 +1,271 @@
+You are an expert Python programmer specializing in code golf and abstract reasoning puzzles.
+
+## Task description:
+
+I will provide you with:
+1. The input-output examples of the task. The input is a grid represented as a list of lists of integers, and the output is the transformed grid following a hidden rule.
+2. The code that generates these examples (the generator)
+3. A solution named `p` which has been proved correct.
+4. Some code golf tricks that may be useful to shorten the solution.
+
+Your task is to analyze the problem context and understand the problem, then read all the tricks and analyze which can be applied to current solution to shorted its length.
+You can also scan your knowledge base and search useful trciks. 
+Anyway, your task is to **try your best to shorten the length of solution with maintaining the correctness**, there is no limits to the methods your used.
+
+## Problem Context
+
+### Input-Output Examples
+
+Here are the input-output examples of the task:
+Examples:
+Example 1:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 6, 6, 0, 0, 0, 0, 0], [0, 6, 0, 0, 6, 0, 0, 0, 0], [0, 0, 6, 0, 0, 6, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0], [0, 0, 0, 0, 6, 6, 6, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 2, 2, 0, 0, 0, 0], [0, 0, 2, 0, 0, 2, 0, 0, 0], [0, 0, 0, 2, 2, 2, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 6, 6, 0, 0, 0, 0], [0, 0, 6, 0, 0, 6, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0], [0, 0, 0, 0, 6, 0, 6, 0, 0], [0, 0, 0, 0, 6, 6, 6, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 2, 2, 2, 0, 0, 0], [0, 0, 0, 2, 0, 2, 0, 0, 0], [0, 0, 0, 2, 2, 2, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 2:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 8, 8, 8, 8, 8, 0, 0, 0], [0, 8, 0, 0, 0, 0, 8, 0, 0], [0, 0, 8, 0, 0, 0, 0, 8, 0], [0, 0, 0, 8, 0, 0, 0, 0, 8], [0, 0, 0, 0, 8, 8, 8, 8, 8], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 8, 8, 8, 8, 8, 0, 0], [0, 0, 8, 0, 0, 0, 0, 8, 0], [0, 0, 0, 8, 0, 0, 0, 0, 8], [0, 0, 0, 0, 8, 0, 0, 0, 8], [0, 0, 0, 0, 8, 8, 8, 8, 8], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 3:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 4, 4, 4, 4, 4, 4, 0, 0, 0], [0, 4, 0, 0, 0, 0, 0, 4, 0, 0], [0, 0, 4, 0, 0, 0, 0, 0, 4, 0], [0, 0, 0, 4, 0, 0, 0, 0, 0, 4], [0, 0, 0, 0, 4, 4, 4, 4, 4, 4], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 4, 4, 4, 4, 4, 4, 0, 0], [0, 0, 4, 0, 0, 0, 0, 0, 4, 0], [0, 0, 0, 4, 0, 0, 0, 0, 0, 4], [0, 0, 0, 0, 4, 0, 0, 0, 0, 4], [0, 0, 0, 0, 4, 4, 4, 4, 4, 4], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 4:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [8, 8, 8, 0, 0, 0, 0, 0, 0], [8, 0, 0, 8, 0, 0, 0, 0, 0], [0, 8, 0, 0, 8, 0, 0, 0, 0], [0, 0, 8, 0, 0, 8, 0, 0, 0], [0, 0, 0, 8, 0, 0, 8, 0, 0], [0, 0, 0, 0, 8, 0, 0, 8, 0], [0, 0, 0, 0, 0, 8, 8, 8, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 4, 4, 4, 0, 0], [0, 0, 0, 0, 4, 0, 0, 4, 0], [0, 0, 0, 0, 0, 4, 0, 0, 4], [0, 0, 0, 0, 0, 0, 4, 4, 4]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 8, 8, 8, 0, 0, 0, 0, 0], [0, 8, 0, 0, 8, 0, 0, 0, 0], [0, 0, 8, 0, 0, 8, 0, 0, 0], [0, 0, 0, 8, 0, 0, 8, 0, 0], [0, 0, 0, 0, 8, 0, 0, 8, 0], [0, 0, 0, 0, 0, 8, 0, 8, 0], [0, 0, 0, 0, 0, 8, 8, 8, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 4, 4, 4, 0], [0, 0, 0, 0, 0, 4, 0, 0, 4], [0, 0, 0, 0, 0, 0, 4, 0, 4], [0, 0, 0, 0, 0, 0, 4, 4, 4]]
+
+Example 5:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 5, 5, 0], [0, 0, 0, 0, 0, 5, 0, 0, 5], [0, 0, 0, 0, 0, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 9, 9, 9, 9, 0, 0, 0, 0], [0, 9, 0, 0, 0, 9, 0, 0, 0], [0, 0, 9, 0, 0, 0, 9, 0, 0], [0, 0, 0, 9, 9, 9, 9, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 6, 6, 6, 6, 0, 0, 0], [0, 6, 0, 0, 0, 0, 6, 0, 0], [0, 0, 6, 0, 0, 0, 0, 6, 0], [0, 0, 0, 6, 6, 6, 6, 6, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0, 5, 0, 5], [0, 0, 0, 0, 0, 0, 5, 5, 5], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 9, 9, 9, 9, 0, 0, 0], [0, 0, 9, 0, 0, 0, 9, 0, 0], [0, 0, 0, 9, 0, 0, 9, 0, 0], [0, 0, 0, 9, 9, 9, 9, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 6, 6, 6, 6, 0, 0], [0, 0, 6, 0, 0, 0, 0, 6, 0], [0, 0, 0, 6, 0, 0, 0, 6, 0], [0, 0, 0, 6, 6, 6, 6, 6, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 6:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 0, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0], [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6, 0], [0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0], [0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 7:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 0, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 8:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0], [7, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0], [0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0], [0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0], [0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0], [0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0], [0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0, 0], [0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 7, 0, 0, 7, 0, 0, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Example 9:
+Input: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 7, 7, 7, 7, 0, 0, 0], [0, 0, 0, 7, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 2, 2, 2, 2, 2, 0, 0, 0, 0], [0, 2, 0, 0, 0, 0, 2, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 2, 0, 0], [0, 0, 0, 2, 2, 2, 2, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Output: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 7, 7, 7, 7, 0, 0], [0, 0, 0, 0, 7, 0, 0, 0, 7, 0], [0, 0, 0, 0, 0, 7, 0, 0, 7, 0], [0, 0, 0, 0, 0, 7, 7, 7, 7, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 2, 2, 2, 2, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 2, 0, 0], [0, 0, 0, 2, 0, 0, 0, 2, 0, 0], [0, 0, 0, 2, 2, 2, 2, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+### Generator Code
+
+Here is the code that generates the input-output examples. Analyze it carefully to understand the underlying transformation rules:
+```python
+def generate(width=None, height=None, rows=None, cols=None, wides=None,
+             talls=None, colors=None):
+  """Returns input and output grids according to the given parameters.
+
+  Args:
+    width: the width of the input grid
+    height: the height of the input grid
+    rows: a list of vertical coordinates where pixels should be placed
+    cols: a list of horizontal coordinates where pixels should be placed
+    wides: a list of box widths
+    talls: a list of box heights
+    colors: a list of colors to be used for pixels
+  """
+  if rows is None:
+    width, height = common.randint(8, 16), common.randint(8, 16)
+    rows, cols, wides, talls = [], [], [], []
+    row = 1
+    while True:
+      wide = common.randint(4, width - 1)
+      tall = common.randint(3, wide - 1)
+      if row + tall > height: break
+      col = common.randint(0, width - wide)
+      rows.append(row)
+      cols.append(col)
+      wides.append(wide)
+      talls.append(tall)
+      row += tall + 1
+    colors = common.random_colors(len(rows))
+
+  grid, output = common.grids(width, height)
+  for row, col, wide, tall, color in zip(rows, cols, wides, talls, colors):
+    # Horizontal stuff.
+    for c in range(wide - tall + 2):
+      grid[row][col + c] = color
+      grid[row + tall - 1][col + c + tall - 2] = color
+      output[row][col + c + 1] = color
+      output[row + tall - 1][col + c + tall - 2] = color
+    # Diagonal stuff
+    for r in range(1, tall - 1):
+      grid[row + r][col + r - 1] = color
+      grid[row + r][col + r + wide - tall + 1] = color
+      output[row + r][col + r] = color
+      output[row + r][min(col + r + wide - tall + 2, col + wide - 1)] = color
+  return {"input": grid, "output": output}
+```
+
+### Current Solutions
+Here is the current solution which has been proved correct:
+```python
+D=range
+def p(g):
+	E=len(g[0]);F=[[0]*E for A in g];G={}
+	for A in D(len(g)-1,-1,-1):
+		for B in D(E-1,-1,-1):
+			C=g[A][B]
+			if C:H,I=G.setdefault(C,[A,B]);F[A][min(B+(A!=H),I)]=C
+	return F
+```
+
+## Code Golf tricks
+Here are some trciks that may be helpful for you to shorten the length of current solution, you can also search more tricks in your knowledge base.
+
+```
+1. Record the First-Seen with dict.setdefault
+
+Explanation: When you need to find and store a value associated with the first time you see a key, a standard if key not in my_dict: block is wordy. The dict.setdefault(key, value) method does this in a single, atomic operation. It returns the value for the key if it exists, otherwise it sets my_dict[key] = value and returns value.
+
+Before:
+Python
+
+# Long version with explicit check
+if color not in anchors:
+    anchors[color] = (r, c)
+anchor_pos = anchors[color]
+
+After:
+Python
+
+# Short version using setdefault
+anchor_pos = anchors.setdefault(color, (r, c))
+
+2. Use Booleans as Integers (0/1) for Compact Math
+
+Explanation: In Python, True is equivalent to 1 and False is equivalent to 0. You can exploit this to replace if/else statements with simple arithmetic, making conditional increments or assignments much shorter.
+
+Before:
+Python
+
+# Long version with a conditional expression
+if row != anchor_row:
+    new_col = col + 1
+else:
+    new_col = col
+
+After:
+Python
+
+# Short version using boolean arithmetic
+new_col = col + (row != anchor_row)
+
+3. Cap Values with min() or max() Instead of if
+
+Explanation: Using an if statement to enforce a boundary (a floor or a ceiling) on a value takes up a full line. The built-in min() and max() functions can achieve the same result within a single expression.
+
+Before:
+Python
+
+# Long version with an if statement
+idx = col + 1
+if idx > max_col:
+    idx = max_col
+
+After:
+Python
+
+# Short version using min()
+idx = min(col + 1, max_col)
+
+4. Use Slice Assignment to Shift Lists In-Place
+
+Explanation: Shifting the contents of a list (e.g., moving elements to the right and inserting a 0 at the beginning) can be done with a loop, but that's verbose. Python's slice assignment is an extremely powerful and concise tool for performing this in one line.
+
+Before:
+Python
+
+# Long version with a loop
+k = 5 # Shift elements up to index 5
+for i in range(k, 0, -1):
+    row[i] = row[i-1]
+row[0] = 0
+
+After:
+Python
+
+# Short version with slice assignment
+k = 5
+row[:k+1] = [0] + row[:k]
+
+5. Find an Index with a Generator Expression
+
+Explanation: To find the index of the first or last element in a sequence that satisfies a condition, a for loop is common but long. A generator expression inside a function like max() or next() is a much shorter, expression-based alternative.
+
+Before:
+Python
+
+# Long version with a for loop to find last non-zero
+last_idx = 0
+for i, cell in enumerate(row):
+    if cell > 0:
+        last_idx = i
+
+After:
+Python
+
+# Short version using a generator in max()
+last_idx = max(i * (cell > 0) for i, cell in enumerate(row))
+
+6. Use the Walrus Operator := for Inline Assignment
+
+Explanation: Often, you need to use a value right after you compute it (e.g., compute a max and then find its index). This usually requires two lines. The walrus operator := (available in Python 3.8+) lets you assign a value to a variable as part of a larger expression, saving a line.
+
+Before:
+Python
+
+# Two separate statements
+max_val = max(row)
+col = row.index(max_val)
+
+After:
+Python
+
+# Single expression with the walrus operator
+col = row.index(max_val := max(row))
+
+7. Process a List with Recursion and pop()
+
+Explanation: Iterating over a list with a for or while loop is standard. For code golf, a recursive function that processes one element at a time by calling list.pop() can be significantly shorter, as the loop structure, base case, and recursive call can be condensed into a single line.
+
+Before:
+Python
+
+# Standard iterative function to process a list
+def process_all(items):
+    results = []
+    for item in items:
+        results.append(process(item))
+    return results
+
+After:
+Python
+
+# Short recursive lambda that consumes the list
+# (Note: This is not pythonic for real code, but is great for golf)
+p = lambda l: l and [process(l.pop(0))] + p(l)
+```
+
+## Analysis Instructions
+
+1. Carefully analyze the problem context, including input-output examples which define the problem exactly, generator code which implicts the rule to generate input-output examples, serveal correct solution which implements the transformation rule.
+2. Find the transformation rule from input grid to output grid.
+3. Process the tricks one by one:
+   For each trick, try to apply it to your shortest version of solution. If the new version of solution is shorter than before, save it as your last version of solution, and you subsequent modifications should be based on this version of solution.
+   If the new version of solution is longer than before, discard it and don't save.
+   Note: If the trick implicts some rule you don't know, don't immediately define it as unappliable or unsafe because the rule may be implictly contained in the generator code. 
+   That's why I require you to analyze and understand the problem context first. Therefore, you need to spend much time in judging the usability of each trick.
+4. Finally provide the final code, which is the shortest solution you can get.
+
+Here are some restrictions you don't need to consider in the golf process:
+  a. There are no restrictions on destroying the input grid as long as you can true output grid.
+
+Now follow the above instructions, begin your thinking and provide your shortest solution. Note that You need to show the whole transition process, including the application of each trick, the analysis of changed solution and the judgement of changed solution.
