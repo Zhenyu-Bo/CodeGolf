@@ -4,17 +4,15 @@ import json
 import os
 import sys
 import random
-import csv
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 from datetime import datetime
 import logging
-import tempfile
 import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules.llm import LLM
-from modules.prompt_template import (
+from modules.prompt_v1 import (
     VARIANT_GENERATION_PROMPT, 
     OPTIMIZATION_PROMPT, 
     TRICKS_PROMPT,
@@ -22,17 +20,19 @@ from modules.prompt_template import (
     KNOWLEDGE_BASE_TRICKS_PROMPT,
     PROVIDED_TRICKS_PROMPT
 )
-from utils.extract import extract_code, extract_variants
+# Import functions from common module
+from modules.common import (
+    extract_code, extract_variants, CodeJudge, minify_code, 
+    load_generator_code, load_task_solution, load_tricks,
+    load_shortest_length, format_examples, setup_logger
+)
 
-# Add Google Code Golf utils to path
+# Project root path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# print("Project root:", PROJECT_ROOT)
-# print("Adding code golf utils path:", os.path.join(PROJECT_ROOT, "google-code-golf-2025", "code_golf_utils"))
 sys.path.append(os.path.join(PROJECT_ROOT, "google-code-golf-2025", "code_golf_utils"))
-from code_golf_utils import load_examples, verify_program
 
-os.environ["http_proxy"] = "http://localhost:7897"
-os.environ["https_proxy"] = "http://localhost:7897"
+# os.environ["http_proxy"] = "http://localhost:7897"
+# os.environ["https_proxy"] = "http://localhost:7897"
 
 @dataclass
 class Attempt:
@@ -86,57 +86,6 @@ class Attempt:
             'min_length': self.min_length() if self.passed else None
         }
 
-class CodeJudge:
-    def __init__(self, task_num: int, examples: Dict, timeout: int = 2):
-        self.task_num = task_num
-        self.examples = examples
-        self.timeout = timeout
-    
-    async def execute(self, code: str) -> tuple[bool, str]:
-        """Execute code against Google Code Golf test cases"""
-        try:
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-                f.write(code)
-                temp_file = f.name
-            
-            try:
-                import io
-                from contextlib import redirect_stdout
-                
-                captured_output = io.StringIO()
-                
-                with redirect_stdout(captured_output):
-                    try:
-                        verify_program(self.task_num, self.examples, temp_file)
-                        verification_output = captured_output.getvalue()
-                        
-                        if "Your code IS READY for submission!".lower() in verification_output.lower():
-                            return True, "All tests passed"
-                        else:
-                            return False, verification_output.split("The expected result is shown in green; your actual result is shown in red.")[0]
-                            
-                    except Exception as e:
-                        return False, f"Verification error: {str(e)}"
-                        
-            finally:
-                try:
-                    os.unlink(temp_file)
-                except:
-                    pass
-                    
-        except Exception as e:
-            return False, f"Runtime error: {str(e)}"
-
-async def minify_code(code: str) -> str:
-    """Simple minification: remove comments and blank lines"""
-    lines = code.split('\n')
-    new_lines = []
-    for line in lines:
-        line = re.sub(r'#.*', '', line)  # Remove comments
-        if line.strip() != '':
-            new_lines.append(line.rstrip())
-    return '\n'.join(new_lines)
-
 class GolfAgent:
     def __init__(
         self, 
@@ -155,15 +104,14 @@ class GolfAgent:
         resume_from_state: bool = False,  # New parameter to enable state resumption
         reasoning_effort: str = "high",  # New parameter for reasoning effort
     ):
-        self.project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        sys.path.append(os.path.join(self.project_path, "google-code-golf-2025", "code_golf_utils"))
-        # Import utils dynamically
-        global load_examples, verify_program
-        from code_golf_utils import load_examples, verify_program
-
+        self.project_path = PROJECT_ROOT
+        
         self.llm = llm
         self.reasoning_effort = reasoning_effort
         self.task_num = task_num
+        
+        # Load examples using common module
+        from code_golf_utils import load_examples
         self.examples = load_examples(task_num)
         self.judge = CodeJudge(task_num, self.examples)
         self.initial_solution = initial_solution
@@ -172,7 +120,7 @@ class GolfAgent:
         self.n_variants = n_variants
         self.generation_factor = generation_factor  # Generate generation_factor * n variants, then select n
         self.use_shortest_hint = use_shortest_hint
-        self.shortest_known = self._load_shortest_length() if use_shortest_hint else None
+        self.shortest_known = load_shortest_length(task_num, self.logger if hasattr(self, 'logger') else None) if use_shortest_hint else None
         
         # Existing configuration
         self.max_steps = max_steps
@@ -196,7 +144,7 @@ class GolfAgent:
         print(f"Session log directory: {self.session_log_dir}")
         print(f"Main log file: {self.main_log_file}")
         
-        self.logger = logger or self._setup_logger()
+        self.logger = logger or setup_logger(f'GolfAgent_task{task_num}_{self.session_timestamp}', self.main_log_file)
         
         # Immediate log to verify logger is working
         self.logger.info(f"GolfAgent initialized for task {task_num}")
@@ -205,8 +153,8 @@ class GolfAgent:
         self.logger.info(f"Main log file: {self.main_log_file}")
         
         # Load generator code and tricks
-        self.generator_code = self._load_generator_code()
-        self.tricks = self._load_tricks()
+        self.generator_code = load_generator_code(task_num, self.logger)
+        self.tricks = load_tricks()
         
         # State tracking
         self.step = 0
@@ -238,31 +186,6 @@ class GolfAgent:
             else:
                 self.logger.info("No previous state found, starting fresh")
         
-    def _setup_logger(self) -> logging.Logger:
-        """Setup a logger that writes to output.log in the session timestamp directory"""
-        # Use a unique logger name to avoid conflicts
-        logger_name = f'GolfAgent_task{self.task_num}_{self.session_timestamp}'
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(logging.INFO)
-        
-        # Clear any existing handlers to avoid duplicates
-        logger.handlers.clear()
-        
-        # Always add console handler
-        console_handler = logging.StreamHandler()
-        console_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        console_handler.setFormatter(console_formatter)
-        logger.addHandler(console_handler)
-
-        # Add file handler for main log file (output.log)
-        file_handler = logging.FileHandler(self.main_log_file, mode='a', encoding='utf-8')
-        file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        file_handler.setFormatter(file_formatter)
-        logger.addHandler(file_handler)
-        logger.info(f"Logger initialized for task {self.task_num}, main log: {self.main_log_file}")
-        
-        return logger
-    
     def _save_variant_conversations(self):
         """Variant conversations are now saved in real-time, this function kept for compatibility"""
         # Conversations are now saved in real-time via _append_conversation_realtime
@@ -361,36 +284,7 @@ class GolfAgent:
         self.logger.info(f"Code length: {len(code.encode())} bytes")
         self.logger.info("")
     
-    def _load_shortest_length(self) -> Optional[int]:
-        """Load shortest known solution length from CSV"""
-        try:
-            with open(os.path.join(self.project_path, "files", "shortest_solutions_len.csv"), 'r') as f:
-                reader = csv.reader(f)
-                lengths = list(reader)
-                if self.task_num <= len(lengths):
-                    return int(lengths[self.task_num - 1][0])
-        except Exception as e:
-            self.logger.warning(f"Could not load shortest length: {e}")
-        return None
-    
-    def _load_generator_code(self) -> str:
-        """Load generator code for the task"""
-        try:
-            with open(os.path.join(self.project_path, "generate", f"task{self.task_num:03d}.py"), 'r') as f:
-                code = f.read()
-                return "def " + code.split("def")[1].strip()
-        except Exception as e:
-            self.logger.warning(f"Could not load generator code: {e}")
-            return ""
-    
-    def _load_tricks(self) -> List[Dict]:
-        """Load code golf tricks from JSON"""
-        try:
-            with open(os.path.join(self.project_path, "files", "tricks.json"), 'r') as f:
-                return json.load(f)
-        except Exception as e:
-            self.logger.warning(f"Could not load tricks: {e}")
-            return []
+
     
     def _record_optimization_step(self, variant_idx: int, step_type: str, 
                                   attempt: Optional[Attempt] = None, 
@@ -580,7 +474,7 @@ class GolfAgent:
     
     def _create_variant_generation_prompt(self) -> str:
         """Create prompt for generating multiple code variants"""
-        examples_str = self._format_examples()
+        examples_str = format_examples(self.examples)
         
         shortest_hint = ""
         if self.shortest_known:
@@ -624,33 +518,7 @@ class GolfAgent:
             shortest_hint=shortest_hint if self.shortest_known else "",
         )
     
-    def _format_examples(self) -> str:
-        """Format examples for display in prompt, combining train, test, and arc-gen."""
-        result = "Examples:\n"
-        total_length = 0
-        max_length = 4000  # Maximum total length of examples
-        max_examples = 10  # Maximum number of examples to include
 
-        # Combine examples from train, test, and arc-gen
-        all_examples = (
-            self.examples.get('train', []) +
-            self.examples.get('test', []) +
-            self.examples.get('arc-gen', [])
-        )
-
-        for i, example in enumerate(all_examples[:max_examples]):
-            example_str = (
-                f"Example {i+1}:\n"
-                f"Input: {example['input']}\n"
-                f"Output: {example['output']}\n\n"
-            )
-            if total_length + len(example_str) > max_length:
-                break
-
-            result += example_str
-            total_length += len(example_str)
-
-        return result
     
     async def _generate_variants(self) -> List[Attempt]:
         """Generate multiple code variants using different strategies, including initial solution as variant 0"""
@@ -1439,9 +1307,8 @@ if __name__ == "__main__":
             with open(os.path.join(PROJECT_ROOT, "solutions", "latest", f"task{task_num:03d}.py"), 'r') as f:
                 initial_solution = f.read()
         except:
-            initial_solution = """def p(g):
-    return g  # placeholder
-"""
+            print(f"Failed to load initial solution for task {task_num}")
+            return
         
         # Initialize LLM and agent
         model_id = args.model
